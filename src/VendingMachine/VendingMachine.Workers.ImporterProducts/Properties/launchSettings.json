@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "VendingMachine.Workers.ImporterProducts": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
