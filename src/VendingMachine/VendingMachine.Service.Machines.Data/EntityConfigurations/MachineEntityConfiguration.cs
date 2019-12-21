@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using VendingMachine.Service.Machines.Domain;
-using static VendingMachine.Service.Machines.Domain.MachineType;
 
 namespace VendingMachine.Service.Machines.Data.EntityConfigurations
 {
@@ -24,7 +21,7 @@ namespace VendingMachine.Service.Machines.Data.EntityConfigurations
                     v => new Services.Shared.Domain.MapPoint((decimal)v.X, (decimal)v.Y));
 
             builder
-                .Property<DateTime?>("_dataCreated")
+                .Property<DateTime>("_dataCreated")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("DataCreated")
                 .IsRequired();

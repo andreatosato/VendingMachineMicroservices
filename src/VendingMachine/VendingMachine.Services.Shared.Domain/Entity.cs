@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-[assembly: InternalsVisibleTo("VendingMachine.Service.Machines.Data")]
+//[assembly: InternalsVisibleTo("VendingMachine.Service.Machines.Data")]
 namespace VendingMachine.Services.Shared.Domain
 {
     public abstract class Entity
@@ -16,7 +16,7 @@ namespace VendingMachine.Services.Shared.Domain
             {
                 return _Id;
             }
-            protected set
+            protected /*internal*/ set
             {
                 _Id = value;
             }

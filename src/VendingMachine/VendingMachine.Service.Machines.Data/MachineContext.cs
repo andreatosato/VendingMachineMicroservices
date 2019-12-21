@@ -21,7 +21,9 @@ namespace VendingMachine.Service.Machines.Data
         {
             modelBuilder.ApplyConfiguration(new MachineEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MachineVersionEntityConfiguration());
-            modelBuilder.SeedData();
+
+            // Choose manual migration
+            //modelBuilder.SeedData();
         }
     }
 }

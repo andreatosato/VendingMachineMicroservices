@@ -8,10 +8,4 @@
     <LangVersion>latestMajor</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-      <_Parameter1>VendingMachine.Service.Machines.Data</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
-
 </Project>
