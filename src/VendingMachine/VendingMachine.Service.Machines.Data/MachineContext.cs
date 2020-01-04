@@ -6,8 +6,10 @@ namespace VendingMachine.Service.Machines.Data
 {
     public class MachineContext : DbContext
     {
-        public DbSet<Machine> Machines { get; set; }
+        public DbSet<MachineItem> Machines { get; set; }
         public DbSet<MachineType> MachineTypes { get; set; }
+        public DbSet<Product> ActiveProduct { get; set; }
+        public DbSet<ProductConsumed> HistoryProduct { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -21,6 +23,8 @@ namespace VendingMachine.Service.Machines.Data
         {
             modelBuilder.ApplyConfiguration(new MachineEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MachineVersionEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ActiveProductEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new HistoryProductEntityConfiguration());
 
             // Choose manual migration
             //modelBuilder.SeedData();

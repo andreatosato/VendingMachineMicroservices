@@ -7,13 +7,15 @@ using VendingMachine.Service.Machines.Domain;
 
 namespace VendingMachine.Service.Machines.Data.EntityConfigurations
 {
-    public class MachineEntityConfiguration : IEntityTypeConfiguration<Machine>
+    public class MachineEntityConfiguration : IEntityTypeConfiguration<MachineItem>
     {
         private const int _SRID = 4326;
-        public void Configure(EntityTypeBuilder<Machine> builder)
+        public void Configure(EntityTypeBuilder<MachineItem> builder)
         {
             builder.HasKey(p => p.Id);
             builder.HasOne(p => p.MachineType);
+            builder.HasMany(p => p.ActiveProducts);
+            builder.HasMany(p => p.HistoryProducts);
 
             builder.Property(x => x.Position)
                 .HasConversion(
