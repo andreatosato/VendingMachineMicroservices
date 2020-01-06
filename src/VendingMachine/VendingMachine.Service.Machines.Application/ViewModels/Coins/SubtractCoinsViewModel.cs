@@ -1,8 +1,7 @@
 ﻿namespace VendingMachine.Service.Machines.Application.ViewModels
 {
-    public class AddCoinsViewModel
+    public class CollectCoinsViewModel
     {
-        public decimal Coins { get; set; }
         public int MachineId { get; set; }
     }
 }

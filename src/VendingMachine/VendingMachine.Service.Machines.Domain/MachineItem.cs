@@ -26,6 +26,7 @@ namespace VendingMachine.Service.Machines.Domain
         public DateTimeOffset? LatestCleaningMachine { get; private set; }
         public DateTimeOffset? LatestMoneyCollection { get; private set; }
         public decimal CoinsInMachine { get; private set; }
+        public decimal CoinsCurrentSupply { get; private set; }
 
         public MachineItem(MachineType machineType)
             : this()
@@ -81,11 +82,23 @@ namespace VendingMachine.Service.Machines.Domain
         public void AddCoins(decimal coinAdded)
         {
             CoinsInMachine += coinAdded;
+            CoinsCurrentSupply += coinAdded;
         }
 
-        public void RestCoins(decimal coinSubtract)
+        public decimal RestCoins()
         {
-            CoinsInMachine -= coinSubtract;
+            decimal coinsToRest = CoinsCurrentSupply;
+            CoinsInMachine -= CoinsCurrentSupply;
+            CoinsCurrentSupply = 0;
+            return coinsToRest;
+        }
+
+
+        // When Buy Products and confirm, we must subtract supply coin to transactions
+        public void SupplyCoins(decimal coinsSupply)
+        {
+            CoinsCurrentSupply -= coinsSupply;
+            CoinsInMachine -= coinsSupply;
         }
 
         public void CollectMoney()

@@ -7,6 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.OpenApi.Models;
 using VendingMachine.Service.Machines.Infrastructure.Handlers;
+using FluentValidation.AspNetCore;
+using VendingMachine.Service.Machines.Application.Validations.Coins;
 
 namespace VendingMachine.Service.Machines
 {
@@ -24,14 +26,23 @@ namespace VendingMachine.Service.Machines
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
+                });
+            string machineDatabaseConnectionString = string.Empty;
+
             if (env.IsDevelopment())
             {
-                services.AddMachineEntityFrameworkDev("Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true");                
+                machineDatabaseConnectionString = "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true";
+                services.AddMachineEntityFrameworkDev(machineDatabaseConnectionString);
             }
             else
             {
-                services.AddMachineEntityFrameworkProd(Configuration.GetConnectionString("ConnectionStrings:MachineDatabase"));
+                machineDatabaseConnectionString = Configuration.GetConnectionString("ConnectionStrings:MachineDatabase");
+                services.AddMachineEntityFrameworkProd(machineDatabaseConnectionString);
             }
 
             if (env.IsDevelopment())
@@ -42,7 +53,8 @@ namespace VendingMachine.Service.Machines
                 });
             }
 
-            services.AddInfrastructure();
+            services.AddInfrastructure()
+                    .AddQueries(machineDatabaseConnectionString);
             services.AddMediatR(typeof(MachineRequestsHandler));
         }
 

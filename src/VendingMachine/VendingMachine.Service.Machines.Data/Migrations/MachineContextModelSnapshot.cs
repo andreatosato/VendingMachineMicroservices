@@ -27,6 +27,9 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("CoinsCurrentSupply")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<decimal>("CoinsInMachine")
                         .HasColumnType("decimal(18,2)");
 

@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Machines.Data\VendingMachine.Service.Machines.Data.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Machines.Domain\VendingMachine.Service.Machines.Domain.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Machines.Read\VendingMachine.Service.Machines.Read.csproj" />
     <ProjectReference Include="..\VendingMachine.Services.Shared.Domain\VendingMachine.Services.Shared.Domain.csproj" />
   </ItemGroup>
 

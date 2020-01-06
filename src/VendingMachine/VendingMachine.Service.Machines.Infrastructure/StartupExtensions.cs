@@ -8,13 +8,14 @@ using VendingMachine.Services.Shared.Domain;
 
 namespace VendingMachine.Service.Machines
 {
-    public static class StartupExtensions
+    public static partial class StartupExtensions
     {
-        public static void AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<IRepository<MachineItem>, MachineItemRepository>();
             services.AddTransient<IRepository<MachineType>, MachineTypeRepository>();
             services.AddTransient<IMachinesUoW, MachinesUoW>();
+            return services;
         }
 
         public static void AddMachineEntityFrameworkDev(this IServiceCollection services, string connectionString)

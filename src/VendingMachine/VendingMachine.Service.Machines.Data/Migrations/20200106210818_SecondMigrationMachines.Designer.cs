@@ -11,7 +11,7 @@ using VendingMachine.Service.Machines.Data;
 namespace VendingMachine.Service.Machines.Data.Migrations
 {
     [DbContext(typeof(MachineContext))]
-    [Migration("20200104214241_SecondMigrationMachines")]
+    [Migration("20200106210818_SecondMigrationMachines")]
     partial class SecondMigrationMachines
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,6 +28,9 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("CoinsCurrentSupply")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("CoinsInMachine")
                         .HasColumnType("decimal(18,2)");

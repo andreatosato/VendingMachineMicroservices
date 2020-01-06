@@ -6,12 +6,11 @@
 
   <ItemGroup>
     <Folder Include="Mappers\" />
-    <Folder Include="Validations\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="FluentValidation" Version="8.6.0" />
+    <PackageReference Include="FluentValidation" Version="8.6.1" />
   </ItemGroup>
 
 </Project>
