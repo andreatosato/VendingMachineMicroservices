@@ -78,12 +78,12 @@ namespace VendingMachine.Service.Machines.Domain
             HistoryProducts.Add(new ProductConsumed(productToLoad));
         }
 
-        public void AddCoin(decimal coinAdded)
+        public void AddCoins(decimal coinAdded)
         {
             CoinsInMachine += coinAdded;
         }
 
-        public void RestCoint(decimal coinSubtract)
+        public void RestCoins(decimal coinSubtract)
         {
             CoinsInMachine -= coinSubtract;
         }

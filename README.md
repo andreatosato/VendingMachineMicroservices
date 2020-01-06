@@ -45,3 +45,8 @@ Previously seeded data will be removed if the primary key is changed in any way.
 
 Quindi in questo secondo servizio andrei ad estrarre i prodotti presenti nella singola macchina. Per ogni macchina potrei estrarre lo stato attuale con il numero di prodotti presenti.
 Inoltre i prodotti venduti, per giorno, per mese etc.
+
+
+
+#Log
+Serilog: https://github.com/serilog/serilog-aspnetcore

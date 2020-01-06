@@ -11,6 +11,18 @@ namespace VendingMachine.Service.Machines.Data
         public DbSet<Product> ActiveProduct { get; set; }
         public DbSet<ProductConsumed> HistoryProduct { get; set; }
 
+        public MachineContext()
+        {
+
+        }
+
+        // Only for application
+        public MachineContext(DbContextOptions<MachineContext> options)
+            : base(options)
+        {
+        }
+
+        // Only for test
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(

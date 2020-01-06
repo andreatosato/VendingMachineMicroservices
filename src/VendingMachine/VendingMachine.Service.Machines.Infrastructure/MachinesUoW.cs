@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Data;
+using VendingMachine.Service.Machines.Domain;
 using VendingMachine.Service.Machines.Infrastructure.Repositories;
+using VendingMachine.Services.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Infrastructure
 {
@@ -8,10 +10,12 @@ namespace VendingMachine.Service.Machines.Infrastructure
     {
         private readonly MachineContext db;
 
-        public MachineRepository MachineRepository { get; }
-        public MachineTypeRepository MachineTypeRepository { get; }
+        public IRepository<MachineItem> MachineRepository { get; }
+        public IRepository<MachineType> MachineTypeRepository { get; }
 
-        public MachinesUoW(MachineContext db, MachineRepository machineRepository, MachineTypeRepository machineTypeRepository)
+        public MachinesUoW(MachineContext db, 
+            IRepository<MachineItem> machineRepository, 
+            IRepository<MachineType> machineTypeRepository)
         {
             this.db = db;
             MachineRepository = machineRepository;

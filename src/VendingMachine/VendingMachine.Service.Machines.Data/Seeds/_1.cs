@@ -10,7 +10,7 @@ using VendingMachine.Service.Machines.Domain;
 
 namespace VendingMachine.Service.Machines.Data.Seeds
 {
-    public static class MigrationExtension
+    public static partial class MigrationExtension
     {
         public static MigrationBuilder _1(this MigrationBuilder builder)
         {

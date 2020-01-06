@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using VendingMachine.Services.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Domain
 {
+
+    // Table Per Type in EntityFramework not work properly with DDD.
+    // Solution? Duplicate logic
     public class Product : Entity, IAggregateRoot
     {
         public DateTimeOffset? ActivationDate { get; protected set; }
@@ -12,8 +13,9 @@ namespace VendingMachine.Service.Machines.Domain
         public bool IsActive => ActivationDate.HasValue;
         
 
-        public Product(DateTimeOffset? activationDate)
+        public Product(int id, DateTimeOffset? activationDate)
         {
+            Id = id;
             ActivationDate = activationDate;
         }
 
@@ -35,8 +37,9 @@ namespace VendingMachine.Service.Machines.Domain
         public bool IsActive => ActivationDate.HasValue;
 
 
-        public ProductConsumed(DateTimeOffset? activationDate, DateTimeOffset? providedDate)
+        public ProductConsumed(int id, DateTimeOffset? activationDate, DateTimeOffset? providedDate)
         {
+            Id = id;
             ActivationDate = activationDate;
             ProvidedDate = providedDate;
         }
