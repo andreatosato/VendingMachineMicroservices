@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VendingMachine.Service.Machines.Application.ViewModels;
+using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 
 namespace VendingMachine.Service.Machines.Controllers
@@ -17,40 +15,15 @@ namespace VendingMachine.Service.Machines.Controllers
     public class CoinsController : ControllerBase
     {
         private readonly IMediator mediator;
+        private readonly IMachinesUoW machinesUoW;
         private readonly ILogger logger;
 
-        public CoinsController(IMediator mediator, ILoggerFactory loggerFactory)
+        public CoinsController(IMediator mediator, IMachinesUoW machinesUoW, ILoggerFactory loggerFactory)
         {
             this.mediator = mediator;
+            this.machinesUoW = machinesUoW;
             this.logger = loggerFactory.CreateLogger<CoinsController>();
         }
-
-        //// GET: api/Coins
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //// GET: api/Coins/5
-        //[HttpGet("{id}", Name = "Get")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-
-        //// PUT: api/Coins/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE: api/ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
 
         [HttpPost("Add")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -99,6 +72,28 @@ namespace VendingMachine.Service.Machines.Controllers
                     logger.LogError("Collect Coins", ex);
                     throw;
                 }
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("RequestRest")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ResponseRestErrorViewModel), (int)HttpStatusCode.InternalServerError)]
+        public async Task<IActionResult> PostRequestRestAsync([FromBody] RequestRestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var machine = await machinesUoW.MachineRepository.FindAsync(model.MachineId).ConfigureAwait(false);
+                decimal restInMachine = machine.RestCoins();
+                if (restInMachine == model.Rest)
+                    return Ok();
+                decimal restCalculated = restInMachine - model.Rest;
+                if (restCalculated > 0)
+                    return StatusCode((int)HttpStatusCode.InternalServerError,
+                        new ResponseRestErrorViewModel() { Difference = restCalculated, ErrorType = RestErrorType.MoreCoinsInMachine });
+                else
+                    return StatusCode((int)HttpStatusCode.InternalServerError,
+                        new ResponseRestErrorViewModel() { Difference = restCalculated, ErrorType = RestErrorType.LessCoinsInMachine });
             }
             return BadRequest(ModelState);
         }

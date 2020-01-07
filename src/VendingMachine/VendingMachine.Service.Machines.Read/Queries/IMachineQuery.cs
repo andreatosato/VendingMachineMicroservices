@@ -11,5 +11,6 @@ namespace VendingMachine.Service.Machines.Read
     {
         public Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachinesAsync(SqlGeography currentPosition, decimal radius);
         public Task<CoinsInMachineReadModel> GetCoinsInMachineAsync(int machineId);
+        public Task<ProductsReadModel> GetProductsInMachineAsync(int machineId);
     }
 }
