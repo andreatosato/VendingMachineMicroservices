@@ -18,4 +18,8 @@
     <ProjectReference Include="..\VendingMachine.Service.Machines.Domain\VendingMachine.Service.Machines.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

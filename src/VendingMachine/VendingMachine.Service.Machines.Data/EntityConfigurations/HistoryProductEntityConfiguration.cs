@@ -13,6 +13,7 @@ namespace VendingMachine.Service.Machines.Data.EntityConfigurations
         {
             builder.ToTable("HistoryProducts");
             builder.HasKey(p => p.Id);
+            builder.Property(p => p.Id).ValueGeneratedNever();
         }
     }
 }

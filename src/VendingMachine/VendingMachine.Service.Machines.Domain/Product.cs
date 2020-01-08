@@ -13,7 +13,7 @@ namespace VendingMachine.Service.Machines.Domain
         public bool IsActive => ActivationDate.HasValue;
         
 
-        public Product(int id, DateTimeOffset? activationDate)
+        public Product(int id, DateTimeOffset? activationDate = null)
         {
             Id = id;
             ActivationDate = activationDate;
@@ -54,7 +54,8 @@ namespace VendingMachine.Service.Machines.Domain
         {
 
         }
-        public void SetActivationDate(DateTimeOffset activationDate)
+
+        private void SetActivationDate(DateTimeOffset activationDate)
         {
             ActivationDate = activationDate;
         }

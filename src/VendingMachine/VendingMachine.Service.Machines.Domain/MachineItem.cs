@@ -15,6 +15,7 @@ namespace VendingMachine.Service.Machines.Domain
         public decimal? Temperature { get; set; }
         // Start or Stop or Not Set
         public bool? Status { get; set; }
+
         public MachineType MachineType { get; private set; }
 
         public decimal MoneyFromBirth { get; }
@@ -62,9 +63,9 @@ namespace VendingMachine.Service.Machines.Domain
             ActiveProducts.Remove(productToRemove);
         }
 
-        public void LoadProducts(List<Product> productsToLoad)
+        public void LoadProducts(List<Product> productsToLoad, DateTimeOffset? dateToLoad = null)
         {
-            var loadProductDate = DateTimeOffset.UtcNow;
+            var loadProductDate = dateToLoad ?? DateTimeOffset.UtcNow;
             LatestLoadedProducts = loadProductDate;
             foreach (var p in productsToLoad)
             {
@@ -74,9 +75,18 @@ namespace VendingMachine.Service.Machines.Domain
 
         protected void LoadProduct(Product productToLoad, DateTimeOffset loadDate)
         {
-            productToLoad.SetActivationDate(loadDate);
-            ActiveProducts.Add(productToLoad);
-            HistoryProducts.Add(new ProductConsumed(productToLoad));
+            if(!productToLoad.IsActive)
+                productToLoad.SetActivationDate(loadDate);
+
+            if(ActiveProducts.Find(t => t.Id == productToLoad.Id) == null)
+            {
+                ActiveProducts.Add(productToLoad);
+                HistoryProducts.Add(new ProductConsumed(productToLoad));
+            }
+            else
+            {
+                // Product already exists
+            }
         }
 
         public void AddCoins(decimal coinAdded)
@@ -92,7 +102,6 @@ namespace VendingMachine.Service.Machines.Domain
             CoinsCurrentSupply = 0;
             return coinsToRest;
         }
-
 
         // When Buy Products and confirm, we must subtract supply coin to transactions
         public void SupplyCoins(decimal coinsSupply)

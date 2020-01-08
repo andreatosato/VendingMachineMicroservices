@@ -17,4 +17,12 @@ namespace VendingMachine.Service.Machines.Application.Validations.Machines
             RuleForEach(t => t.Products).GreaterThan(0);
         }
     }
+
+    public class LoadProductsValidation : AbstractValidator<LoadProductsViewModel>
+    {
+        public LoadProductsValidation()
+        {
+            RuleForEach(t => t.Products).GreaterThan(0);
+        }
+    }
 }

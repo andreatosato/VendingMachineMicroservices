@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VendingMachine.Service.Machines.Application.ViewModels;
-using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 
 namespace VendingMachine.Service.Machines.Controllers
@@ -15,13 +14,11 @@ namespace VendingMachine.Service.Machines.Controllers
     public class CoinsController : ControllerBase
     {
         private readonly IMediator mediator;
-        private readonly IMachinesUoW machinesUoW;
         private readonly ILogger logger;
 
-        public CoinsController(IMediator mediator, IMachinesUoW machinesUoW, ILoggerFactory loggerFactory)
+        public CoinsController(IMediator mediator, ILoggerFactory loggerFactory)
         {
             this.mediator = mediator;
-            this.machinesUoW = machinesUoW;
             this.logger = loggerFactory.CreateLogger<CoinsController>();
         }
 
@@ -83,8 +80,8 @@ namespace VendingMachine.Service.Machines.Controllers
         {
             if (ModelState.IsValid)
             {
-                var machine = await machinesUoW.MachineRepository.FindAsync(model.MachineId).ConfigureAwait(false);
-                decimal restInMachine = machine.RestCoins();
+                decimal restInMachine = await mediator.Send(new RequestRestMachineCommand() { MachineId = model.MachineId, Rest = model.Rest });
+
                 if (restInMachine == model.Rest)
                     return Ok();
                 decimal restCalculated = restInMachine - model.Rest;

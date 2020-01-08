@@ -12,7 +12,8 @@ namespace VendingMachine.Service.Machines.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("ActiveProducts");
-            builder.HasKey(p => p.Id);
+            builder.HasKey(p => p.Id).HasName("PK_ActiveProducts");
+            builder.Property(p => p.Id).ValueGeneratedNever();
         }
     }
 }

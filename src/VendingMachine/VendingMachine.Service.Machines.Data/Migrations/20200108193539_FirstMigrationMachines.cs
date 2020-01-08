@@ -33,6 +33,11 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                     Temperature = table.Column<decimal>(nullable: true),
                     Status = table.Column<bool>(nullable: true),
                     MachineTypeId = table.Column<int>(nullable: true),
+                    LatestLoadedProducts = table.Column<DateTimeOffset>(nullable: true),
+                    LatestCleaningMachine = table.Column<DateTimeOffset>(nullable: true),
+                    LatestMoneyCollection = table.Column<DateTimeOffset>(nullable: true),
+                    CoinsInMachine = table.Column<decimal>(nullable: false),
+                    CoinsCurrentSupply = table.Column<decimal>(nullable: false),
                     DataCreated = table.Column<DateTime>(nullable: false),
                     DataUpdated = table.Column<DateTime>(nullable: true)
                 },
@@ -47,6 +52,55 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ActiveProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    ActivationDate = table.Column<DateTimeOffset>(nullable: true),
+                    MachineItemId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActiveProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActiveProducts_Machines_MachineItemId",
+                        column: x => x.MachineItemId,
+                        principalTable: "Machines",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HistoryProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    ProvidedDate = table.Column<DateTimeOffset>(nullable: true),
+                    ActivationDate = table.Column<DateTimeOffset>(nullable: true),
+                    MachineItemId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HistoryProducts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HistoryProducts_Machines_MachineItemId",
+                        column: x => x.MachineItemId,
+                        principalTable: "Machines",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActiveProducts_MachineItemId",
+                table: "ActiveProducts",
+                column: "MachineItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HistoryProducts_MachineItemId",
+                table: "HistoryProducts",
+                column: "MachineItemId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Machines_MachineTypeId",
                 table: "Machines",
@@ -59,12 +113,19 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                 unique: true,
                 filter: "[Model] IS NOT NULL");
 
-            /// Migration Data
+
+
             migrationBuilder._1();
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActiveProducts");
+
+            migrationBuilder.DropTable(
+                name: "HistoryProducts");
+
             migrationBuilder.DropTable(
                 name: "Machines");
 

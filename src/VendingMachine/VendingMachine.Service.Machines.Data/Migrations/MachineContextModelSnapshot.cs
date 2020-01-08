@@ -97,9 +97,7 @@ namespace VendingMachine.Service.Machines.Data.Migrations
             modelBuilder.Entity("VendingMachine.Service.Machines.Domain.Product", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ActivationDate")
                         .HasColumnType("datetimeoffset");
@@ -107,7 +105,8 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                     b.Property<int?>("MachineItemId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("PK_ActiveProducts");
 
                     b.HasIndex("MachineItemId");
 
@@ -117,9 +116,7 @@ namespace VendingMachine.Service.Machines.Data.Migrations
             modelBuilder.Entity("VendingMachine.Service.Machines.Domain.ProductConsumed", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<DateTimeOffset?>("ActivationDate")
                         .HasColumnType("datetimeoffset");

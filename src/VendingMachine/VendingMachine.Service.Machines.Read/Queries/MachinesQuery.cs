@@ -24,11 +24,26 @@ namespace VendingMachine.Service.Machines.Read
             using (SqlConnection connection = new SqlConnection(machineConnectionString))
             {
                 var article = await connection
-                    .QueryFirstAsync<ProductReadModel>(@"SELECT Id
+                    .QueryAsync<ProductReadModel>(@"SELECT Id
                         FROM dbo.ActiveProducts
                         Where MachineItemId = @Id", new { Id = machineId })
                     .ConfigureAwait(false);
-                result.Products.Add(article);
+                result.Products.AddRange(article);
+            }
+            return result;
+        }
+
+        public async Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId)
+        {
+            HistoryProductsReadModel result = new HistoryProductsReadModel();
+            using (SqlConnection connection = new SqlConnection(machineConnectionString))
+            {
+                var article = await connection
+                    .QueryAsync<HistoryProductReadModel>(@"SELECT Id, ProvidedDate, ActivationDate 
+                        FROM dbo.HistoryProducts
+                        Where MachineItemId = @Id", new { Id = machineId })
+                    .ConfigureAwait(false);
+                result.Products.AddRange(article);
             }
             return result;
         }

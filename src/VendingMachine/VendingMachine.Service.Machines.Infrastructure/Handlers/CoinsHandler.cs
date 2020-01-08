@@ -13,6 +13,7 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
         IRequestHandler<AddCoinsMachineCommand, Unit>,
         IRequestHandler<ResetCoinsMachineCommand, ResetCoinsMachineResult>,
         IRequestHandler<CollectCoinsMachineCommand, CollectCoinsMachineResult>,
+        IRequestHandler<RequestRestMachineCommand, decimal>,
         INotificationHandler<CoinNotificationEvent>
     {
         private readonly IMediator mediator;
@@ -66,6 +67,15 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
             await machinesUoW.SaveAsync().ConfigureAwait(false);
             return result;
         }
+
+        public async Task<decimal> Handle(RequestRestMachineCommand request, CancellationToken cancellationToken)
+        {
+            var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            decimal rest = machine.RestCoins();
+            await machinesUoW.SaveAsync().ConfigureAwait(false);
+            return rest;
+        }
+
         #endregion
 
         #region Events

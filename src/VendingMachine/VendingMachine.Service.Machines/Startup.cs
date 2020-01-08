@@ -56,6 +56,7 @@ namespace VendingMachine.Service.Machines
             services.AddInfrastructure()
                     .AddQueries(machineDatabaseConnectionString);
             services.AddMediatR(typeof(MachineRequestsHandler));
+            services.AddDistributedMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -23,8 +23,8 @@ namespace VendingMachine.Service.Machines.Data.Seeds
                 new object[] {"MiniSnakky", "FrigoAndCoffee" });
 
             builder.InsertData("Machines",
-                new[] {"DataCreated", "DataUpdated", "Position", "Temperature", "Status", "MachineTypeId" },
-                new object[] { DateTime.UtcNow, null, SeedBase.SetPosition(45.4351m, 10.9988m), "2", true, 2 });
+                new[] {"DataCreated", "DataUpdated", "Position", "Temperature", "Status", "MachineTypeId", "CoinsInMachine", "CoinsCurrentSupply" },
+                new object[] { DateTime.UtcNow, null, SeedBase.SetPosition(45.4351m, 10.9988m), "2", true, 2, 0, 0 });
 
             return builder;
         }

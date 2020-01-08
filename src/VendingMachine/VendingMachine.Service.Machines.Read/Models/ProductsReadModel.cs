@@ -14,4 +14,16 @@ namespace VendingMachine.Service.Machines.Read.Models
     {
         public int Id { get; set; }
     }
+
+    public class HistoryProductsReadModel : IReadEntity
+    {
+        public List<HistoryProductReadModel> Products { get; set; }
+    }
+
+    public class HistoryProductReadModel
+    {
+        public int Id { get; set; }
+        public DateTimeOffset ActivationDate { get; set; }
+        public DateTimeOffset ProvidedDate { get; set; }
+    }
 }

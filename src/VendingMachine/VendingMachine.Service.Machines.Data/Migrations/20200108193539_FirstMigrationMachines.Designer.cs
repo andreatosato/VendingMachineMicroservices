@@ -11,7 +11,7 @@ using VendingMachine.Service.Machines.Data;
 namespace VendingMachine.Service.Machines.Data.Migrations
 {
     [DbContext(typeof(MachineContext))]
-    [Migration("20191221093009_FirstMigrationMachines")]
+    [Migration("20200108193539_FirstMigrationMachines")]
     partial class FirstMigrationMachines
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,12 +22,27 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.Machine", b =>
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.MachineItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("CoinsCurrentSupply")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("CoinsInMachine")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset?>("LatestCleaningMachine")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("LatestLoadedProducts")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("LatestMoneyCollection")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int?>("MachineTypeId")
                         .HasColumnType("int");
@@ -81,11 +96,65 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                     b.ToTable("MachineTypes");
                 });
 
-            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.Machine", b =>
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ActivationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("MachineItemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_ActiveProducts");
+
+                    b.HasIndex("MachineItemId");
+
+                    b.ToTable("ActiveProducts");
+                });
+
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.ProductConsumed", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ActivationDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("MachineItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("ProvidedDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MachineItemId");
+
+                    b.ToTable("HistoryProducts");
+                });
+
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.MachineItem", b =>
                 {
                     b.HasOne("VendingMachine.Service.Machines.Domain.MachineType", "MachineType")
                         .WithMany()
                         .HasForeignKey("MachineTypeId");
+                });
+
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.Product", b =>
+                {
+                    b.HasOne("VendingMachine.Service.Machines.Domain.MachineItem", null)
+                        .WithMany("ActiveProducts")
+                        .HasForeignKey("MachineItemId");
+                });
+
+            modelBuilder.Entity("VendingMachine.Service.Machines.Domain.ProductConsumed", b =>
+                {
+                    b.HasOne("VendingMachine.Service.Machines.Domain.MachineItem", null)
+                        .WithMany("HistoryProducts")
+                        .HasForeignKey("MachineItemId");
                 });
 #pragma warning restore 612, 618
         }
