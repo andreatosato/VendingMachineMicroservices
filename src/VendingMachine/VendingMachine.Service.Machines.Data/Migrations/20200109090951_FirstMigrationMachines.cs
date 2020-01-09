@@ -113,8 +113,6 @@ namespace VendingMachine.Service.Machines.Data.Migrations
                 unique: true,
                 filter: "[Model] IS NOT NULL");
 
-
-
             migrationBuilder._1();
         }
 

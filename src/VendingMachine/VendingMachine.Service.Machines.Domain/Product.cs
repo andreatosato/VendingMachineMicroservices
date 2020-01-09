@@ -1,5 +1,5 @@
 ﻿using System;
-using VendingMachine.Services.Shared.Domain;
+using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Domain
 {

@@ -9,6 +9,7 @@ using VendingMachine.Service.Machines.Application.ViewModels;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 using VendingMachine.Service.Machines.Read;
+using VendingMachine.Service.Shared.Exceptions;
 
 namespace VendingMachine.Service.Machines.Controllers
 {
@@ -28,6 +29,64 @@ namespace VendingMachine.Service.Machines.Controllers
             this.mediator = mediator;
             this.distributedCache = distributedCache;
             this.logger = loggerFactory.CreateLogger(typeof(MachinesController));
+        }
+
+        // TODO: Implement ETag and If-None-Match
+        [HttpGet("{machineId:int}")]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetInfosAsync([FromRoute] int machineId)
+        {
+            if (machineId > 0)
+            {
+                // Check Cache for ETag
+                // Check Machine Id
+                // Read All infos
+                return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.Created)]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> PostCreateMachineItemAsync([FromBody] CreateMachineItemViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var machineId = await mediator.Send(new CreateNewMachineCommand()
+                {
+                    Status = model.Status,
+                    X = model.Position?.X,
+                    Y = model.Position?.Y,
+                    Temperature = model.Temperature,
+                    Model = model.Model.ModelName,
+                    Version = model.Model.Version
+                }).ConfigureAwait(false);
+                return Created($"{machineId}/GetInfos", model);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpDelete("{machineId:int}")]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
+        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> DeleteMachineAsync([FromRoute] int machineId)
+        {
+            if (machineId > 0)
+            {
+                try
+                {
+                    await mediator.Send(new DeleteMachineCommand() { MachineId = machineId });
+                }
+                catch (NotExistsException nex)
+                {
+                    logger.LogError(nex, "Not found machine");
+                    return NotFound();
+                }
+                return Ok();
+            }
+            return BadRequest(ModelState);
         }
 
         [HttpGet("{machineId:int}/Coins")]
@@ -107,11 +166,11 @@ namespace VendingMachine.Service.Machines.Controllers
         [HttpPut("{machineId:int}/SetTemperature")]
         [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
         [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> SetTemperatureAsync([FromRoute] int machineId)
+        public async Task<IActionResult> SetTemperatureAsync([FromRoute] int machineId, [FromBody] SetTemperatureViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //mediator.Send(new );
+                await mediator.Send(new SetTemperatureMachineCommand() { MachineId = machineId, Data = model.Data} );
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -120,11 +179,11 @@ namespace VendingMachine.Service.Machines.Controllers
         [HttpPut("{machineId:int}/SetStatus")]
         [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
         [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> SetStatusAsync([FromRoute] int machineId)
+        public async Task<IActionResult> SetStatusAsync([FromRoute] int machineId, [FromBody] SetStatusViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //mediator.Send(new );
+                await mediator.Send(new SetStatusMachineCommand() { MachineId = machineId, Data = model.Data });
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -133,25 +192,11 @@ namespace VendingMachine.Service.Machines.Controllers
         [HttpPut("{machineId:int}/SetPosition")]
         [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
         [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> SetPositionAsync([FromRoute] int machineId, MapPointViewModel model)
+        public async Task<IActionResult> SetPositionAsync([FromRoute] int machineId, [FromBody] SetPositionViewModel model)
         {
             if (ModelState.IsValid)
             {
-                //mediator.Send(new );
-                return Ok();
-            }
-            return BadRequest(ModelState);
-        }
-
-        // TODO: Implement ETag and If-None-Match
-        [HttpGet("{machineId:int}/GetInfos")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetInfosAsync([FromRoute] int machineId)
-        {
-            if (ModelState.IsValid)
-            {
-                //mediator.Send(new );
+                await mediator.Send(new SetPositionMachineCommand() { MachineId = machineId, Data = new MapPointModel(model.Data.X, model.Data.Y ) });
                 return Ok();
             }
             return BadRequest(ModelState);

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Data;
 using VendingMachine.Service.Machines.Domain;
-using VendingMachine.Services.Shared.Domain;
+using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Infrastructure
 {

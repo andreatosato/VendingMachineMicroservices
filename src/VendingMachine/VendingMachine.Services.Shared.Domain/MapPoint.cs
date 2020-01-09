@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VendingMachine.Services.Shared.Domain
+namespace VendingMachine.Service.Shared.Domain
 {
     public class MapPoint
     {

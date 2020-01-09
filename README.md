@@ -50,3 +50,7 @@ Inoltre i prodotti venduti, per giorno, per mese etc.
 
 #Log
 Serilog: https://github.com/serilog/serilog-aspnetcore
+
+
+#Mediatr
+https://github.com/jbogard/MediatR/wiki

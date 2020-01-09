@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 
 //[assembly: InternalsVisibleTo("VendingMachine.Service.Machines.Data")]
-namespace VendingMachine.Services.Shared.Domain
+namespace VendingMachine.Service.Shared.Domain
 {
     public abstract class Entity
     {

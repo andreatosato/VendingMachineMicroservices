@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VendingMachine.Services.Shared.Domain\VendingMachine.Services.Shared.Domain.csproj" />
+    <ProjectReference Include="..\VendingMachine.Services.Shared.Domain\VendingMachine.Service.Shared.Domain.csproj" />
   </ItemGroup>
 
 </Project>

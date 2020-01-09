@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace VendingMachine.Services.Shared.Domain
+namespace VendingMachine.Service.Shared.Domain
 {
     public interface IRepository<T> where T : IAggregateRoot
     {

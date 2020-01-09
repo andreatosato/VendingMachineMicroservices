@@ -7,14 +7,18 @@ using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 using VendingMachine.Service.Machines.Infrastructure.Events;
 using VendingMachine.Service.Machines.Read;
+using VendingMachine.Service.Shared.Exceptions;
 
 namespace VendingMachine.Service.Machines.Infrastructure.Handlers
 {
-    /// https://github.com/jbogard/MediatR/wiki
     public class MachineRequestsHandler :
         IRequestHandler<CreateNewMachineCommand, int>,
+        IRequestHandler<DeleteMachineCommand, Unit>,
         IRequestHandler<BuyProductsMachineCommand, Unit>,
-        IRequestHandler<LoadProductsMachineCommand, Unit>
+        IRequestHandler<LoadProductsMachineCommand, Unit>,
+        IRequestHandler<SetTemperatureMachineCommand, Unit>,
+        IRequestHandler<SetStatusMachineCommand, Unit>,
+        IRequestHandler<SetPositionMachineCommand, Unit>
     {
         private readonly IMediator mediator;
         private readonly IMachinesUoW machinesUoW;
@@ -29,8 +33,22 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
 
         public async Task<int> Handle(CreateNewMachineCommand request, CancellationToken cancellationToken)
         {
-            await mediator.Publish(new NewMachineCreatedEvent()).ConfigureAwait(false);
-            throw new System.NotImplementedException();
+            var machineType = new Domain.MachineType(request.Model, (Domain.MachineType.MachineVersion)request.Version);
+            var machineItem = new Domain.MachineItem(machineType);
+            await machinesUoW.MachineRepository.AddAsync(machineItem).ConfigureAwait(false);
+            await machinesUoW.SaveAsync().ConfigureAwait(false);
+
+            await mediator.Publish(new NewMachineCreatedEvent() { Id = machineItem.Id}).ConfigureAwait(false);
+            return machineItem.Id;
+        }
+        public async Task<Unit> Handle(DeleteMachineCommand request, CancellationToken cancellationToken)
+        {
+            var machineItem = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            if (machineItem == null)
+                throw new NotExistsException("Machine not found", request.MachineId);
+            await machinesUoW.MachineRepository.DeleteAsync(machineItem).ConfigureAwait(false);
+            await machinesUoW.SaveAsync();
+            return new Unit();
         }
 
         public async Task<Unit> Handle(BuyProductsMachineCommand request, CancellationToken cancellationToken)
@@ -80,8 +98,34 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
             }
 
             machine.LoadProducts(products, activationDate);
-            //await machinesUoW.MachineRepository.UpdateAsync(machine).ConfigureAwait(false);
             await machinesUoW.SaveAsync();
+            return new Unit();
+        }
+
+        public async Task<Unit> Handle(SetTemperatureMachineCommand request, CancellationToken cancellationToken)
+        {
+            var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            machine.Temperature = request.Data;
+            await machinesUoW.SaveAsync().ConfigureAwait(false);
+            logger.LogInformation($"In Machine {request.MachineId}, Set Temperature {request.Data}");
+            return new Unit();
+        }
+
+        public async Task<Unit> Handle(SetStatusMachineCommand request, CancellationToken cancellationToken)
+        {
+            var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            machine.Status = request.Data;
+            await machinesUoW.SaveAsync().ConfigureAwait(false);
+            logger.LogInformation($"In Machine {request.MachineId}, Set Status {request.Data}");
+            return new Unit();
+        }
+
+        public async Task<Unit> Handle(SetPositionMachineCommand request, CancellationToken cancellationToken)
+        {
+            var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            machine.Position = new Service.Shared.Domain.MapPoint(request.Data.X, request.Data.Y);
+            await machinesUoW.SaveAsync().ConfigureAwait(false);
+            logger.LogInformation("In Machine {@machineId}, Set Point {@point}", request.MachineId, request.Data);
             return new Unit();
         }
     }

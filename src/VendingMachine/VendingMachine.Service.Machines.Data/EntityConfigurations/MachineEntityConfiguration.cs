@@ -20,7 +20,7 @@ namespace VendingMachine.Service.Machines.Data.EntityConfigurations
             builder.Property(x => x.Position)
                 .HasConversion(
                     v => SetPosition(v.X, v.Y),
-                    v => new Services.Shared.Domain.MapPoint((decimal)v.X, (decimal)v.Y));
+                    v => new Shared.Domain.MapPoint((decimal)v.X, (decimal)v.Y));
 
             builder
                 .Property<DateTime>("_dataCreated")

@@ -11,7 +11,7 @@ using VendingMachine.Service.Machines.Data;
 namespace VendingMachine.Service.Machines.Data.Migrations
 {
     [DbContext(typeof(MachineContext))]
-    [Migration("20200108193539_FirstMigrationMachines")]
+    [Migration("20200109090951_FirstMigrationMachines")]
     partial class FirstMigrationMachines
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

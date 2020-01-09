@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using VendingMachine.Services.Shared.Domain;
+using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Domain
 {

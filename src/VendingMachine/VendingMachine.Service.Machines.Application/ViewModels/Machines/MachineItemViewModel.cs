@@ -19,14 +19,8 @@ namespace VendingMachine.Service.Machines.Application.ViewModels
 
     public class MachineTypeViewModel
     {
-        public string Model { get; }
-        public MachineVersion Version { get; }
-        public enum MachineVersion
-        {
-            Coffee,
-            Frigo,
-            FrigoAndCoffee
-        }
+        public string ModelName { get; set; }
+        public short Version { get; set; }
     }
 
     public class MapPointViewModel
