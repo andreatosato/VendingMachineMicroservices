@@ -54,3 +54,7 @@ Serilog: https://github.com/serilog/serilog-aspnetcore
 
 #Mediatr
 https://github.com/jbogard/MediatR/wiki
+
+
+#HealthCheck
+https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks

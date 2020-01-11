@@ -4,7 +4,7 @@ using VendingMachine.Service.Machines.Data;
 using VendingMachine.Service.Machines.Domain;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Repositories;
-using VendingMachine.Services.Shared.Domain;
+using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Domain;
-using VendingMachine.Services.Shared.Domain;
+using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Infrastructure.Repositories
 {

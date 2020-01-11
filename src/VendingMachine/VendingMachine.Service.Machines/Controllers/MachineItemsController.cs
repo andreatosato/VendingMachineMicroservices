@@ -16,19 +16,19 @@ namespace VendingMachine.Service.Machines.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [RequireHttps]
-    public class MachinesController : ControllerBase
+    public class MachineItemsController : ControllerBase
     {
         private readonly IMachineQuery machineQuery;
         private readonly IMediator mediator;
         private readonly IDistributedCache distributedCache;
         private readonly ILogger logger;
 
-        public MachinesController(IMachineQuery machineQuery, IMachinesUoW machinesUoW, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
+        public MachineItemsController(IMachineQuery machineQuery, IMachinesUoW machinesUoW, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
         {
             this.machineQuery = machineQuery;
             this.mediator = mediator;
             this.distributedCache = distributedCache;
-            this.logger = loggerFactory.CreateLogger(typeof(MachinesController));
+            this.logger = loggerFactory.CreateLogger(typeof(MachineItemsController));
         }
 
         // TODO: Implement ETag and If-None-Match
