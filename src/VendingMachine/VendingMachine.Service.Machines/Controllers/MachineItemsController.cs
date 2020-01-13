@@ -1,10 +1,13 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using VendingMachine.Service.Machines.Application.Cachings;
 using VendingMachine.Service.Machines.Application.ViewModels;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
@@ -33,23 +36,32 @@ namespace VendingMachine.Service.Machines.Controllers
 
         // TODO: Implement ETag and If-None-Match
         [HttpGet("{machineId:int}")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetInfosAsync([FromRoute] int machineId)
         {
             if (machineId > 0)
             {
-                // Check Cache for ETag
-                // Check Machine Id
-                // Read All infos
-                return Ok();
+                var cache = (await distributedCache.GetAsync(CachingKeys.MachineInformationKey(machineId)))
+                    .DeserializeCache<Read.Models.MachineItemReadModel>();
+
+                if (cache != null)
+                    return Ok(cache);
+
+                var result = await machineQuery.GetMachineItemInfoAsync(machineId);
+                await distributedCache.SetAsync(
+                    CachingKeys.MachineInformationKey(machineId),
+                    result.SerializeCache(),
+                    DistribuitedCacheOptions.SlideStandard);
+
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
 
         [HttpPost]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.Created)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCreateMachineItemAsync([FromBody] CreateMachineItemViewModel model)
         {
             if (ModelState.IsValid)
@@ -70,7 +82,7 @@ namespace VendingMachine.Service.Machines.Controllers
 
         [HttpDelete("{machineId:int}")]
         [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> DeleteMachineAsync([FromRoute] int machineId)
         {
             if (machineId > 0)
@@ -97,8 +109,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpGet("{machineId:int}/ActiveProducts")]
-        [ProducesResponseType(typeof(Read.Models.ProductsReadModel), (int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Read.Models.ProductsReadModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetActiveProductsAsync(int machineId)
         {
             if(machineId > 0)
@@ -110,8 +122,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpGet("{machineId:int}/HistoryProducts")]
-        [ProducesResponseType(typeof(Read.Models.HistoryProductsReadModel), (int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Read.Models.HistoryProductsReadModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetHistoryProductsAsync(int machineId)
         {
             if (machineId > 0)
@@ -123,8 +135,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPost("{machineId:int}/BuyProducts")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostBuyProductsAsync([FromRoute] int machineId, [FromBody] BuyProductsViewModel model)
         {
             if (ModelState.IsValid)
@@ -144,8 +156,8 @@ namespace VendingMachine.Service.Machines.Controllers
 
 
         [HttpPost("{machineId:int}/LoadProducts")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostLoadProductsAsync([FromRoute] int machineId, [FromBody] LoadProductsViewModel model)
         {
             if (ModelState.IsValid)
@@ -164,8 +176,8 @@ namespace VendingMachine.Service.Machines.Controllers
 
 
         [HttpPut("{machineId:int}/SetTemperature")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SetTemperatureAsync([FromRoute] int machineId, [FromBody] SetTemperatureViewModel model)
         {
             if (ModelState.IsValid)
@@ -177,8 +189,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPut("{machineId:int}/SetStatus")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SetStatusAsync([FromRoute] int machineId, [FromBody] SetStatusViewModel model)
         {
             if (ModelState.IsValid)
@@ -190,8 +202,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPut("{machineId:int}/SetPosition")]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.OK)]
-        [ProducesResponseType((int)System.Net.HttpStatusCode.BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SetPositionAsync([FromRoute] int machineId, [FromBody] SetPositionViewModel model)
         {
             if (ModelState.IsValid)

@@ -3,6 +3,7 @@ using Microsoft.SqlServer.Types;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Read.Models;
 using VendingMachine.Service.Shared.Read;
@@ -65,6 +66,48 @@ namespace VendingMachine.Service.Machines.Read
         public async Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachinesAsync(SqlGeography currentPosition, decimal radius)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId)
+        {
+            MachineItemReadModel mapping = null;
+            MachineItemReadModel result = null;
+            using (System.Data.IDbConnection connection = new SqlConnection(machineConnectionString))
+            {
+                string sql = @"SELECT M.[Id]
+                    ,[Position]
+                    ,[Temperature]
+                    ,[Status]
+                    ,[MachineTypeId]
+                    ,[LatestLoadedProducts]
+                    ,[LatestCleaningMachine]
+                    ,[LatestMoneyCollection]
+                    ,[CoinsInMachine]
+                    ,[CoinsCurrentSupply],
+                    P.Id,
+                    P.ActivationDate
+                FROM [VendingMachine-Machines].[dbo].[Machines] AS M
+                LEFT JOIN [VendingMachine-Machines].[dbo].[ActiveProducts] AS P ON M.Id = P.MachineItemId
+                WHERE M.Id = @Id";
+                
+                result = (await connection
+                    .QueryAsync<MachineItemDapper, ActiveProductReadModel, MachineItemReadModel>(
+                        sql: sql, 
+                        map: (m, p) => 
+                        {
+                            if (mapping == null)
+                            {
+                                mapping = new MachineItemReadModel();
+                                mapping.FromDapper(m, new MapPointReadModel(m.Position.Lat.Value, m.Position.Long.Value));
+                            }
+                            mapping.ActiveProducts.Add(p);
+                            return mapping;
+                        },
+                        splitOn: "Id",
+                        param: new { Id = machineId })
+                    .ConfigureAwait(false)).FirstOrDefault();
+            }
+            return result;
         }
     }
 }

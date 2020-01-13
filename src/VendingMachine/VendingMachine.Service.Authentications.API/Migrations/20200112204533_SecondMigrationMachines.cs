@@ -3,29 +3,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VendingMachine.Service.Authentications.API.Migrations
 {
-    public partial class SecondMigrationAuth : Migration
+    public partial class SecondMigrationMachines : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("a4f066b6-833d-4c6f-bed4-77cbf83bda1c"), "d92d527f-0ca4-40f5-9dad-6f7ae92172d1", "User", null });
+                values: new object[] { new Guid("facbd4f2-da0f-4ef9-afeb-770d08ff7c2f"), "aa6dbeda-9fa6-480e-8288-a243b3a6d043", "User", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c"), "4a51f3ab-b7cf-451f-8891-5983a1d572ca", "Admin", null });
+                values: new object[] { new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a"), "a7ef2388-3da8-497d-97a8-ae99f8fd4e04", "Admin", null });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"), 0, "90bedd48-5a12-4e81-bc39-1abeee8397a7", "andrea.tosato@4ward.it", true, "Andrea", "Tosato", false, null, null, null, "AQAAAAEAACcQAAAAEE0Q7h/ZxkG7DzE4E7NQZyYnE0Et8+5ee09LOSxtg7LzPJ7U1WilnOJGfY2ShWbbFA==", null, false, null, false, "andrea.tosato@4ward.it" });
+                values: new object[] { new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"), 0, "7d61c568-91ee-4667-93a2-65626c84aeaf", "andrea.tosato@4ward.it", true, "Andrea", "Tosato", false, null, "andrea.tosato@4ward.it", "andrea.tosato@4ward.it", "AQAAAAEAACcQAAAAEFXdckTvNYlv2ztV/cC6u0fJsnLcadlMXaW94rQ/WgXC82aNA4mIYMjFKBxm3GWZOQ==", null, false, null, false, "andrea.tosato@4ward.it" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "UserId", "RoleId" },
-                values: new object[] { new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"), new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c") });
+                values: new object[] { new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"), new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a") });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -33,22 +33,22 @@ namespace VendingMachine.Service.Authentications.API.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: new Guid("a4f066b6-833d-4c6f-bed4-77cbf83bda1c"));
+                keyValue: new Guid("facbd4f2-da0f-4ef9-afeb-770d08ff7c2f"));
 
             migrationBuilder.DeleteData(
                 table: "AspNetUserRoles",
                 keyColumns: new[] { "UserId", "RoleId" },
-                keyValues: new object[] { new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"), new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c") });
+                keyValues: new object[] { new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"), new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a") });
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c"));
+                keyValue: new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a"));
 
             migrationBuilder.DeleteData(
                 table: "AspNetUsers",
                 keyColumn: "Id",
-                keyValue: new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"));
+                keyValue: new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"));
         }
     }
 }

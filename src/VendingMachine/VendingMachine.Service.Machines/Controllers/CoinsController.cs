@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using VendingMachine.Service.Machines.Application.ViewModels;
@@ -23,8 +24,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPost("Add")]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Add([FromBody] AddCoinsViewModel model)
         {
             if (ModelState.IsValid)
@@ -49,8 +50,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPost("Collect")]
-        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(CollectCoinsMachineResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(CollectCoinsMachineResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> Collect([FromBody] CollectCoinsViewModel model)
         {
             if (ModelState.IsValid)
@@ -74,8 +75,8 @@ namespace VendingMachine.Service.Machines.Controllers
         }
 
         [HttpPost("RequestRest")]
-        [ProducesResponseType((int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ResponseRestErrorViewModel), (int)HttpStatusCode.InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseRestErrorViewModel), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostRequestRestAsync([FromBody] RequestRestViewModel model)
         {
             if (ModelState.IsValid)

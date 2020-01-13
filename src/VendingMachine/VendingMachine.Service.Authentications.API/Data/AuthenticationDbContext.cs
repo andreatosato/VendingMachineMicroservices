@@ -22,11 +22,13 @@ namespace VendingMachine.Service.Authentications.API.Data
             var user1Object = new ApplicationUser()
             {
                 Email = user1Mail,
+                NormalizedEmail = user1Mail,
                 EmailConfirmed = true,
                 FirstName = "Andrea",
                 LastName = "Tosato",
                 LockoutEnabled = false,
-                UserName = user1Mail,                
+                UserName = user1Mail,
+                NormalizedUserName = user1Mail
             };
             user1Object.Id = Guid.NewGuid();
             user1Object.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(user1Object, "Pass123$");

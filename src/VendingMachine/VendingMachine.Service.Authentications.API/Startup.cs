@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using VendingMachine.Service.Authentications.API.Configuration;
 using VendingMachine.Service.Authentications.API.Data;
 using VendingMachine.Service.Authentications.API.Data.Models;
@@ -16,9 +17,11 @@ namespace VendingMachine.Service.Authentications.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment env;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -62,6 +65,14 @@ namespace VendingMachine.Service.Authentications.API
                 };
             });
 
+
+            if (env.IsDevelopment())
+            {
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Authorize API", Version = "v1" });
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +81,17 @@ namespace VendingMachine.Service.Authentications.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            if (env.IsDevelopment())
+            {
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authorize API");
+                });
             }
 
             app.UseHttpsRedirection();

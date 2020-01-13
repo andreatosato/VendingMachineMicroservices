@@ -37,7 +37,7 @@ namespace VendingMachine.Service.Authentications.API.Controllers
         /// <param name="model">The information about the registered user</param>
         /// <response code="200">Registration completed successfully</response>
         /// <response code="400">Unable to register the news user because of an error of input data</response>
-        [HttpPost("register")]
+        [HttpPost("Register")]
         [ProducesResponseType(typeof(IdentityResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
@@ -73,7 +73,7 @@ namespace VendingMachine.Service.Authentications.API.Controllers
         /// <response code="200">Login completed successfully</response>
         /// <response code="400">Unable to perform login because of an error of input data</response>
         /// <response code="401">Invalid passsword</response>
-        [HttpPost("token")]
+        [HttpPost("Token")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -93,13 +93,14 @@ namespace VendingMachine.Service.Authentications.API.Controllers
 
                 var claims = new[]
                 {
-                        new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
-                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                        new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
-                        new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName ?? string.Empty)
-                    }.Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role)))
+                    new Claim(JwtRegisteredClaimNames.Sid, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                    new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName ?? string.Empty)
+                }
+                .Union(userRoles.Select(role => new Claim(ClaimTypes.Role, role)))
                 .Union(userClaims);
 
                 var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecurityKey));

@@ -13,5 +13,6 @@ namespace VendingMachine.Service.Machines.Read
         public Task<CoinsInMachineReadModel> GetCoinsInMachineAsync(int machineId);
         public Task<ProductsReadModel> GetProductsInMachineAsync(int machineId);
         public Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId);
+        public Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId);
     }
 }

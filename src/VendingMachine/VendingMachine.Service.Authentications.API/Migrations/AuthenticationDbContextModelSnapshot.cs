@@ -103,8 +103,8 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"),
-                            RoleId = new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c")
+                            UserId = new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"),
+                            RoleId = new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a")
                         });
                 });
 
@@ -157,14 +157,14 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a4f066b6-833d-4c6f-bed4-77cbf83bda1c"),
-                            ConcurrencyStamp = "d92d527f-0ca4-40f5-9dad-6f7ae92172d1",
+                            Id = new Guid("facbd4f2-da0f-4ef9-afeb-770d08ff7c2f"),
+                            ConcurrencyStamp = "aa6dbeda-9fa6-480e-8288-a243b3a6d043",
                             Name = "User"
                         },
                         new
                         {
-                            Id = new Guid("0e79c05e-b046-43ad-b255-7a5e015f345c"),
-                            ConcurrencyStamp = "4a51f3ab-b7cf-451f-8891-5983a1d572ca",
+                            Id = new Guid("d5398c47-f617-4dc6-885a-32bdbe43877a"),
+                            ConcurrencyStamp = "a7ef2388-3da8-497d-97a8-ae99f8fd4e04",
                             Name = "Admin"
                         });
                 });
@@ -246,15 +246,17 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("96c8fd76-fff3-4aa0-afec-679cbf01f497"),
+                            Id = new Guid("9c346aeb-22d7-4da4-ada4-88d8ab67978e"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "90bedd48-5a12-4e81-bc39-1abeee8397a7",
+                            ConcurrencyStamp = "7d61c568-91ee-4667-93a2-65626c84aeaf",
                             Email = "andrea.tosato@4ward.it",
                             EmailConfirmed = true,
                             FirstName = "Andrea",
                             LastName = "Tosato",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEE0Q7h/ZxkG7DzE4E7NQZyYnE0Et8+5ee09LOSxtg7LzPJ7U1WilnOJGfY2ShWbbFA==",
+                            NormalizedEmail = "andrea.tosato@4ward.it",
+                            NormalizedUserName = "andrea.tosato@4ward.it",
+                            PasswordHash = "AQAAAAEAACcQAAAAEFXdckTvNYlv2ztV/cC6u0fJsnLcadlMXaW94rQ/WgXC82aNA4mIYMjFKBxm3GWZOQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "andrea.tosato@4ward.it"
