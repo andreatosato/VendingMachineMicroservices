@@ -19,6 +19,12 @@ using VendingMachine.Service.Machines.Binders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using VendingMachine.Service.Machines.Configuration;
+using System.Threading.Tasks;
+using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Machines
 {
@@ -70,7 +76,6 @@ namespace VendingMachine.Service.Machines
                 settings.AddHealthCheckEndpoint("api", $"{Configuration.GetValue<string>("PathBase")}/health-data-api");
             });
 
-            services.AddCustomAuthentication(Configuration);
 
             services.AddControllers(options =>
             {
@@ -80,9 +85,9 @@ namespace VendingMachine.Service.Machines
 
                 // Apply Auth filter
                 var policy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .RequireClaim(ClaimTypes.Role, "Machine.Api")
-                .Build();
+                    .RequireAuthenticatedUser()
+                    .RequireClaim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi)
+                    .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             })
             .AddFluentValidation(fv =>
@@ -91,29 +96,32 @@ namespace VendingMachine.Service.Machines
                 fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
             });
 
+            services.AddCustomAuthentication(Configuration);
 
             if (env.IsDevelopment())
             {
                 services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machine API", Version = "v1" });
-                    
-                    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, 
+                        new OpenApiSecurityScheme 
+                        { 
+                            In = ParameterLocation.Header, 
+                            Description = "Insert JWT token with the \"Bearer \" prefix", 
+                            Name = "Authorization", 
+                            Type = SecuritySchemeType.ApiKey 
+                        });
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
                     {
-                        Type = SecuritySchemeType.OAuth2,
-                        Flows = new OpenApiOAuthFlows()
                         {
-                            Password = new OpenApiOAuthFlow()
+                            new OpenApiSecurityScheme
                             {
-                                TokenUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
-                                Scopes = new Dictionary<string, string>()
-                                {
-                                    { "machines", "Machine API" },
-                                    { "products", "Product API" },
-                                }
-                            }
+                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
+                            },
+                            new string[0]
                         }
                     });
+                    
                 });
             }
 
@@ -174,21 +182,28 @@ namespace VendingMachine.Service.Machines
     {
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
-            var identityUrl = configuration.GetValue<string>("IdentityUrl");
+            var jwtSection = configuration.GetSection(nameof(JwtSettings));
+            var jwtSettings = jwtSection.Get<JwtSettings>();
+            services.Configure<JwtSettings>(jwtSection);
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
-
-            }).AddJwtBearer(options =>
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.RequireAuthenticatedSignIn = true;
+            }).AddJwtBearer(configureOptions =>
             {
-                options.Authority = identityUrl;
-                options.RequireHttpsMetadata = false;
-                options.Audience = "machines";
+                configureOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidAudience = jwtSettings.Audience,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.Default.GetBytes(jwtSettings.SecurityKey)),
+                    LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) => DateTime.UtcNow < expires.GetValueOrDefault(),
+                };
             });
 
             return services;

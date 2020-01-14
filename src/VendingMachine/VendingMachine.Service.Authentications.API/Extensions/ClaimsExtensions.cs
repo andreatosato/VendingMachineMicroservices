@@ -31,9 +31,4 @@ namespace VendingMachine.Service.Authentications.API
             return value;
         }
     }
-
-    public static class ClaimCustomTypes
-    {
-        public const string ApiClaim = "CustomApiClaim";
-    }
 }

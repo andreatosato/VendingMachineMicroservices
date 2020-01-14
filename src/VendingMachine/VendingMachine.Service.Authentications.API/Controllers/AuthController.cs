@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using VendingMachine.Service.Authentications.API.Configuration;
 using VendingMachine.Service.Authentications.API.Data.Models;
 using VendingMachine.Service.Authentications.API.ViewModels;
+using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Authentications.API.Controllers
 {
@@ -52,7 +53,7 @@ namespace VendingMachine.Service.Authentications.API.Controllers
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
-            await userManager.AddClaimsAsync(user, new Claim[] { new Claim(ClaimCustomTypes.ApiClaim, "Machine.API") });
+            await userManager.AddClaimsAsync(user, new Claim[] { new Claim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi) });
             if (result.Succeeded)
             {
                 return Ok(result);
@@ -81,15 +82,20 @@ namespace VendingMachine.Service.Authentications.API.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<AuthResponse>> CreateToken([FromForm] LoginRequest model)
         {
+            if(model.Grant_Type.ToLower() != "password".ToLower())
+                return BadRequest("Grant Type not supported");
+
             var user = await userManager.FindByNameAsync(model.Username);
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest("User not found");
             }
 
             if (passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) == PasswordVerificationResult.Success)
             {
                 var userClaims = await userManager.GetClaimsAsync(user);
+                // Filtro solo quelli richiesti
+                userClaims = userClaims.Where(x => model.Scopes.Contains(x.Value)).ToList();
                 var userRoles = await userManager.GetRolesAsync(user);
 
                 var claims = new[]

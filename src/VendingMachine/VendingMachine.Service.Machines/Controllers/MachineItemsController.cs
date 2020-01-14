@@ -36,7 +36,6 @@ namespace VendingMachine.Service.Machines.Controllers
             this.logger = loggerFactory.CreateLogger(typeof(MachineItemsController));
         }
 
-        // TODO: Implement ETag and If-None-Match
         [HttpGet("{machineId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -44,7 +43,7 @@ namespace VendingMachine.Service.Machines.Controllers
         {
             if (machineId > 0)
             {
-                var cache = (await distributedCache.GetAsync(CachingKeys.MachineInformationKey(machineId)))
+                var cache = await (await distributedCache.GetAsync(CachingKeys.MachineInformationKey(machineId)))
                     .DeserializeCacheAsync<Read.Models.MachineItemReadModel>();
 
                 if (cache != null)
