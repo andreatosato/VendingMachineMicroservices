@@ -9,10 +9,13 @@ namespace VendingMachine.Service.Machines.Read
 {
     public interface IMachineQuery : IQuery
     {
-        public Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachinesAsync(SqlGeography currentPosition, decimal radius);
-        public Task<CoinsInMachineReadModel> GetCoinsInMachineAsync(int machineId);
-        public Task<ProductsReadModel> GetProductsInMachineAsync(int machineId);
-        public Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId);
-        public Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId);
+        Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachinesAsync(SqlGeography currentPosition, decimal radius);
+        Task<CoinsInMachineReadModel> GetCoinsInMachineAsync(int machineId);
+        Task<ProductsReadModel> GetProductsInMachineAsync(int machineId);
+        Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId);
+        Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId);
+        Task<bool> CheckMachineItemExistsAsync(int machineId);
+        Task<bool> CheckActiveProductExist(int productId);
+        Task<bool> CheckHistoryProductExist(int productId);
     }
 }

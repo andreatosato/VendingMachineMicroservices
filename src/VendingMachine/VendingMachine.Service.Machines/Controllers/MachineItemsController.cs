@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Application.Cachings;
 using VendingMachine.Service.Machines.Application.Validations.Machines;
 using VendingMachine.Service.Machines.Application.ViewModels;
+using VendingMachine.Service.Machines.Binders;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 using VendingMachine.Service.Machines.Read;
@@ -44,7 +45,7 @@ namespace VendingMachine.Service.Machines.Controllers
             if (machineId > 0)
             {
                 var cache = (await distributedCache.GetAsync(CachingKeys.MachineInformationKey(machineId)))
-                    .DeserializeCache<Read.Models.MachineItemReadModel>();
+                    .DeserializeCacheAsync<Read.Models.MachineItemReadModel>();
 
                 if (cache != null)
                     return Ok(cache);
@@ -135,14 +136,12 @@ namespace VendingMachine.Service.Machines.Controllers
             return BadRequest("MachineId is not correct");
         }
 
-        [HttpPost("BuyProducts")]
+        [HttpPost("{machineId:int}/BuyProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostBuyProductsAsync([FromBody] BuyProductsViewModel model)
         {
-            BuyProductsValidation validations = new BuyProductsValidation(machineQuery);
-            var validationResult = await validations.ValidateAsync(model);
-            if(validationResult.IsValid) // if (ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 await mediator.Send(new BuyProductsMachineCommand()
                 {
@@ -154,11 +153,11 @@ namespace VendingMachine.Service.Machines.Controllers
                 return Ok();
             }
             logger.LogDebug("Error in input data for BuyProducts {@model}", model);
-            return BadRequest(validationResult);
+            return BadRequest(ModelState);
         }
 
 
-        [HttpPost("LoadProducts")]
+        [HttpPost("{machineId:int}/LoadProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostLoadProductsAsync([FromBody] LoadProductsViewModel model)

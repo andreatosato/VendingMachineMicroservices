@@ -14,6 +14,8 @@ using HealthChecks.UI.Client;
 using System.IdentityModel.Tokens.Jwt;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using VendingMachine.Service.Machines.Binders;
 
 namespace VendingMachine.Service.Machines
 {
@@ -59,6 +61,11 @@ namespace VendingMachine.Service.Machines
             services.AddCustomAuthentication(Configuration);
 
             services.AddControllers()
+                .AddMvcOptions(options =>
+                {
+                    IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
+                    options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
+                })
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();

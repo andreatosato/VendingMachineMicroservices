@@ -23,13 +23,13 @@ namespace VendingMachine.Service.Machines.Application.Cachings
             return JsonSerializer.SerializeToUtf8Bytes(obj, typeof(T), _serializer);
         }
 
-        public static object DeserializeCache<T>(this byte[] arrBytes)
+        public static async System.Threading.Tasks.Task<T> DeserializeCacheAsync<T>(this byte[] arrBytes)
         {
             if (arrBytes == null)
-                return null;
+                return await System.Threading.Tasks.Task.FromResult<T>(default);
 
             using var m = new MemoryStream(arrBytes);
-            return JsonSerializer.DeserializeAsync<T>(m, _serializer);
+            return await JsonSerializer.DeserializeAsync<T>(m, _serializer);
         }
     }
 }

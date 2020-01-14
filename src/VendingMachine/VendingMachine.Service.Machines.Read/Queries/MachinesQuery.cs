@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Read.Models;
-using VendingMachine.Service.Shared.Read;
 
 namespace VendingMachine.Service.Machines.Read
 {
@@ -32,6 +31,32 @@ namespace VendingMachine.Service.Machines.Read
                 result.Products.AddRange(article);
             }
             return result;
+        }
+
+        public async Task<bool> CheckActiveProductExist(int productId)
+        {
+            using (SqlConnection connection = new SqlConnection(machineConnectionString))
+            {
+                var p = await connection
+                    .QueryAsync<ProductReadModel>(@"SELECT Id
+                        FROM dbo.ActiveProducts
+                        Where Id = @Id", new { Id = productId })
+                    .ConfigureAwait(false);
+                return p != null;
+            }
+        }
+
+        public async Task<bool> CheckHistoryProductExist(int productId)
+        {
+            using (SqlConnection connection = new SqlConnection(machineConnectionString))
+            {
+                var p = await connection
+                    .QueryAsync<ProductReadModel>(@"SELECT Id
+                        FROM dbo.HistoryProducts
+                        Where Id = @Id", new { Id = productId })
+                    .ConfigureAwait(false);
+                return p.Any();
+            }
         }
 
         public async Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId)
@@ -108,6 +133,27 @@ namespace VendingMachine.Service.Machines.Read
                     .ConfigureAwait(false)).FirstOrDefault();
             }
             return result;
+        }
+
+        public async Task<bool> CheckMachineItemExistsAsync(int machineId)
+        {
+            using (System.Data.IDbConnection connection = new SqlConnection(machineConnectionString))
+            {
+                string sql = @"SELECT 1 AS Result
+                FROM [VendingMachine-Machines].[dbo].[Machines] AS M
+                WHERE M.Id = @Id";
+
+                // Install Microsoft.CSharp for use Dynamic data
+                var exists = await connection
+                    .QueryAsync(
+                        sql: sql,
+                        param: new { Id = machineId })
+                    .ConfigureAwait(false);
+
+                if(exists.FirstOrDefault().Result == 1)
+                    return true;
+                return false;
+            }
         }
     }
 }
