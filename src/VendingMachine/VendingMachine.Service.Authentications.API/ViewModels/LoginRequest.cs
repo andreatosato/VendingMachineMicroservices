@@ -9,6 +9,11 @@ namespace VendingMachine.Service.Authentications.API.ViewModels
     public class LoginRequest
     {
         [Required]
+        public string Grant_Type { get; set; }
+
+        public List<string> Scopes { get; set; }
+
+        [Required]
         [EmailAddress]
         public string Username { get; set; }
 

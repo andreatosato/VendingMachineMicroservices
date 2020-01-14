@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace VendingMachine.Service.Authentications.API.Extensions
+namespace VendingMachine.Service.Authentications.API
 {
     public static class ClaimsExtensions
     {
@@ -30,5 +30,10 @@ namespace VendingMachine.Service.Authentications.API.Extensions
             var value = ((ClaimsIdentity)user.Identity).Claims.Where(c => c.Type == claimType).Select(c => c.Value).FirstOrDefault();
             return value;
         }
+    }
+
+    public static class ClaimCustomTypes
+    {
+        public const string ApiClaim = "CustomApiClaim";
     }
 }

@@ -16,7 +16,7 @@ using VendingMachine.Service.Authentications.API.ViewModels;
 
 namespace VendingMachine.Service.Authentications.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("connect")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -37,7 +37,7 @@ namespace VendingMachine.Service.Authentications.API.Controllers
         /// <param name="model">The information about the registered user</param>
         /// <response code="200">Registration completed successfully</response>
         /// <response code="400">Unable to register the news user because of an error of input data</response>
-        [HttpPost("Register")]
+        [HttpPost("register")]
         [ProducesResponseType(typeof(IdentityResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(IEnumerable<IdentityError>), StatusCodes.Status400BadRequest)]
         [ProducesDefaultResponseType]
@@ -52,6 +52,7 @@ namespace VendingMachine.Service.Authentications.API.Controllers
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
+            await userManager.AddClaimsAsync(user, new Claim[] { new Claim(ClaimCustomTypes.ApiClaim, "Machine.API") });
             if (result.Succeeded)
             {
                 return Ok(result);
@@ -73,12 +74,12 @@ namespace VendingMachine.Service.Authentications.API.Controllers
         /// <response code="200">Login completed successfully</response>
         /// <response code="400">Unable to perform login because of an error of input data</response>
         /// <response code="401">Invalid passsword</response>
-        [HttpPost("Token")]
+        [HttpPost("token")]
         [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<AuthResponse>> CreateToken(LoginRequest model)
+        public async Task<ActionResult<AuthResponse>> CreateToken([FromForm] LoginRequest model)
         {
             var user = await userManager.FindByNameAsync(model.Username);
             if (user == null)

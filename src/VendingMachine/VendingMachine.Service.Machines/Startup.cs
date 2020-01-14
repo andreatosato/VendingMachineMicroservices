@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using VendingMachine.Service.Machines.Binders;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Security.Claims;
 
 namespace VendingMachine.Service.Machines
 {
@@ -44,6 +47,15 @@ namespace VendingMachine.Service.Machines
                 machineDatabaseConnectionString = Configuration.GetConnectionString("ConnectionStrings:MachineDatabase");
                 services.AddMachineEntityFrameworkProd(machineDatabaseConnectionString);
             }
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AnyOrigin", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod();
+                });
+            });
             services.AddHttpContextAccessor();
             
             services
@@ -60,17 +72,24 @@ namespace VendingMachine.Service.Machines
 
             services.AddCustomAuthentication(Configuration);
 
-            services.AddControllers()
-                .AddMvcOptions(options =>
-                {
-                    IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
-                    options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
-                })
-                .AddFluentValidation(fv =>
-                {
-                    fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
-                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
-                });
+            services.AddControllers(options =>
+            {
+                // Add ModelBinderProvider
+                IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
+                options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
+
+                // Apply Auth filter
+                var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .RequireClaim(ClaimTypes.Role, "Machine.Api")
+                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
+                fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
+            });
 
 
             if (env.IsDevelopment())
@@ -78,6 +97,7 @@ namespace VendingMachine.Service.Machines
                 services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machine API", Version = "v1" });
+                    
                     c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                     {
                         Type = SecuritySchemeType.OAuth2,
@@ -85,12 +105,11 @@ namespace VendingMachine.Service.Machines
                         {
                             Password = new OpenApiOAuthFlow()
                             {
-                                AuthorizationUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/authorize"),
                                 TokenUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/token"),
-                                RefreshUrl = new Uri($"{Configuration.GetValue<string>("IdentityUrlExternal")}/connect/refresh"),
                                 Scopes = new Dictionary<string, string>()
                                 {
-                                    { "machines", "Machine API" }
+                                    { "machines", "Machine API" },
+                                    { "products", "Product API" },
                                 }
                             }
                         }
@@ -112,6 +131,7 @@ namespace VendingMachine.Service.Machines
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AnyOrigin");
             if (env.IsDevelopment())
             {
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -122,7 +142,6 @@ namespace VendingMachine.Service.Machines
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Machine API");
                 });
             }
-            
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseRouting();
