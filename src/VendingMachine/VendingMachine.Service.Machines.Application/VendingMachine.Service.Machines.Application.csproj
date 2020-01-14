@@ -15,4 +15,8 @@
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Machines.Read\VendingMachine.Service.Machines.Read.csproj" />
+  </ItemGroup>
+
 </Project>

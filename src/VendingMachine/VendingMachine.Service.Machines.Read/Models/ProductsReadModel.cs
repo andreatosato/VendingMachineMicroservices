@@ -7,7 +7,7 @@ namespace VendingMachine.Service.Machines.Read.Models
 {
     public class ProductsReadModel : IReadEntity
     {
-        public List<ProductReadModel> Products { get; set; }
+        public List<ProductReadModel> Products { get; set; } = new List<ProductReadModel>();
     }
 
     public class ProductReadModel
@@ -17,7 +17,7 @@ namespace VendingMachine.Service.Machines.Read.Models
 
     public class HistoryProductsReadModel : IReadEntity
     {
-        public List<HistoryProductReadModel> Products { get; set; }
+        public List<HistoryProductReadModel> Products { get; set; } = new List<HistoryProductReadModel>();
     }
 
     public class HistoryProductReadModel

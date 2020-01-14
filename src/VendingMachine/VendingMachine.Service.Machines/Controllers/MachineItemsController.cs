@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Application.Cachings;
+using VendingMachine.Service.Machines.Application.Validations.Machines;
 using VendingMachine.Service.Machines.Application.ViewModels;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
@@ -134,16 +135,18 @@ namespace VendingMachine.Service.Machines.Controllers
             return BadRequest("MachineId is not correct");
         }
 
-        [HttpPost("{machineId:int}/BuyProducts")]
+        [HttpPost("BuyProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostBuyProductsAsync([FromRoute] int machineId, [FromBody] BuyProductsViewModel model)
+        public async Task<IActionResult> PostBuyProductsAsync([FromBody] BuyProductsViewModel model)
         {
-            if (ModelState.IsValid)
+            BuyProductsValidation validations = new BuyProductsValidation(machineQuery);
+            var validationResult = await validations.ValidateAsync(model);
+            if(validationResult.IsValid) // if (ModelState.IsValid)
             {
                 await mediator.Send(new BuyProductsMachineCommand()
                 {
-                    MachineId = machineId,
+                    MachineId = model.MachineId,
                     ProductsBuy = model.Products,
                     TotalBuy = model.TotalBuy,
                     TotalRest = model.TotalRest
@@ -151,20 +154,20 @@ namespace VendingMachine.Service.Machines.Controllers
                 return Ok();
             }
             logger.LogDebug("Error in input data for BuyProducts {@model}", model);
-            return BadRequest(ModelState);
+            return BadRequest(validationResult);
         }
 
 
-        [HttpPost("{machineId:int}/LoadProducts")]
+        [HttpPost("LoadProducts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PostLoadProductsAsync([FromRoute] int machineId, [FromBody] LoadProductsViewModel model)
+        public async Task<IActionResult> PostLoadProductsAsync([FromBody] LoadProductsViewModel model)
         {
             if (ModelState.IsValid)
             {
                 await mediator.Send(new LoadProductsMachineCommand()
                 {
-                    MachineId = machineId,
+                    MachineId = model.MachineId,
                     Products = model.Products
                 }).ConfigureAwait(false);
 
