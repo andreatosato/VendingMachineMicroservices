@@ -43,8 +43,7 @@ namespace VendingMachine.Service.Machines
                 .AddControllers(options =>
                 {
                     // Add ModelBinderProvider
-                    IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
-                    options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
+                    options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters));
 
                     // Apply Auth filter
                     var policy = new AuthorizationPolicyBuilder()

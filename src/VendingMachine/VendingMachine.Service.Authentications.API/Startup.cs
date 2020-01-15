@@ -9,9 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using VendingMachine.Service.Authentications.API.Configuration;
 using VendingMachine.Service.Authentications.API.Data;
 using VendingMachine.Service.Authentications.API.Data.Models;
+using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Authentications.API
 {

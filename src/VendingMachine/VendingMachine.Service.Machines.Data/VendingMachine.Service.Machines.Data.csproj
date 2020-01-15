@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Machines.Domain\VendingMachine.Service.Machines.Domain.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Shared.Data\VendingMachine.Service.Shared.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

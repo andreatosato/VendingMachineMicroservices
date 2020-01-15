@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VendingMachine.Service.Machines.Domain.DomainEvents;
 using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Machines.Domain
@@ -50,6 +51,7 @@ namespace VendingMachine.Service.Machines.Domain
             {
                 BuyProduct(p, providedDate);
             }
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
 
         protected void BuyProduct(Product productToBuy, DateTimeOffset providedDate)
@@ -69,6 +71,7 @@ namespace VendingMachine.Service.Machines.Domain
             {
                 LoadProduct(p, loadProductDate);
             }
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
 
         protected void LoadProduct(Product productToLoad, DateTimeOffset loadDate)
@@ -91,6 +94,7 @@ namespace VendingMachine.Service.Machines.Domain
         {
             CoinsInMachine += coinAdded;
             CoinsCurrentSupply += coinAdded;
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
 
         public decimal RestCoins()
@@ -98,6 +102,7 @@ namespace VendingMachine.Service.Machines.Domain
             decimal coinsToRest = CoinsCurrentSupply;
             CoinsInMachine -= CoinsCurrentSupply;
             CoinsCurrentSupply = 0;
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
             return coinsToRest;
         }
 
@@ -106,17 +111,20 @@ namespace VendingMachine.Service.Machines.Domain
         {
             CoinsCurrentSupply -= coinsSupply;
             CoinsInMachine -= coinsSupply;
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
 
         public void CollectMoney()
         {
             LatestMoneyCollection = DateTimeOffset.UtcNow;
             CoinsInMachine = 0;
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
 
         public void CleanMachine()
         {
             LatestCleaningMachine = DateTimeOffset.UtcNow;
+            AddDomainEvent(new MachineItemUpdatedEvent(Id));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -8,6 +9,9 @@ namespace VendingMachine.Service.Shared.Domain
 {
     public abstract class Entity
     {
+        private List<INotification> _domainEvents;
+        public List<INotification> DomainEvents => _domainEvents;
+
         int? _requestedHashCode;
         int _Id;
         public virtual int Id
@@ -70,6 +74,22 @@ namespace VendingMachine.Service.Shared.Domain
         public static bool operator !=(Entity left, Entity right)
         {
             return !(left == right);
+        }
+
+        public void AddDomainEvent(INotification eventItem)
+        {
+            _domainEvents ??= new List<INotification>();
+            _domainEvents.Add(eventItem);
+        }
+
+        public void RemoveDomainEvent(INotification eventItem)
+        {
+            _domainEvents?.Remove(eventItem);
+        }
+
+        public void ClearDomainEvents()
+        {
+            _domainEvents?.Clear();
         }
     }
 }

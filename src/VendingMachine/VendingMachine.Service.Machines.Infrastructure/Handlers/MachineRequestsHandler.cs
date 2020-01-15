@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using VendingMachine.Service.Machines.Domain.DomainEvents;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 using VendingMachine.Service.Machines.Infrastructure.Events;
 using VendingMachine.Service.Machines.Read;
@@ -18,17 +20,20 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
         IRequestHandler<LoadProductsMachineCommand, Unit>,
         IRequestHandler<SetTemperatureMachineCommand, Unit>,
         IRequestHandler<SetStatusMachineCommand, Unit>,
-        IRequestHandler<SetPositionMachineCommand, Unit>
+        IRequestHandler<SetPositionMachineCommand, Unit>,
+        INotificationHandler<MachineItemUpdatedEvent>
     {
         private readonly IMediator mediator;
         private readonly IMachinesUoW machinesUoW;
         private readonly ILogger logger;
+        private readonly IDistributedCache distributedCache;
 
-        public MachineRequestsHandler(IMediator mediator, IMachinesUoW machinesUoW, ILoggerFactory loggerFactory)
+        public MachineRequestsHandler(IMediator mediator, IMachinesUoW machinesUoW, ILoggerFactory loggerFactory, IDistributedCache distributedCache)
         {
             this.mediator = mediator;
             this.machinesUoW = machinesUoW;
             this.logger = loggerFactory.CreateLogger(typeof(MachineRequestsHandler));
+            this.distributedCache = distributedCache;
         }
 
         public async Task<int> Handle(CreateNewMachineCommand request, CancellationToken cancellationToken)
@@ -38,7 +43,7 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
             await machinesUoW.MachineRepository.AddAsync(machineItem).ConfigureAwait(false);
             await machinesUoW.SaveAsync().ConfigureAwait(false);
 
-            await mediator.Publish(new NewMachineCreatedEvent() { Id = machineItem.Id}).ConfigureAwait(false);
+            await mediator.Publish(new MachineItemCreatedEvent() { Id = machineItem.Id}).ConfigureAwait(false);
             return machineItem.Id;
         }
         public async Task<Unit> Handle(DeleteMachineCommand request, CancellationToken cancellationToken)
@@ -127,6 +132,13 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
             await machinesUoW.SaveAsync().ConfigureAwait(false);
             logger.LogInformation("In Machine {@machineId}, Set Point {@point}", request.MachineId, request.Data);
             return new Unit();
+        }
+
+        public async Task Handle(MachineItemUpdatedEvent notification, CancellationToken cancellationToken)
+        {
+            // Remove cache after MachineItem Update
+            await distributedCache.RemoveAsync($"MachineInformationKey-{notification.Id}");
+            // Notify machine item update
         }
     }
 }

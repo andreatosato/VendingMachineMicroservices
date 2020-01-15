@@ -1,11 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Data.EntityConfigurations;
 using VendingMachine.Service.Machines.Domain;
+using VendingMachine.Service.Shared.Data;
 
 namespace VendingMachine.Service.Machines.Data
 {
     public class MachineContext : DbContext
     {
+        private readonly IMediator _mediator;
         public DbSet<MachineItem> Machines { get; set; }
         public DbSet<MachineType> MachineTypes { get; set; }
         public DbSet<Product> ActiveProduct { get; set; }
@@ -13,13 +18,13 @@ namespace VendingMachine.Service.Machines.Data
 
         public MachineContext()
         {
-
         }
 
         // Only for application
-        public MachineContext(DbContextOptions<MachineContext> options)
+        public MachineContext(DbContextOptions<MachineContext> options, IMediator _mediator)
             : base(options)
         {
+            this._mediator = _mediator;
         }
 
         // Only for test
@@ -40,6 +45,13 @@ namespace VendingMachine.Service.Machines.Data
 
             // Choose manual migration
             //modelBuilder.SeedData();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            int result = await base.SaveChangesAsync(cancellationToken);
+            await _mediator?.DispatchDomainEventsAsync(this);
+            return result;
         }
     }
 }
