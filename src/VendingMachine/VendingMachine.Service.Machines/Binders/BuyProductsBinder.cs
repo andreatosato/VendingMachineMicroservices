@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.AspNetCore.Routing;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Application.ViewModels;
 

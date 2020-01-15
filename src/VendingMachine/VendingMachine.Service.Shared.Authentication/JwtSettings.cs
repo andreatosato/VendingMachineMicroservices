@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace VendingMachine.Service.Machines.Configuration
+namespace VendingMachine.Service.Shared.Authentication
 {
     public class JwtSettings
     {

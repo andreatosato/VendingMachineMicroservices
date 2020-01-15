@@ -10,7 +10,7 @@ namespace VendingMachine.Service.Machines
 {
     public static partial class StartupExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddMachineInfrastructure(this IServiceCollection services)
         {
             services.AddTransient<IRepository<MachineItem>, MachineItemRepository>();
             services.AddTransient<IRepository<MachineType>, MachineTypeRepository>();

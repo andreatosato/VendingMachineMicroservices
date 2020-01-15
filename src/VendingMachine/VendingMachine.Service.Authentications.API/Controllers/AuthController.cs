@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using VendingMachine.Service.Authentications.API.Configuration;
 using VendingMachine.Service.Authentications.API.Data.Models;
 using VendingMachine.Service.Authentications.API.ViewModels;
 using VendingMachine.Service.Shared.Authentication;

@@ -11,19 +11,14 @@ using FluentValidation.AspNetCore;
 using VendingMachine.Service.Machines.Application.Validations.Coins;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
-using System.IdentityModel.Tokens.Jwt;
 using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using VendingMachine.Service.Machines.Binders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using VendingMachine.Service.Machines.Configuration;
-using System.Threading.Tasks;
 using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Machines
@@ -42,93 +37,34 @@ namespace VendingMachine.Service.Machines
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string machineDatabaseConnectionString = string.Empty;
-            if (env.IsDevelopment())
-            {
-                machineDatabaseConnectionString = "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true";
-                services.AddMachineEntityFrameworkDev(machineDatabaseConnectionString);
-            }
-            else
-            {
-                machineDatabaseConnectionString = Configuration.GetConnectionString("ConnectionStrings:MachineDatabase");
-                services.AddMachineEntityFrameworkProd(machineDatabaseConnectionString);
-            }
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AnyOrigin", builder =>
+            services.AddHttpContextAccessor()
+                .AddMachineEntityFramework(Configuration, env)
+                .AddMachineHealthChecks(Configuration)
+                .AddControllers(options =>
                 {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod();
-                });
-            });
-            services.AddHttpContextAccessor();
-            
-            services
-               .AddHealthChecks()
-               .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
-               .AddSqlServer(machineDatabaseConnectionString,
-                    tags: new[] { "machine" },
-                    name: "machine-db-check");
+                    // Add ModelBinderProvider
+                    IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
+                    options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
 
-            services.AddHealthChecksUI(setupSettings: settings => 
-            {
-                settings.AddHealthCheckEndpoint("api", $"{Configuration.GetValue<string>("PathBase")}/health-data-api");
-            });
-
-
-            services.AddControllers(options =>
-            {
-                // Add ModelBinderProvider
-                IHttpRequestStreamReaderFactory readerFactory = services.BuildServiceProvider().GetRequiredService<IHttpRequestStreamReaderFactory>();
-                options.ModelBinderProviders.Insert(0, new MachineModelBinderProvider(options.InputFormatters, readerFactory));
-
-                // Apply Auth filter
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .RequireClaim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi)
-                    .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            })
-            .AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
-                fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
-            });
-
-            services.AddCustomAuthentication(Configuration);
-
-            if (env.IsDevelopment())
-            {
-                services.AddSwaggerGen(c =>
+                    // Apply Auth filter
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .RequireClaim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi)
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                })
+                .AddFluentValidation(fv =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machine API", Version = "v1" });
-                    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, 
-                        new OpenApiSecurityScheme 
-                        { 
-                            In = ParameterLocation.Header, 
-                            Description = "Insert JWT token with the \"Bearer \" prefix", 
-                            Name = "Authorization", 
-                            Type = SecuritySchemeType.ApiKey 
-                        });
-                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
-                            },
-                            new string[0]
-                        }
-                    });
-                    
+                    fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
+                    fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
                 });
-            }
 
-            services.AddInfrastructure()
-                    .AddQueries(machineDatabaseConnectionString);
-            services.AddMediatR(typeof(MachineRequestsHandler));
-            services.AddDistributedMemoryCache();
+            services.AddCustomAuthentication(Configuration)
+                .AddMachineInfrastructure()
+                .AddMachineQueries(Configuration.GetConnectionString("MachineDatabase"))
+                .AddMediatR(typeof(MachineRequestsHandler))
+                .AddDistributedMemoryCache()
+                .AddMachineSwagger(env);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -173,13 +109,66 @@ namespace VendingMachine.Service.Machines
                 endpoints.MapControllers();
             });
         }
-
-
-        
     }
 
     public static class CustomExceptions
     {
+        public static IServiceCollection AddMachineSwagger(this IServiceCollection services, IHostEnvironment environment)
+        {
+            if (environment.IsDevelopment())
+            {
+                services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Machine API", Version = "v1" });
+                    c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
+                        new OpenApiSecurityScheme
+                        {
+                            In = ParameterLocation.Header,
+                            Description = "Insert JWT token with the \"Bearer \" prefix",
+                            Name = "Authorization",
+                            Type = SecuritySchemeType.ApiKey
+                        });
+                    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
+                            },
+                            new string[0]
+                        }
+                    });
+                });
+            }
+            return services;
+        }
+
+        public static IServiceCollection AddMachineHealthChecks(this IServiceCollection services, IConfiguration Configuration)
+        {
+            services
+               .AddHealthChecks()
+               .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
+               .AddSqlServer(Configuration.GetConnectionString("MachineDatabase"),
+                    tags: new[] { "machine" },
+                    name: "machine-db-check");
+
+            services.AddHealthChecksUI(setupSettings: settings =>
+            {
+                settings.AddHealthCheckEndpoint("api", $"{Configuration.GetValue<string>("PathBase")}/health-data-api");
+            });
+            return services;
+        }
+
+        public static IServiceCollection AddMachineEntityFramework(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment env)
+        {
+            // Ogni ambiente avrà la corretta connectionstring in base al file appsettings --> appsettings.Development, appsettings.Production, appsettings.Staging
+            if (env.IsDevelopment())
+                services.AddMachineEntityFrameworkDev(Configuration.GetConnectionString("MachineDatabase"));
+            else
+                services.AddMachineEntityFrameworkProd(Configuration.GetConnectionString("MachineDatabase"));
+            return services;
+        }
+
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSection = configuration.GetSection(nameof(JwtSettings));
