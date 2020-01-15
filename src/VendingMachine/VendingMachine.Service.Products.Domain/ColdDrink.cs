@@ -4,10 +4,27 @@ using System.Text;
 
 namespace VendingMachine.Service.Products.Domain
 {
+    /// Bottle Drink 
     public class ColdDrink : Product
     {
-        public ColdDrink(string name) : base(name)
+        public decimal TemperatureMinimum { get; private set; }
+        public decimal TemperatureMax { get; private set; }
+        public decimal Litre { get; }
+
+        public ColdDrink(string name, decimal litre)
+            : base(name)
         {
+            Litre = litre;
+        }
+
+        public void SetTemperatureMinimum(decimal temp)
+        {
+            TemperatureMinimum = temp;
+        }
+
+        public void SetTemperatureMaximun(decimal temp)
+        {
+            TemperatureMax = temp;
         }
     }
 }

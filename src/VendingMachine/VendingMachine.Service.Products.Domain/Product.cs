@@ -7,7 +7,6 @@ namespace VendingMachine.Service.Products.Domain
     {
         public GrossPrice Price { get; private set; }
         public string Name { get; }
-        public DateTime ExpirationDate { get; private set; }
 
         public Product(string name)
         {
@@ -17,12 +16,6 @@ namespace VendingMachine.Service.Products.Domain
         public void SetPrice(GrossPrice price)
         {
             Price = price;
-        }
-
-        public void SetExpirationDate(DateTime date)
-        {
-            ExpirationDate = date;
-            // TODO : set reminder for Expiration Products
         }
     }
 }

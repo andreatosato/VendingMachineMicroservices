@@ -6,8 +6,11 @@ namespace VendingMachine.Service.Products.Domain
 {
     public class Snak : Product
     {
-        public Snak(string name) : base(name)
+        public decimal Grams { get; }
+
+        public Snak(string name, decimal grams) : base(name)
         {
+            Grams = grams;
         }
     }
 }
