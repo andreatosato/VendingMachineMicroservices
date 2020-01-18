@@ -18,7 +18,7 @@ namespace VendingMachine.Service.Products.Domain
                 throw new ArgumentOutOfRangeException("Price must be greater or equal then 0");
             if(taxPercentage < 0)
                 throw new ArgumentOutOfRangeException("Tax Percentage must be greater or equal then 0");
-            if (taxPercentage > 0)
+            if (taxPercentage < 0 || taxPercentage > 100)
                 throw new ArgumentOutOfRangeException("Tax Percentage must be less or equal then 100");
 
             Value = price;
@@ -34,8 +34,8 @@ namespace VendingMachine.Service.Products.Domain
 
         private void CalculatePriceAndRate()
         {
-            Rate = Value * TaxPercentage;
-            NetPrice = Value * (100 - TaxPercentage);
+            Rate = Value * ((decimal)TaxPercentage / 100);
+            NetPrice = Value * ((100 - (decimal)TaxPercentage) /100);
         }
         
         protected override IEnumerable<object> GetAtomicValues()

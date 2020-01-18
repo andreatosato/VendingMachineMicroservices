@@ -8,7 +8,7 @@ namespace VendingMachine.Service.Products.Domain
     public class ColdDrink : Product
     {
         public decimal TemperatureMinimum { get; private set; }
-        public decimal TemperatureMax { get; private set; }
+        public decimal TemperatureMaximum { get; private set; }
         public decimal Litre { get; }
 
         public ColdDrink(string name, decimal litre)
@@ -24,7 +24,7 @@ namespace VendingMachine.Service.Products.Domain
 
         public void SetTemperatureMaximun(decimal temp)
         {
-            TemperatureMax = temp;
+            TemperatureMaximum = temp;
         }
     }
 }

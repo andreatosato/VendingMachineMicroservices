@@ -11,10 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="MediatR" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Products.Data\VendingMachine.Service.Products.Data.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Domain\VendingMachine.Service.Products.Domain.csproj" />
   </ItemGroup>
 

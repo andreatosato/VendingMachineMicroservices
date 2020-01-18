@@ -15,7 +15,7 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
                 o => o.SoldPrice,
                 sa =>
                 {
-                    sa.Property(p => p.Value).HasColumnName("GrossPrice");
+                    sa.Property(p => p.GrossPrice).HasColumnName("GrossPrice");
                     sa.Property(p => p.TaxPercentage).HasColumnName("TaxPercentage");
                     sa.Property(p => p.NetPrice).HasColumnName("NetPrice");
                     sa.Property(p => p.Rate).HasColumnName("Rate");

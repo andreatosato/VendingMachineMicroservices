@@ -8,7 +8,7 @@ namespace VendingMachine.Service.Products.Data.Entities
     [Owned]
     public class GrossPriceEntity
     {
-        public decimal Value { get; set; }
+        public decimal GrossPrice { get; set; }
         public decimal NetPrice { get; set; }
         public int TaxPercentage { get; set; }
         public decimal Rate { get; set; }
