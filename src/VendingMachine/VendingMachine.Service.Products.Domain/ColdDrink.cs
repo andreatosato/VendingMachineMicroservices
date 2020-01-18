@@ -11,8 +11,8 @@ namespace VendingMachine.Service.Products.Domain
         public decimal TemperatureMaximum { get; private set; }
         public decimal Litre { get; }
 
-        public ColdDrink(string name, decimal litre)
-            : base(name)
+        public ColdDrink(string name, GrossPrice price, decimal litre)
+            : base(name, price)
         {
             Litre = litre;
         }

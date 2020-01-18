@@ -8,14 +8,10 @@ namespace VendingMachine.Service.Products.Domain
         public GrossPrice Price { get; private set; }
         public string Name { get; }
 
-        public Product(string name)
+        public Product(string name, GrossPrice price)
         {
             Name = name;
-        }
-
-        public void SetPrice(GrossPrice price)
-        {
-            Price = price;
+            Price = price ?? throw new ArgumentNullException("Price must be set");
         }
     }
 }

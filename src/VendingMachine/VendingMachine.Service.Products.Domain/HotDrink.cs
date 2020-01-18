@@ -10,8 +10,8 @@ namespace VendingMachine.Service.Products.Domain
         public decimal TemperatureMaximum { get; private set; }
         public decimal Grams { get; }
 
-        public HotDrink(string name, decimal grams) 
-            : base(name)
+        public HotDrink(string name, GrossPrice price, decimal grams) 
+            : base(name, price)
         {
             Grams = grams;
         }

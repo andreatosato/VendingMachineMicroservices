@@ -24,13 +24,12 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                 cfg.CreateMap<Product, ProductEntity>()
                    .ForMember(entity => entity.Price, mapper => mapper.MapFrom(entity => entity.Price))
                    .ReverseMap()
-                   .ForMember(domain => domain.Price, mapper => mapper.Ignore())
-                   .AfterMap((entity, domain, ctx) => domain.SetPrice(ctx.Mapper.Map<GrossPrice>(entity.Price)));
+                   .ForMember(domain => domain.Price, mapper => mapper.Ignore());
 
                 cfg.CreateMap<ColdDrink, ColdDrinkEntity>()
                     .IncludeBase<Product, ProductEntity>()
                     .ReverseMap()
-                    .ConstructUsing((entity, domain) => new ColdDrink(entity.Name, entity.Litre))
+                    .ConstructUsing((entity, ctx) => new ColdDrink(entity.Name, ctx.Mapper.Map<GrossPrice>(entity.Price), entity.Litre))
                     .ForMember(domain => domain.TemperatureMaximum, mapper => mapper.Ignore())
                     .ForMember(domain => domain.TemperatureMinimum, mapper => mapper.Ignore())
                     .AfterMap((entity, domain, ctx) => domain.SetTemperatureMaximun(entity.TemperatureMaximum))
@@ -39,7 +38,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                 cfg.CreateMap<HotDrink, HotDrinkEntity>()
                     .IncludeBase<Product, ProductEntity>()
                     .ReverseMap()
-                    .ConstructUsing((entity, domain) => new HotDrink(entity.Name, entity.Grams))
+                    .ConstructUsing((entity, ctx) => new HotDrink(entity.Name, ctx.Mapper.Map<GrossPrice>(entity.Price), entity.Grams))
                     .ForMember(domain => domain.TemperatureMaximum, mapper => mapper.Ignore())
                     .ForMember(domain => domain.TemperatureMinimum, mapper => mapper.Ignore())
                     .AfterMap((entity, domain, ctx) => domain.SetTemperatureMaximun(entity.TemperatureMaximum))
@@ -48,23 +47,23 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                 cfg.CreateMap<Snak, SnakEntity>()
                     .IncludeBase<Product, ProductEntity>()
                     .ReverseMap()
-                    .ConstructUsing((entity, domain) => new Snak(entity.Name, entity.Grams));
+                    .ConstructUsing((entity, ctx) => new Snak(entity.Name, ctx.Mapper.Map<GrossPrice>(entity.Price), entity.Grams));
 
                 cfg.CreateMap<ProductItem, ProductItemEntity>()
                    .ReverseMap()
-                   .ConstructUsing((entity, domain) =>
+                   .ConstructUsing((entity, ctx) =>
                    {
                        if (entity.Product is ColdDrinkEntity coldDrinkEntity)
                        {
-                           return new ProductItem(new ColdDrink(coldDrinkEntity.Name, coldDrinkEntity.Litre));
+                           return new ProductItem(new ColdDrink(coldDrinkEntity.Name, ctx.Mapper.Map<GrossPrice>(coldDrinkEntity.Price), coldDrinkEntity.Litre));
                        }
                        if (entity.Product is HotDrinkEntity hotDrinkEntity)
                        {
-                           return new ProductItem(new HotDrink(hotDrinkEntity.Name, hotDrinkEntity.Grams));
+                           return new ProductItem(new HotDrink(hotDrinkEntity.Name, ctx.Mapper.Map<GrossPrice>(hotDrinkEntity.Price), hotDrinkEntity.Grams));
                        }
                        if (entity.Product is SnakEntity snakEntity)
                        {
-                           return new ProductItem(new Snak(snakEntity.Name, snakEntity.Grams));
+                           return new ProductItem(new Snak(snakEntity.Name, ctx.Mapper.Map<GrossPrice>(snakEntity.Price), snakEntity.Grams));
                        }
                        throw new InvalidCastException("Can't create a valid product");
                    })
@@ -80,6 +79,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                            domain.SetPurchasedDate(entity.Purchased.Value);
                        if (entity.Sold.HasValue)
                            domain.SetSoldDate(entity.Sold.Value);
+                       domain.SetExpirationDate(entity.ExpirationDate);
                    });
             });
 
