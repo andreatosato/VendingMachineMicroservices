@@ -50,7 +50,7 @@ namespace VendingMachine.Service.Products.Data
                 TemperatureMinimum = 15,
                 Id = 2
             };
-            var snak = new SnakEntity()
+            var snak = new SnackEntity()
             {
                 Name = "Kinder Delice",
                 Grams = 40,
@@ -84,8 +84,8 @@ namespace VendingMachine.Service.Products.Data
                 NetPrice = 0.48m,
                 Rate = 0.02m
             });
-            modelBuilder.Entity<SnakEntity>().HasData(snak);
-            modelBuilder.Entity<SnakEntity>().OwnsOne(p => p.Price).HasData(new
+            modelBuilder.Entity<SnackEntity>().HasData(snak);
+            modelBuilder.Entity<SnackEntity>().OwnsOne(p => p.Price).HasData(new
             {
                 ProductEntityId = snak.Id,
                 Value = 0.70m,

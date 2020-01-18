@@ -74,9 +74,9 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         }
     }
 
-    public class SnakEntityConfiguration : IEntityTypeConfiguration<SnakEntity>
+    public class SnakEntityConfiguration : IEntityTypeConfiguration<SnackEntity>
     {
-        public void Configure(EntityTypeBuilder<SnakEntity> builder)
+        public void Configure(EntityTypeBuilder<SnackEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
             builder.Property(x => x.Grams).HasColumnName("Grams");

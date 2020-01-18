@@ -12,7 +12,6 @@ using VendingMachine.Service.Machines.Application.Validations.Coins;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using HealthChecks.UI.Client;
 using System;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using VendingMachine.Service.Machines.Binders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;

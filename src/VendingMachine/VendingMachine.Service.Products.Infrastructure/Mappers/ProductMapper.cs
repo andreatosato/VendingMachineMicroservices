@@ -44,10 +44,10 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                     .AfterMap((entity, domain, ctx) => domain.SetTemperatureMaximun(entity.TemperatureMaximum))
                     .AfterMap((entity, domain, ctx) => domain.SetTemperatureMinimum(entity.TemperatureMinimum));
 
-                cfg.CreateMap<Snak, SnakEntity>()
+                cfg.CreateMap<Snack, SnackEntity>()
                     .IncludeBase<Product, ProductEntity>()
                     .ReverseMap()
-                    .ConstructUsing((entity, ctx) => new Snak(entity.Name, ctx.Mapper.Map<GrossPrice>(entity.Price), entity.Grams));
+                    .ConstructUsing((entity, ctx) => new Snack(entity.Name, ctx.Mapper.Map<GrossPrice>(entity.Price), entity.Grams));
 
                 cfg.CreateMap<ProductItem, ProductItemEntity>()
                    .ReverseMap()
@@ -61,9 +61,9 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                        {
                            return new ProductItem(new HotDrink(hotDrinkEntity.Name, ctx.Mapper.Map<GrossPrice>(hotDrinkEntity.Price), hotDrinkEntity.Grams));
                        }
-                       if (entity.Product is SnakEntity snakEntity)
+                       if (entity.Product is SnackEntity snakEntity)
                        {
-                           return new ProductItem(new Snak(snakEntity.Name, ctx.Mapper.Map<GrossPrice>(snakEntity.Price), snakEntity.Grams));
+                           return new ProductItem(new Snack(snakEntity.Name, ctx.Mapper.Map<GrossPrice>(snakEntity.Price), snakEntity.Grams));
                        }
                        throw new InvalidCastException("Can't create a valid product");
                    })

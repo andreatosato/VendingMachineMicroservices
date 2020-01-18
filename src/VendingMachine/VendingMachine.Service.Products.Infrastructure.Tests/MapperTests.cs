@@ -124,9 +124,9 @@ namespace VendingMachine.Service.Products.Infrastructure.Tests
         [Fact]
         public void Snak_DomainToEntity()
         {
-            var domain = new Snak("kinder delice", new GrossPrice(0.75m, 4), 39);
+            var domain = new Snack("kinder delice", new GrossPrice(0.75m, 4), 39);
 
-            var entity = mapper.Map<SnakEntity>(domain);
+            var entity = mapper.Map<SnackEntity>(domain);
             Assert.Equal(39, entity.Grams);
             Assert.Equal("kinder delice", entity.Name);
         }
@@ -134,14 +134,14 @@ namespace VendingMachine.Service.Products.Infrastructure.Tests
         [Fact]
         public void Snak_EntityToDomain()
         {
-            var entity = new SnakEntity()
+            var entity = new SnackEntity()
             {
                 Grams = 39,
                 Name = "kinder delice",
                 Price = new GrossPriceEntity() { GrossPrice = 0.75m, TaxPercentage = 4 },
             };
 
-            var domain = mapper.Map<Snak>(entity);
+            var domain = mapper.Map<Snack>(entity);
             Assert.Equal(39, domain.Grams);
             Assert.Equal("kinder delice", domain.Name);
         }
@@ -151,7 +151,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Tests
         [Fact]
         public void ProductItem_DomainToEntity()
         {
-            var kinderDelice = new Snak("kinder delice", new GrossPrice(0.75m, 4), 39);
+            var kinderDelice = new Snack("kinder delice", new GrossPrice(0.75m, 4), 39);
 
             var domain = new ProductItem(kinderDelice);
             domain.SetExpirationDate(new DateTime(2022, 1, 31));
@@ -172,7 +172,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Tests
         {
             var entity = new ProductItemEntity()
             {
-                Product = new SnakEntity()
+                Product = new SnackEntity()
                 {
                     Grams = 39,
                     Name = "kinder delice",
