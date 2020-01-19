@@ -5,7 +5,7 @@ namespace VendingMachine.Service.Products.Infrastructure
 {
     public interface IProductsUoW : IUnitOfWork
     {
-        IRepository<Product> ProductRepository { get; }
-        IRepository<ProductItem> ProductItemRepository { get; }
+        IRepositoryPrimaryKeys<Product> ProductRepository { get; }
+        IRepositoryPrimaryKeys<ProductItem> ProductItemRepository { get; }
     }
 }

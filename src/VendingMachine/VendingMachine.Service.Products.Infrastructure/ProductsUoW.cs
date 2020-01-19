@@ -11,13 +11,13 @@ namespace VendingMachine.Service.Products.Infrastructure
     {
         private readonly ProductContext db;
         private readonly ILogger logger;
-        public IRepository<Product> ProductRepository { get; }
-        public IRepository<ProductItem> ProductItemRepository { get; }
+        public IRepositoryPrimaryKeys<Product> ProductRepository { get; }
+        public IRepositoryPrimaryKeys<ProductItem> ProductItemRepository { get; }
 
         public ProductsUoW(ProductContext db, 
             ILoggerFactory loggerFactory,
-            IRepository<Product> productRepository, 
-            IRepository<ProductItem> productItemRepository)
+            IRepositoryPrimaryKeys<Product> productRepository, 
+            IRepositoryPrimaryKeys<ProductItem> productItemRepository)
         {
             this.db = db;
             logger = loggerFactory.CreateLogger(typeof(ProductsUoW));

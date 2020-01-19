@@ -5,6 +5,7 @@ using Dapper;
 using System.Threading.Tasks;
 using VendingMachine.Service.Products.Read.DapperModels;
 using VendingMachine.Service.Products.Read.Models;
+using System.Collections.ObjectModel;
 
 namespace VendingMachine.Service.Products.Read.Queries
 {
@@ -27,6 +28,23 @@ namespace VendingMachine.Service.Products.Read.Queries
                     Where Id = @Id", new { Id = productId })
                 .ConfigureAwait(false);
             return product.ToReadModel();
+        }
+
+        public async Task<ProductsReadModel> GetProductsInfoAsync(List<int> productId)
+        {
+            ProductsReadModel result = new ProductsReadModel();
+            using SqlConnection connection = new SqlConnection(productConnectionString);
+            var products = await connection
+                .QueryAsync<ProductFullDapperModel>(
+                    @"SELECT [Id],[GrossPrice],[NetPrice],[TaxPercentage],[Rate],[Name],[Version],[Discriminator],[TemperatureMinimum],[TemperatureMaximum],[Litre],[Grams]
+                    FROM dbo.Products
+                    Where Id IN @Ids", new { Ids = productId.ToArray() })
+                .ConfigureAwait(false);
+            foreach (var item in products)
+            {
+                result.Products.Add(item.ToReadModel());
+            }
+            return result;
         }
     }
 }

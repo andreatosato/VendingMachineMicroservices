@@ -11,9 +11,9 @@ using VendingMachine.Service.Products.Infrastructure.Commands;
 namespace VendingMachine.Service.Products.Infrastructure.Handlers
 {
     public class ProductHandler : 
-        IRequestHandler<ColdDrinkAddCommand, Unit>,
-        IRequestHandler<HotDrinkAddCommand, Unit>,
-        IRequestHandler<SnackAddCommand, Unit>,
+        IRequestHandler<ColdDrinkAddCommand, ProductAddedResult>,
+        IRequestHandler<HotDrinkAddCommand, ProductAddedResult>,
+        IRequestHandler<SnackAddCommand, ProductAddedResult>,
         IRequestHandler<ProductDeleteCommand, Unit>
     {
         private readonly IMediator mediator;
@@ -27,7 +27,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Handlers
             this.logger = loggerFactory.CreateLogger(typeof(ProductHandler));
         }
 
-        public async Task<Unit> Handle(ColdDrinkAddCommand request, CancellationToken cancellationToken)
+        public async Task<ProductAddedResult> Handle(ColdDrinkAddCommand request, CancellationToken cancellationToken)
         {
             var grossPrice = new GrossPrice(request.Price.GrossPrice, request.Price.TaxPercentage);
             var domain = new ColdDrink(request.Name, grossPrice, request.Litre);
@@ -36,10 +36,11 @@ namespace VendingMachine.Service.Products.Infrastructure.Handlers
 
             await productUoW.ProductRepository.AddAsync(domain);
             await productUoW.SaveAsync();
-            return new Unit();
+            int? primaryKey = productUoW.ProductRepository.GetLatestPrimaryKey(domain);
+            return new ProductAddedResult { Id = primaryKey ?? 0 };
         }
 
-        public async Task<Unit> Handle(HotDrinkAddCommand request, CancellationToken cancellationToken)
+        public async Task<ProductAddedResult> Handle(HotDrinkAddCommand request, CancellationToken cancellationToken)
         {
             var grossPrice = new GrossPrice(request.Price.GrossPrice, request.Price.TaxPercentage);
             var domain = new HotDrink(request.Name, grossPrice, request.Grams);
@@ -48,17 +49,19 @@ namespace VendingMachine.Service.Products.Infrastructure.Handlers
 
             await productUoW.ProductRepository.AddAsync(domain);
             await productUoW.SaveAsync();
-            return new Unit();
+            int? primaryKey = productUoW.ProductRepository.GetLatestPrimaryKey(domain);
+            return new ProductAddedResult { Id = primaryKey ?? 0 };
         }
 
-        public async Task<Unit> Handle(SnackAddCommand request, CancellationToken cancellationToken)
+        public async Task<ProductAddedResult> Handle(SnackAddCommand request, CancellationToken cancellationToken)
         {
             var grossPrice = new GrossPrice(request.Price.GrossPrice, request.Price.TaxPercentage);
             var domain = new Snack(request.Name, grossPrice, request.Grams);
 
             await productUoW.ProductRepository.AddAsync(domain);
             await productUoW.SaveAsync();
-            return new Unit();
+            int? primaryKey = productUoW.ProductRepository.GetLatestPrimaryKey(domain);
+            return new ProductAddedResult { Id = primaryKey ?? 0 };
         }
 
         public async Task<Unit> Handle(ProductDeleteCommand request, CancellationToken cancellationToken)

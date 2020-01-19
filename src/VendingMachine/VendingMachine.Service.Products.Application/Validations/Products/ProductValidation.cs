@@ -7,7 +7,6 @@ namespace VendingMachine.Service.Products.Application.Validations.Products
     {
         public ProductValidation()
         {
-            RuleFor(x => x.Id).NotEmpty().NotNull();
             RuleFor(x => x.Name).NotNull().NotEmpty();
             RuleFor(x => x.Price).SetValidator(new GrossPriceValidation());
         }

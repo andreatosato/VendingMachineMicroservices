@@ -37,7 +37,7 @@ namespace VendingMachine.Service.Products
         {
             services.AddHttpContextAccessor()
                 .AddProductEntityFramework(Configuration, env)
-                .AddProductHealthChecks(Configuration)
+                .AddProductHealthChecks(Configuration, env)
                 .AddControllers(options =>
                 {
                     // Apply Auth filter
@@ -89,17 +89,20 @@ namespace VendingMachine.Service.Products
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health-data-api", new HealthCheckOptions()
+                if (env.IsProduction())
                 {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                    endpoints.MapHealthChecks("/health-data-api", new HealthCheckOptions()
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
 
-                endpoints.MapHealthChecksUI(setupOptions: setup =>
-                {
-                    setup.UIPath = "/show-health-ui"; // this is ui path in your browser
-                    setup.ApiPath = "/health-ui-api"; // the UI ( spa app )  use this path to get information from the store ( this is NOT the health-data-api path, is internal ui api )
-                });
+                    endpoints.MapHealthChecksUI(setupOptions: setup =>
+                    {
+                        setup.UIPath = "/show-health-ui"; // this is ui path in your browser
+                        setup.ApiPath = "/health-ui-api"; // the UI ( spa app )  use this path to get information from the store ( this is NOT the health-data-api path, is internal ui api )
+                    });
+                }                
                 endpoints.MapControllers();
             });
         }
@@ -137,19 +140,22 @@ namespace VendingMachine.Service.Products
             return services;
         }
 
-        public static IServiceCollection AddProductHealthChecks(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddProductHealthChecks(this IServiceCollection services, IConfiguration Configuration, IHostEnvironment env)
         {
-            services
-               .AddHealthChecks()
-               .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
-               .AddSqlServer(Configuration.GetConnectionString("ProductDatabase"),
-                    tags: new[] { "product" },
-                    name: "product-db-check");
-
-            services.AddHealthChecksUI(setupSettings: settings =>
+            if (env.IsProduction())
             {
-                settings.AddHealthCheckEndpoint("api", $"{Configuration.GetValue<string>("PathBase")}/health-data-api");
-            });
+                services
+                               .AddHealthChecks()
+                               .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
+                               .AddSqlServer(Configuration.GetConnectionString("ProductDatabase"),
+                                    tags: new[] { "product" },
+                                    name: "product-db-check");
+
+                services.AddHealthChecksUI(setupSettings: settings =>
+                {
+                    settings.AddHealthCheckEndpoint("api", $"{Configuration.GetValue<string>("PathBase")}/health-data-api");
+                });
+            }
             return services;
         }
 

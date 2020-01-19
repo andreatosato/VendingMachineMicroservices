@@ -2,7 +2,7 @@
 
 namespace VendingMachine.Service.Products.Infrastructure.Commands
 {
-    public abstract class ProductAddCommand : IRequest
+    public abstract class ProductAddCommand : IRequest<ProductAddedResult>
     {
         public string Name { get; set; }
         public PriceCommand Price { get; set; }
@@ -25,5 +25,10 @@ namespace VendingMachine.Service.Products.Infrastructure.Commands
     public class SnackAddCommand : ProductAddCommand
     {
         public decimal Grams { get; set; }
+    }
+
+    public class ProductAddedResult
+    {
+        public int Id { get; set; }
     }
 }

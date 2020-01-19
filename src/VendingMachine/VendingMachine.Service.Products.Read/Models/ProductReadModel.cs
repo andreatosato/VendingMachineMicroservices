@@ -1,8 +1,14 @@
 ﻿
+using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 
 namespace VendingMachine.Service.Products.Read.Models
 {
+    public class ProductsReadModel
+    {
+        public Collection<ProductReadModel> Products { get; set; } = new Collection<ProductReadModel>();
+    }
+
     public class ProductReadModel
     {
         public string Name { get; set; }

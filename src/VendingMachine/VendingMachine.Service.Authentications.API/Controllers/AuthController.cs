@@ -93,8 +93,9 @@ namespace VendingMachine.Service.Authentications.API.Controllers
             if (passwordHasher.VerifyHashedPassword(user, user.PasswordHash, model.Password) == PasswordVerificationResult.Success)
             {
                 var userClaims = await userManager.GetClaimsAsync(user);
+                var scopes = model.Scopes.SelectMany(x => x.Split(','));
                 // Filtro solo quelli richiesti
-                userClaims = userClaims.Where(x => model.Scopes.Contains(x.Value)).ToList();
+                userClaims = userClaims.Where(x => scopes.Contains(x.Value)).ToList();
                 var userRoles = await userManager.GetRolesAsync(user);
 
                 var claims = new[]

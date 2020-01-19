@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +72,22 @@ namespace VendingMachine.Service.Products.Controllers
             return BadRequest(ModelState);
         }
 
+        [HttpPost("List")]
+        [ProducesResponseType(typeof(ColdDrinkReadModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(HotDrinkReadModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SnackReadModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetProductsAsync([FromBody] List<int> productIds)
+        {
+            if (!(!productIds.Any() && productIds.Any(x => x <= 0)))
+            {
+                
+                var result = await productQuery.GetProductsInfoAsync(productIds);                
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpPost("Snack")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,9 +103,10 @@ namespace VendingMachine.Service.Products.Controllers
                         GrossPrice = model.Price.GrossPrice,
                         TaxPercentage = model.Price.TaxPercentage
                     },
-                    Grams = model.Grams                    
+                    Grams = model.Grams
                 }).ConfigureAwait(false);
-                return Created($"{productId}", model);
+                model.Id = productId.Id;
+                return CreatedAtAction(nameof(GetInfosAsync), "Products", new { productId = model.Id }, model);
             }
             return BadRequest(ModelState);
         }
@@ -110,7 +129,8 @@ namespace VendingMachine.Service.Products.Controllers
                     TemperatureMaximum = model.TemperatureMaximum,
                     TemperatureMinimum = model.TemperatureMinimum
                 }).ConfigureAwait(false);
-                return Created($"{productId}", model);
+                model.Id = productId.Id;
+                return Created($"{model.Id}", model);
             }
             return BadRequest(ModelState);
         }
@@ -133,7 +153,8 @@ namespace VendingMachine.Service.Products.Controllers
                     TemperatureMaximum = model.TemperatureMaximum,
                     TemperatureMinimum = model.TemperatureMinimum
                 }).ConfigureAwait(false);
-                return Created($"{productId}", model);
+                model.Id = productId.Id;
+                return Created($"{model.Id}", model);
             }
             return BadRequest(ModelState);
         }

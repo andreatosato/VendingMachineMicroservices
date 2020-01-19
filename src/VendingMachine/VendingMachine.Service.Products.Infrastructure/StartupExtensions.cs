@@ -17,8 +17,8 @@ namespace VendingMachine.Service.Products
         public static IServiceCollection AddProductInfrastructure(this IServiceCollection services)
         {
             services.AddMapper();
-            services.AddTransient<IRepository<Product>, ProductRepository>();
-            services.AddTransient<IRepository<ProductItem>, ProductItemRepository>();
+            services.AddTransient<IRepositoryPrimaryKeys<Product>, ProductRepository>();
+            services.AddTransient<IRepositoryPrimaryKeys<ProductItem>, ProductItemRepository>();
             services.AddTransient<IProductsUoW, ProductsUoW>();
             return services;
         }

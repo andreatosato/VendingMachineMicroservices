@@ -10,10 +10,11 @@ using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Products.Infrastructure.Repositories
 {
-    public class ProductItemRepository : IRepository<ProductItem>
+    public class ProductItemRepository : IRepositoryPrimaryKeys<ProductItem>
     {
         private readonly ProductContext db;
         private readonly IMapper mapper;
+        private readonly IDictionary<ProductItem, ProductItemEntity> addedObjects = new Dictionary<ProductItem, ProductItemEntity>();
 
         public ProductItemRepository(ProductContext db, IMapper mapper)
         {
@@ -23,13 +24,14 @@ namespace VendingMachine.Service.Products.Infrastructure.Repositories
 
         public async Task<ProductItem> AddAsync(ProductItem element)
         {
-            var entity = await db.AddAsync(element).ConfigureAwait(false);
+            var entity = await db.ProductItems.AddAsync(mapper.Map<ProductItemEntity>(element)).ConfigureAwait(false);
+            addedObjects.Add(element, entity.Entity);
             return mapper.Map<ProductItem>(entity.Entity);           
         }
 
         public async Task<ProductItem> DeleteAsync(ProductItem element)
         {
-            db.Remove(mapper.Map<ProductItemEntity>(element));
+            db.ProductItems.Remove(mapper.Map<ProductItemEntity>(element));
             return await Task.FromResult(element).ConfigureAwait(false);
         }
 
@@ -43,6 +45,16 @@ namespace VendingMachine.Service.Products.Infrastructure.Repositories
         {
             db.ProductItems.Update(mapper.Map<ProductItemEntity>(element));
             return await Task.FromResult(element).ConfigureAwait(false);
+        }
+
+        public int GetLatestPrimaryKey(ProductItem domain)
+        {
+            if (addedObjects.TryGetValue(domain, out ProductItemEntity entity))
+            {
+                addedObjects.Remove(domain);
+                return entity.Id;
+            }
+            throw new InvalidOperationException("No entity found");
         }
     }
 }

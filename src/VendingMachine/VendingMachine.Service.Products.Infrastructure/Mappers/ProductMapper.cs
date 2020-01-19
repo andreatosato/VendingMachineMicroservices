@@ -24,6 +24,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                 cfg.CreateMap<Product, ProductEntity>()
                    .ForMember(entity => entity.Price, mapper => mapper.MapFrom(entity => entity.Price))
                    .ReverseMap()
+                   .ForMember(d => d.Id, c => c.Ignore())
                    .ForMember(domain => domain.Price, mapper => mapper.Ignore());
 
                 cfg.CreateMap<ColdDrink, ColdDrinkEntity>()
