@@ -10,9 +10,9 @@
     public class GrossPriceViewModel
     {
         public decimal GrossPrice { get; set; }
-        public decimal NetPrice { get; set; }
+        //public decimal NetPrice { get; set; }
         public int TaxPercentage { get; set; }
-        public decimal Rate { get; set; }
+        //public decimal Rate { get; set; }
     }
 
     public class ColdDrinkViewModel : ProductViewModel

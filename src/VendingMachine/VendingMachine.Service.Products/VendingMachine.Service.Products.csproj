@@ -27,6 +27,7 @@
     <ProjectReference Include="..\VendingMachine.Service.Products.Infrastructure\VendingMachine.Service.Products.Infrastructure.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Read\VendingMachine.Service.Products.Read.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Shared.Exceptions\VendingMachine.Service.Shared.Exceptions.csproj" />
   </ItemGroup>
 
 

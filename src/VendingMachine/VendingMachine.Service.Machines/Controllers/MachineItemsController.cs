@@ -71,7 +71,7 @@ namespace VendingMachine.Service.Machines.Controllers
                     Model = model.Model.ModelName,
                     Version = model.Model.Version
                 }).ConfigureAwait(false);
-                return Created($"{machineId}/GetInfos", model);
+                return Created($"{machineId}", model);
             }
             return BadRequest(ModelState);
         }
