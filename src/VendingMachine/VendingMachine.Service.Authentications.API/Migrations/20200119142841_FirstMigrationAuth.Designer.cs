@@ -10,8 +10,8 @@ using VendingMachine.Service.Authentications.API.Data;
 namespace VendingMachine.Service.Authentications.API.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
-    [Migration("20200114202903_ThirdMigrationMachines")]
-    partial class ThirdMigrationMachines
+    [Migration("20200119142841_FirstMigrationAuth")]
+    partial class FirstMigrationAuth
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -70,9 +70,23 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                         new
                         {
                             Id = 1,
-                            ClaimType = "CustomApiClaim",
+                            ClaimType = "VendingMachineApiClaim",
                             ClaimValue = "Machine.Api",
-                            UserId = new Guid("18770f41-908d-40d5-83cd-8481e8009fe2")
+                            UserId = new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7")
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "VendingMachineApiClaim",
+                            ClaimValue = "Product.Api",
+                            UserId = new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7")
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "VendingMachineApiClaim",
+                            ClaimValue = "Order.Api",
+                            UserId = new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7")
                         });
                 });
 
@@ -114,8 +128,8 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("18770f41-908d-40d5-83cd-8481e8009fe2"),
-                            RoleId = new Guid("b6575a31-1be2-4a21-8452-f607d88626e9")
+                            UserId = new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7"),
+                            RoleId = new Guid("5f4f86b0-c668-4919-9725-0c8875a8736f")
                         });
                 });
 
@@ -168,14 +182,14 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c4d55f96-203a-433a-afc5-46a9471bc5dc"),
-                            ConcurrencyStamp = "8420b60f-a5e4-4d31-9263-2c2f0fb640fb",
+                            Id = new Guid("844e9e57-9282-4779-8b3a-eb87b9f9add1"),
+                            ConcurrencyStamp = "4e0666e3-f79e-4ca8-8509-2235bd3578b6",
                             Name = "User"
                         },
                         new
                         {
-                            Id = new Guid("b6575a31-1be2-4a21-8452-f607d88626e9"),
-                            ConcurrencyStamp = "d1bb20a8-fb29-435b-8b90-e482d6d075a4",
+                            Id = new Guid("5f4f86b0-c668-4919-9725-0c8875a8736f"),
+                            ConcurrencyStamp = "e9324026-7d28-46be-82ff-debc16f65b5a",
                             Name = "Admin"
                         });
                 });
@@ -257,9 +271,9 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("18770f41-908d-40d5-83cd-8481e8009fe2"),
+                            Id = new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "de0f10c6-f255-4aa6-ba34-a74c3b987835",
+                            ConcurrencyStamp = "cb8566f5-3fe4-4b14-9adb-e628fcc1f80c",
                             Email = "andrea.tosato@4ward.it",
                             EmailConfirmed = true,
                             FirstName = "Andrea",
@@ -267,7 +281,7 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "andrea.tosato@4ward.it",
                             NormalizedUserName = "andrea.tosato@4ward.it",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAQN/rBto+QkHrly4WhzI+n0H8v/lZXHXw5HXbKTcRzFEYvLNf9YrEzwZ6J46PKm9w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAMm7dx7OYx9kQZkMJ9UEUVqlqZ+OntwYtYCzX+Gu4w4n0ojXmi09OX+Vwi6XK/bQw==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "andrea.tosato@4ward.it"

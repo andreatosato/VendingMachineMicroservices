@@ -49,7 +49,7 @@ namespace VendingMachine.Service.Products
                 })
                 .AddFluentValidation(fv =>
                 {
-                    fv.RegisterValidatorsFromAssemblyContaining<SnackValidation>();
+                    fv.RegisterValidatorsFromAssemblyContaining<ProductValidation>();
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
                 });
 
@@ -77,7 +77,7 @@ namespace VendingMachine.Service.Products
                 // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Machine API");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
                 });
             }
 

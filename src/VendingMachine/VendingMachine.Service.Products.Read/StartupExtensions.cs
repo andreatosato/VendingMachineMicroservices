@@ -8,6 +8,7 @@ namespace VendingMachine.Service.Products
         public static IServiceCollection AddProductQueries(this IServiceCollection services, string connectionString)
         {
             services.AddTransient<IProductQuery>(t => new ProductQuery(connectionString));
+            services.AddTransient<IProductItemQuery>(t => new ProductItemQuery(connectionString));
             return services;
         }
     }

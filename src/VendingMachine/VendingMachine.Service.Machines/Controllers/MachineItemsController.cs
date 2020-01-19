@@ -23,7 +23,7 @@ namespace VendingMachine.Service.Machines.Controllers
         private readonly IDistributedCache distributedCache;
         private readonly ILogger logger;
 
-        public MachineItemsController(IMachineQuery machineQuery, IMachinesUoW machinesUoW, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
+        public MachineItemsController(IMachineQuery machineQuery, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
         {
             this.machineQuery = machineQuery;
             this.mediator = mediator;

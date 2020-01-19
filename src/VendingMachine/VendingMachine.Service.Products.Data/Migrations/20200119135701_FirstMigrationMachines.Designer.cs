@@ -10,7 +10,7 @@ using VendingMachine.Service.Products.Data;
 namespace VendingMachine.Service.Products.Data.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    [Migration("20200115233646_FirstMigrationMachines")]
+    [Migration("20200119135701_FirstMigrationMachines")]
     partial class FirstMigrationMachines
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,10 +58,10 @@ namespace VendingMachine.Service.Products.Data.Migrations
                     b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<DateTimeOffset>("Purchased")
+                    b.Property<DateTimeOffset?>("Purchased")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTimeOffset>("Sold")
+                    b.Property<DateTimeOffset?>("Sold")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
@@ -89,7 +89,7 @@ namespace VendingMachine.Service.Products.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TemperatureMaximum")
-                        .HasColumnName("TemperatureMax")
+                        .HasColumnName("TemperatureMaximum")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TemperatureMinimum")
@@ -118,7 +118,7 @@ namespace VendingMachine.Service.Products.Data.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TemperatureMaximum")
-                        .HasColumnName("TemperatureMax")
+                        .HasColumnName("TemperatureMaximum")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TemperatureMinimum")
@@ -138,7 +138,7 @@ namespace VendingMachine.Service.Products.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("VendingMachine.Service.Products.Data.Entities.SnakEntity", b =>
+            modelBuilder.Entity("VendingMachine.Service.Products.Data.Entities.SnackEntity", b =>
                 {
                     b.HasBaseType("VendingMachine.Service.Products.Data.Entities.ProductEntity");
 
@@ -146,7 +146,7 @@ namespace VendingMachine.Service.Products.Data.Migrations
                         .HasColumnName("Grams")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasDiscriminator().HasValue("SnakEntity");
+                    b.HasDiscriminator().HasValue("SnackEntity");
 
                     b.HasData(
                         new
@@ -166,6 +166,10 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                            b1.Property<decimal>("GrossPrice")
+                                .HasColumnName("GrossPrice")
+                                .HasColumnType("decimal(18,2)");
+
                             b1.Property<decimal>("NetPrice")
                                 .HasColumnName("NetPrice")
                                 .HasColumnType("decimal(18,2)");
@@ -178,10 +182,6 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 .HasColumnName("TaxPercentage")
                                 .HasColumnType("int");
 
-                            b1.Property<decimal>("Value")
-                                .HasColumnName("GrossPrice")
-                                .HasColumnType("decimal(18,2)");
-
                             b1.HasKey("ProductEntityId");
 
                             b1.ToTable("Products");
@@ -193,26 +193,26 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 new
                                 {
                                     ProductEntityId = 1,
+                                    GrossPrice = 0.50m,
                                     NetPrice = 0.48m,
                                     Rate = 0.02m,
-                                    TaxPercentage = 4,
-                                    Value = 0.50m
+                                    TaxPercentage = 4
                                 },
                                 new
                                 {
                                     ProductEntityId = 2,
+                                    GrossPrice = 0.50m,
                                     NetPrice = 0.48m,
                                     Rate = 0.02m,
-                                    TaxPercentage = 4,
-                                    Value = 0.50m
+                                    TaxPercentage = 4
                                 },
                                 new
                                 {
                                     ProductEntityId = 3,
+                                    GrossPrice = 0.70m,
                                     NetPrice = 0.67m,
                                     Rate = 0.03m,
-                                    TaxPercentage = 4,
-                                    Value = 0.70m
+                                    TaxPercentage = 4
                                 });
                         });
                 });
@@ -230,6 +230,10 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 .HasColumnType("int")
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                            b1.Property<decimal>("GrossPrice")
+                                .HasColumnName("GrossPrice")
+                                .HasColumnType("decimal(18,2)");
+
                             b1.Property<decimal>("NetPrice")
                                 .HasColumnName("NetPrice")
                                 .HasColumnType("decimal(18,2)");
@@ -242,10 +246,6 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 .HasColumnName("TaxPercentage")
                                 .HasColumnType("int");
 
-                            b1.Property<decimal>("Value")
-                                .HasColumnName("GrossPrice")
-                                .HasColumnType("decimal(18,2)");
-
                             b1.HasKey("ProductItemEntityId");
 
                             b1.ToTable("ProductItems");
@@ -257,10 +257,10 @@ namespace VendingMachine.Service.Products.Data.Migrations
                                 new
                                 {
                                     ProductItemEntityId = 1,
+                                    GrossPrice = 0.90m,
                                     NetPrice = 0.86m,
                                     Rate = 0.04m,
-                                    TaxPercentage = 4,
-                                    Value = 0.90m
+                                    TaxPercentage = 4
                                 });
                         });
                 });

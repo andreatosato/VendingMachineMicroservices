@@ -154,6 +154,36 @@ namespace VendingMachine.Service.Authentications.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { new Guid("844e9e57-9282-4779-8b3a-eb87b9f9add1"), "4e0666e3-f79e-4ca8-8509-2235bd3578b6", "User", null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { new Guid("5f4f86b0-c668-4919-9725-0c8875a8736f"), "e9324026-7d28-46be-82ff-debc16f65b5a", "Admin", null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7"), 0, "cb8566f5-3fe4-4b14-9adb-e628fcc1f80c", "andrea.tosato@4ward.it", true, "Andrea", "Tosato", false, null, "andrea.tosato@4ward.it", "andrea.tosato@4ward.it", "AQAAAAEAACcQAAAAEAMm7dx7OYx9kQZkMJ9UEUVqlqZ+OntwYtYCzX+Gu4w4n0ojXmi09OX+Vwi6XK/bQw==", null, false, null, false, "andrea.tosato@4ward.it" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "VendingMachineApiClaim", "Machine.Api", new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7") },
+                    { 2, "VendingMachineApiClaim", "Product.Api", new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7") },
+                    { 3, "VendingMachineApiClaim", "Order.Api", new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7") }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { new Guid("aa172fc2-786d-4f47-bb30-32b77bc3f3e7"), new Guid("5f4f86b0-c668-4919-9725-0c8875a8736f") });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",

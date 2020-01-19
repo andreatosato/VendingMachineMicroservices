@@ -50,7 +50,7 @@ namespace VendingMachine.Service.Products.Data
                 TemperatureMinimum = 15,
                 Id = 2
             };
-            var snak = new SnackEntity()
+            var snack = new SnackEntity()
             {
                 Name = "Kinder Delice",
                 Grams = 40,
@@ -60,7 +60,7 @@ namespace VendingMachine.Service.Products.Data
             var kinderDelice = new
             {
                 Id = 1,
-                ProductId = snak.Id,
+                ProductId = snack.Id,
                 ExpirationDate = new System.DateTime(2022, 1, 1, 0, 0, 0),
                 Purchased = new System.DateTimeOffset(2020, 1, 6, 9, 0, 0, System.TimeSpan.Zero),
                 Sold = new System.DateTimeOffset(2020, 1, 6, 11, 0, 0, System.TimeSpan.Zero),
@@ -70,7 +70,7 @@ namespace VendingMachine.Service.Products.Data
             modelBuilder.Entity<ColdDrinkEntity>().OwnsOne(p => p.Price).HasData(new 
             {
                 ProductEntityId = cold.Id,
-                Value = 0.50m,
+                GrossPrice = 0.50m,
                 TaxPercentage = 4,
                 NetPrice = 0.48m,
                 Rate = 0.02m
@@ -79,25 +79,27 @@ namespace VendingMachine.Service.Products.Data
             modelBuilder.Entity<HotDrinkEntity>().OwnsOne(p => p.Price).HasData(new
             {
                 ProductEntityId = hot.Id,
-                Value = 0.50m,
+                GrossPrice = 0.50m,
                 TaxPercentage = 4,
                 NetPrice = 0.48m,
                 Rate = 0.02m
             });
-            modelBuilder.Entity<SnackEntity>().HasData(snak);
+            modelBuilder.Entity<SnackEntity>().HasData(snack);
             modelBuilder.Entity<SnackEntity>().OwnsOne(p => p.Price).HasData(new
             {
-                ProductEntityId = snak.Id,
-                Value = 0.70m,
+                ProductEntityId = snack.Id,
+                GrossPrice = 0.70m,
                 TaxPercentage = 4,
                 NetPrice = 0.67m,
                 Rate = 0.03m
             });
+
+
             modelBuilder.Entity<ProductItemEntity>().HasData(kinderDelice);
             modelBuilder.Entity<ProductItemEntity>().OwnsOne(p => p.SoldPrice).HasData(new
             {
                 ProductItemEntityId = kinderDelice.Id,
-                Value = 0.90m,
+                GrossPrice = 0.90m,
                 TaxPercentage = 4,
                 NetPrice = 0.86m,
                 Rate = 0.04m

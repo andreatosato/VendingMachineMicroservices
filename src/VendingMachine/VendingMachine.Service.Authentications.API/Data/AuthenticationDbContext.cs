@@ -50,6 +50,8 @@ namespace VendingMachine.Service.Authentications.API.Data
                 .HasData(userRole, adminRole);
 
             modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 1, UserId = user1Object.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.MachineApi });
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 2, UserId = user1Object.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.ProductApi });
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 3, UserId = user1Object.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.OrderApi });
 
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>() { UserId = user1Object.Id, RoleId = adminRole.Id });
         }

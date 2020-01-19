@@ -11,7 +11,6 @@ namespace VendingMachine.Service.Machines.Binders
     public class MachineModelBinderProvider : IModelBinderProvider
     {
         private readonly IList<IInputFormatter> formatters;
-        private readonly IHttpRequestStreamReaderFactory readerFactory;
         private BodyModelBinderProvider defaultProvider;
 
         public MachineModelBinderProvider(IList<IInputFormatter> formatters)

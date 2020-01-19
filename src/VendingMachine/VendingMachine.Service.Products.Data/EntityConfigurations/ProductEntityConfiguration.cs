@@ -36,7 +36,7 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<ColdDrinkEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
-            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMax");
+            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum");
             builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum");
             
             //owned types with table splitting
@@ -57,7 +57,7 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<HotDrinkEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
-            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMax");
+            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum");
             builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum");
             builder.Property(x => x.Grams).HasColumnName("Grams");
 

@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using VendingMachine.Service.Products.Read.Models;
+using System.Threading.Tasks;
 
 namespace VendingMachine.Service.Products.Read.Queries
 {
-    interface IProductQuery
+    public interface IProductQuery
     {
+        Task<ProductReadModel> GetProductInfoAsync(int productId);
     }
 }
