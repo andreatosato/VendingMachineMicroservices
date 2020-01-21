@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using VendingMachine.Service.Products.ServiceCommunications;
 using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Aggregators.Web.API
@@ -32,6 +33,16 @@ namespace VendingMachine.Service.Aggregators.Web.API
             services
                 .AddCustomAuthentication(Configuration)
                 .AddControllers();
+            services.AddGrpcClient<ProductItems.ProductItemsClient>(o =>
+            {
+                o.Address = new Uri("https://localhost:5001");
+            })
+            //.AddInterceptor(() => new LoggingInterceptor())
+            //.ConfigureChannel(o =>
+            //{
+            //    o.Credentials = new CustomCredentials();
+            //})
+            ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

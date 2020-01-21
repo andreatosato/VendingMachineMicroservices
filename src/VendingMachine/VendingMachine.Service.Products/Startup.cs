@@ -22,6 +22,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VendingMachine.Service.Products.Application.Validations.Products;
 using VendingMachine.Service.Products.Infrastructure.Handlers;
+using VendingMachine.Service.Products.ServiceCommunications.Services;
 using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Products
@@ -82,6 +83,8 @@ namespace VendingMachine.Service.Products
             .AddMediatR(typeof(ProductHandler))
             .AddDistributedMemoryCache()
             .AddProductSwagger(env);
+
+            services.AddGrpc(c => c.EnableDetailedErrors = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +135,7 @@ namespace VendingMachine.Service.Products
                     });
                 }                
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ProductsService>();
             });
         }
     }

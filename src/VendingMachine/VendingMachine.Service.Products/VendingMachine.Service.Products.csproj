@@ -9,6 +9,10 @@
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
     <PackageReference Include="FluentValidation" Version="8.6.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.26.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
@@ -22,12 +26,18 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.24.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="gRPC\Protos\product.proto" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Products.Application\VendingMachine.Service.Products.Application.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Infrastructure\VendingMachine.Service.Products.Infrastructure.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Read\VendingMachine.Service.Products.Read.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications\VendingMachine.Service.Products.ServiceCommunications.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Exceptions\VendingMachine.Service.Shared.Exceptions.csproj" />
   </ItemGroup>

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "VendingMachine.Service.Products";
+
+package VendingMachine.Service.Products;
+
+service ProductsMicroservices {
+	rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+}
+
+message GetProductsRequest {
+
+}
+
+message GetProductsResponse {
+
+}

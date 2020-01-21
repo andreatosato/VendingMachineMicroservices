@@ -11,9 +11,12 @@
       ],
       "UpstreamPathTemplate": "/product-api/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
-      "Key" :  "Product.Api",
+      "Key": "Product.Api",
       "DangerousAcceptAnyServerCertificateValidator": true
     }
+  ],
+  "Aggregates": [
+
   ],
   "GlobalConfiguration": {
 

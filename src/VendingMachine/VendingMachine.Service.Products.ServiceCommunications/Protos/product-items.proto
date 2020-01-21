@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+/*Namespace per i Timestamp C#*/
+import "google/protobuf/duration.proto";
+/*Namespace per i DateTime C#*/
+import "google/protobuf/timestamp.proto";
+/*Campo Any e OneOf*/
+import "google/protobuf/any.proto";
+/*Namespace per i tipi nullable ESPLICITI (double?) => google.protobuf.DoubleValue C#*/
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "VendingMachine.Service.Products.ServiceCommunications";
+
+package VendingMachine.Service.Products.ServiceCommunications;
+
+service ProductItems {
+	rpc GetProducts (ProductsRequest) returns (stream ProductItemsServiceModel);
+}
+
+message ProductItemsServiceModel {
+	ProductServiceModel Product = 1;
+	google.protobuf.Timestamp Purchased = 2;
+	google.protobuf.Timestamp Sold = 3;
+	google.protobuf.Timestamp ExpirationDate = 4;
+	GrossPriceServiceModel SoldPrice = 5;
+}
+
+message ProductServiceModel {
+	ProductType ProductType = 1;
+	string Name = 2;
+	int32 Id = 3;
+	GrossPriceServiceModel Price = 4;
+	google.protobuf.DoubleValue TemperatureMinimum = 5;
+	google.protobuf.DoubleValue TemperatureMaximum = 6;
+	google.protobuf.DoubleValue Litre = 7;
+	google.protobuf.DoubleValue Grams  = 8;
+}
+
+message GrossPriceServiceModel {
+	double GrossPrice = 1;
+	int32 TaxPercentage = 2;
+}
+
+enum ProductType {
+    ColdDrink = 0;
+    HotDrink = 1;
+    Snack = 2;
+}
+
+message ProductsRequest {
+	repeated int32 ProductIds = 1;
+}
