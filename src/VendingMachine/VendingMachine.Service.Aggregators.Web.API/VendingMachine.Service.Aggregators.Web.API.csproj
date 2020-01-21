@@ -5,13 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ocelot" Version="14.0.3" />
-    <PackageReference Include="Ocelot.Provider.Polly" Version="14.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
   </ItemGroup>
+
 
 </Project>

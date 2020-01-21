@@ -7,9 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace VendingMachine.Service.Products.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/ProductItems")]
     [ApiController]
-    public class ProductItemsController : ControllerBase
+    public class ProductItemsV1Controller : ControllerBase
     {
+        [HttpGet("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetInfosAsync([FromRoute] int productId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

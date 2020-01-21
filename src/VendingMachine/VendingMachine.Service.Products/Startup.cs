@@ -8,13 +8,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using VendingMachine.Service.Products.Application.Validations.Products;
 using VendingMachine.Service.Products.Infrastructure.Handlers;
 using VendingMachine.Service.Shared.Authentication;
@@ -53,32 +58,55 @@ namespace VendingMachine.Service.Products
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
                 });
 
-            services.AddCustomAuthentication(Configuration)
-               .AddProductInfrastructure()
-               .AddProductQueries(Configuration.GetConnectionString("ProductDatabase"))
-               .AddMediatR(typeof(ProductHandler))
-               .AddDistributedMemoryCache()
-               .AddProductSwagger(env);
+            services.AddApiVersioning(o => 
+            {
+                o.ReportApiVersions = true;
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+                //o.Conventions.Controller<Controllers.Productsv1Controller>().HasApiVersion(new ApiVersion(1, 0));
+            })
+            .AddVersionedApiExplorer(options =>                {
+                // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+                // note: the specified format code will format the version as "'v'major[.minor][-status]"
+                options.GroupNameFormat = "'v'VVV";
+
+                // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+                // can also be used to control the format of the API version in route templates
+                options.SubstituteApiVersionInUrl = true;
+            })
+            .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+            .AddCustomAuthentication(Configuration)
+            .AddProductInfrastructure()
+            .AddProductQueries(Configuration.GetConnectionString("ProductDatabase"))
+            .AddMediatR(typeof(ProductHandler))
+            .AddDistributedMemoryCache()
+            .AddProductSwagger(env);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseCors("AnyOrigin");
             if (env.IsDevelopment())
             {
                 // Enable middleware to serve generated Swagger as a JSON endpoint.
                 app.UseSwagger();
                 // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
-                });
+                app.UseSwaggerUI(
+                   options =>
+                   {
+                        // build a swagger endpoint for each discovered API version
+                        foreach (var description in provider.ApiVersionDescriptions)
+                        {
+                           options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", 
+                               description.GroupName.ToUpperInvariant());
+                        }
+                   });
             }
 
             app.UseSerilogRequestLogging();
@@ -116,7 +144,8 @@ namespace VendingMachine.Service.Products
             {
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product API", Version = "v1" });
+                    c.OperationFilter<SwaggerDefaultValues>();
+                   
                     c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme,
                         new OpenApiSecurityScheme
                         {

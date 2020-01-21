@@ -15,21 +15,30 @@ using VendingMachine.Service.Shared.Exceptions;
 
 namespace VendingMachine.Service.Products.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/Products")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class Productsv1Controller : ControllerBase
+    {
+
+    }
+
+    [ApiVersion("2.0")]    
+    [Route("api/Products")]
+    [ApiController]
+    public class ProductsV2Controller : ControllerBase
     {
         private readonly IProductQuery productQuery;
         private readonly IMediator mediator;
         private readonly IDistributedCache distributedCache;
         private readonly ILogger logger;
 
-        public ProductsController(IProductQuery productQuery, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
+        public ProductsV2Controller(IProductQuery productQuery, IMediator mediator, IDistributedCache distributedCache, ILoggerFactory loggerFactory)
         {
             this.productQuery = productQuery;
             this.mediator = mediator;
             this.distributedCache = distributedCache;
-            this.logger = loggerFactory.CreateLogger(typeof(ProductsController));
+            this.logger = loggerFactory.CreateLogger(typeof(ProductsV2Controller));
         }
 
         [HttpGet("{productId:int}")]
@@ -106,7 +115,7 @@ namespace VendingMachine.Service.Products.Controllers
                     Grams = model.Grams
                 }).ConfigureAwait(false);
                 model.Id = productId.Id;
-                return CreatedAtAction(nameof(GetInfosAsync), "Products", new { productId = model.Id }, model);
+                return CreatedAtAction(nameof(GetInfosAsync), new { productId = model.Id }, model);
             }
             return BadRequest(ModelState);
         }
