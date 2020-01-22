@@ -135,7 +135,8 @@ namespace VendingMachine.Service.Products
                     });
                 }                
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<ProductsService>();
+                endpoints.MapGrpcService<ServiceCommunications.Services.ProductsService>();
+                endpoints.MapGrpcService<ServiceCommunications.Services.ProductItemsService>();
             });
         }
     }

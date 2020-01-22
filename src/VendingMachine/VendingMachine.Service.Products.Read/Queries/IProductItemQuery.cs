@@ -9,5 +9,6 @@ namespace VendingMachine.Service.Products.Read.Queries
     public interface IProductItemQuery
     {
         Task<ProductItemsReadModel> GetProductsInfoAsync(List<int> productItemsId);
+        Task<bool> ExistProductItemAsync(int productItemsId);
     }
 }

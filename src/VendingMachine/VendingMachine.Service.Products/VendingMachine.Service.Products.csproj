@@ -30,10 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="gRPC\Protos\product.proto" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Products.Application\VendingMachine.Service.Products.Application.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Infrastructure\VendingMachine.Service.Products.Infrastructure.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Read\VendingMachine.Service.Products.Read.csproj" />

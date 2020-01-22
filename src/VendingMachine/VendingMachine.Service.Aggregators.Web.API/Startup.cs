@@ -30,19 +30,12 @@ namespace VendingMachine.Service.Aggregators.Web.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IServicesReference>(Configuration);
+
             services
                 .AddCustomAuthentication(Configuration)
-                .AddControllers();
-            services.AddGrpcClient<ProductItems.ProductItemsClient>(o =>
-            {
-                o.Address = new Uri("https://localhost:5001");
-            })
-            //.AddInterceptor(() => new LoggingInterceptor())
-            //.ConfigureChannel(o =>
-            //{
-            //    o.Credentials = new CustomCredentials();
-            //})
-            ;
+                .AddGrpcServices()
+                .AddControllers();                
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,11 +47,8 @@ namespace VendingMachine.Service.Aggregators.Web.API
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -92,6 +82,29 @@ namespace VendingMachine.Service.Aggregators.Web.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.Default.GetBytes(jwtSettings.SecurityKey)),
                     LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) => DateTime.UtcNow < expires.GetValueOrDefault(),
                 };
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        {
+            services.AddGrpcClient<ProductItems.ProductItemsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                o.Address = new Uri(serviceReference.ProductItemsService);
+            })
+            //.AddInterceptor(() => new LoggingInterceptor())
+            //.ConfigureChannel(o =>
+            //{
+            //    o.Credentials = new CustomCredentials();
+            //})
+            ;
+
+            services.AddGrpcClient<Products.ServiceCommunications.Products.ProductsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                o.Address = new Uri(serviceReference.ProductsService);
             });
 
             return services;

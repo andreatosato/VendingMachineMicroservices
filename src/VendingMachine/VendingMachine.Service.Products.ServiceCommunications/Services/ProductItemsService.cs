@@ -14,9 +14,10 @@ namespace VendingMachine.Service.Products.ServiceCommunications.Services
         {
            this.query = query;
         }
-        public override async Task GetProducts(ProductsRequest request, IServerStreamWriter<ProductItemsServiceModel> responseStream, ServerCallContext context)
+
+
+        public override async Task GetProductItems(GetProductItemsRequest request, IServerStreamWriter<ProductItemsServiceModel> responseStream, ServerCallContext context)
         {
-            ProductItemsServiceModel response = new ProductItemsServiceModel();
             List<int> productIds = new List<int>();
             while (request.ProductIds.GetEnumerator().MoveNext())
             {
@@ -68,5 +69,10 @@ namespace VendingMachine.Service.Products.ServiceCommunications.Services
             }
         }
 
+        public override async Task<ExistProductItemResponse> ExistProductItem(ExistProductItemRequest request, ServerCallContext context)
+        {
+            bool result = await query.ExistProductItemAsync(request.ProductItemId);
+            return new ExistProductItemResponse() { Exist = result };
+        }
     }
 }

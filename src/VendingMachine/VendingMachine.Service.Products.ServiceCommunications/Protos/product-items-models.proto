@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+
+/*Namespace per i Timestamp C#*/
+/*import "google/protobuf/duration.proto";*/
+/*Namespace per i DateTime C#*/
+import "google/protobuf/timestamp.proto";
+/*Campo Any e OneOf*/
+/*import "google/protobuf/any.proto"; */
+/*Namespace per i tipi nullable ESPLICITI (double?) => google.protobuf.DoubleValue C#*/
+/*import "google/protobuf/wrappers.proto";*/
+
+import "Protos/product-models.proto";
+
+option csharp_namespace = "VendingMachine.Service.Products.ServiceCommunications";
+
+package VendingMachine.Service.Products.ServiceCommunications;
+
+
+message ProductItemsServiceModel {
+	ProductServiceModel Product = 1;
+	google.protobuf.Timestamp Purchased = 2;
+	google.protobuf.Timestamp Sold = 3;
+	google.protobuf.Timestamp ExpirationDate = 4;
+	GrossPriceServiceModel SoldPrice = 5;
+}
+
+message GetProductItemsRequest {
+	repeated int32 ProductIds = 1;
+}
+
+message ExistProductItemRequest {
+	int32 ProductItemId = 1;
+}
+
+message ExistProductItemResponse {
+	bool Exist = 1;
+}
+

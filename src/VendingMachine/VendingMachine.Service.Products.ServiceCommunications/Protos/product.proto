@@ -1,0 +1,11 @@
+﻿syntax = "proto3";
+
+import "Protos/product-models.proto";
+
+option csharp_namespace = "VendingMachine.Service.Products.ServiceCommunications";
+
+package VendingMachine.Service.Products.ServiceCommunications;
+
+service Products {
+	rpc ExistProduct (ExistProductRequest) returns (ExistProductResponse);
+}

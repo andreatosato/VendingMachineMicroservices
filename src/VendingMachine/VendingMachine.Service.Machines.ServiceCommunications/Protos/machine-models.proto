@@ -1,0 +1,64 @@
+﻿syntax = "proto3";
+
+/*Namespace per i tipi nullable ESPLICITI (double?) => google.protobuf.DoubleValue C#*/
+import "google/protobuf/wrappers.proto";
+
+/*Models*/
+message MachineServiceModel {
+	MapPosition Position = 1;
+	google.protobuf.DoubleValue Temperature = 2;
+	google.protobuf.BoolValue Status = 3;
+	google.protobuf.DoubleValue MoneyFromBirth = 4;
+    google.protobuf.DoubleValue MoneyMonth = 5;
+    google.protobuf.DoubleValue MoneyYear = 6;
+    repeated ProductConsumedModel HistoryProducts = 7;
+    repeated ProductActiveModel ActiveProducts = 8;
+    google.protobuf.Timestamp LatestLoadedProducts = 9;
+    google.protobuf.Timestamp LatestCleaningMachine = 10;
+    google.protobuf.Timestamp LatestMoneyCollection = 11;
+    google.protobuf.DoubleValue CoinsInMachine = 12;
+    google.protobuf.DoubleValue CoinsCurrentSupply = 13;
+}
+message ProductConsumedModel {
+	google.protobuf.Timestamp ActivationDate = 1;
+	google.protobuf.Timestamp ProvidedDate = 2;
+}
+
+message ProductActiveModel {
+	google.protobuf.Timestamp ActivationDate = 1;
+}
+
+message MapPosition {
+	double X = 1;
+	double Y = 2;
+}
+
+message MachineType {
+	string Model = 1;
+	MachineVersion Version = 2;
+}
+
+enum MachineVersion {
+     Coffee = 0,
+     Frigo = 1,
+     FrigoAndCoffee = 2
+}
+
+
+
+/*Request and Response*/
+message GetMachineInfoRequest {
+	int32 MachineId = 1;
+}
+
+message GetMachineInfoResponse {
+	MachineServiceModel Machine = 1;
+}
+
+message ExistMachineRequest {
+	int32 MachineId = 1;
+}
+
+message ExistMachineResponse {
+	bool Exist = 1;
+}

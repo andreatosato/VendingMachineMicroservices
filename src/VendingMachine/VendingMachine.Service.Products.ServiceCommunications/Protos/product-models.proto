@@ -1,0 +1,38 @@
+﻿syntax = "proto3";
+
+/*Namespace per i tipi nullable ESPLICITI (double?) => google.protobuf.DoubleValue C#*/
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "VendingMachine.Service.Products.ServiceCommunications";
+
+package VendingMachine.Service.Products.ServiceCommunications;
+
+message ProductServiceModel {
+	ProductType ProductType = 1;
+	string Name = 2;
+	int32 Id = 3;
+	GrossPriceServiceModel Price = 4;
+	google.protobuf.DoubleValue TemperatureMinimum = 5;
+	google.protobuf.DoubleValue TemperatureMaximum = 6;
+	google.protobuf.DoubleValue Litre = 7;
+	google.protobuf.DoubleValue Grams  = 8;
+}
+
+message GrossPriceServiceModel {
+	double GrossPrice = 1;
+	int32 TaxPercentage = 2;
+}
+
+enum ProductType {
+    ColdDrink = 0;
+    HotDrink = 1;
+    Snack = 2;
+}
+
+message ExistProductRequest {
+	int32 ProductId = 1;
+}
+
+message ExistProductResponse {
+	bool Exist = 1;
+}

@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\product-items-models.proto" />
     <None Remove="Protos\product-items.proto" />
+    <None Remove="Protos\product-models.proto" />
+    <None Remove="Protos\product.proto" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\product-items.proto" GrpcServices="Client" />
+    <Protobuf Include="Protos\product-items.proto" />
+    <Protobuf Include="Protos\product-items-models.proto" />
+    <Protobuf Include="Protos\product-models.proto" />
+    <Protobuf Include="Protos\product.proto" />
   </ItemGroup>
 
 

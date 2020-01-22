@@ -9,5 +9,6 @@ namespace VendingMachine.Service.Products.Read.Queries
     {
         Task<ProductReadModel> GetProductInfoAsync(int productId);
         Task<ProductsReadModel> GetProductsInfoAsync(List<int> productId);
+        Task<bool> ExistProductAsync(int productId);
     }
 }

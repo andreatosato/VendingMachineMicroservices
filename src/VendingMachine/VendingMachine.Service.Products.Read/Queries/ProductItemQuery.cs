@@ -18,6 +18,17 @@ namespace VendingMachine.Service.Products.Read.Queries
             this.productConnectionString = productConnectionString;
         }
 
+        public async Task<bool> ExistProductItemAsync(int productItemsId)
+        {
+            bool result;
+            using SqlConnection connection = new SqlConnection(productConnectionString);
+            result = await connection
+                .ExecuteScalarAsync<bool>(@"SELECT COUNT(DISTINCT 1) FROM [dbo].[ProductItems] WHERE PI.Id IN @Id", 
+                    param: new { Id = productItemsId })
+                .ConfigureAwait(false);
+            return result;
+        }
+
         public async Task<ProductItemsReadModel> GetProductsInfoAsync(List<int> productItemsId)
         {
             ProductItemsReadModel result = new ProductItemsReadModel();
