@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\machine-models.proto" />
+    <None Remove="Protos\machine.proto" />
     <None Remove="Protos\product-items-models.proto" />
     <None Remove="Protos\product-items.proto" />
     <None Remove="Protos\product-models.proto" />
@@ -29,6 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos\machine-models.proto" />
+    <Protobuf Include="Protos\machine.proto" />
     <Protobuf Include="Protos\product-items.proto" />
     <Protobuf Include="Protos\product-items-models.proto" />
     <Protobuf Include="Protos\product-models.proto" />

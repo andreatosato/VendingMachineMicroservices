@@ -107,6 +107,13 @@ namespace VendingMachine.Service.Aggregators.Web.API
                 o.Address = new Uri(serviceReference.ProductsService);
             });
 
+
+            services.AddGrpcClient<Machines.ServiceCommunications.MachineItems.MachineItemsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                o.Address = new Uri(serviceReference.MachineItemService);
+            });
+
             return services;
         }
     }

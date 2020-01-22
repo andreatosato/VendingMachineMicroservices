@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VendingMachine.Service.Machines.ServiceCommunications;
 using VendingMachine.Service.Products.ServiceCommunications;
 
 namespace VendingMachine.Service.Aggregators.Web.API.Controllers
@@ -14,10 +15,13 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
     public class MachineController : ControllerBase
     {
         private readonly ProductItems.ProductItemsClient productItemsClient;
+        private readonly MachineItems.MachineItemsClient machineItemsClient;
 
-        public MachineController(ProductItems.ProductItemsClient productItemsClient)
+        public MachineController(ProductItems.ProductItemsClient productItemsClient, 
+            MachineItems.MachineItemsClient machineItemsClient)
         {
             this.productItemsClient = productItemsClient;
+            this.machineItemsClient = machineItemsClient;
         }
 
         [HttpGet("{machineId:int}")]
@@ -28,11 +32,11 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
             // Read Payload
 
             //Then, foreach product...
-            var request = new ProductsRequest();
+            var request = new GetProductItemsRequest();
             request.ProductIds.Add(new int[1] { 1 });
-            while (await productItemsClient.GetProducts(request).ResponseStream.MoveNext(CancellationToken.None))
+            while (await productItemsClient.GetProductItems(request).ResponseStream.MoveNext(CancellationToken.None))
             {
-                var product = productItemsClient.GetProducts(request).ResponseStream.Current;
+                var product = productItemsClient.GetProductItems(request).ResponseStream.Current;
             }
 
             throw new NotImplementedException();
