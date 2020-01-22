@@ -56,13 +56,14 @@ namespace VendingMachine.Service.Machines
                     fv.RegisterValidatorsFromAssemblyContaining<AddCoinsValidation>();
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false; // Remove default ASP .NET Core Validations
                 });
-
             services.AddCustomAuthentication(Configuration)
                 .AddMachineInfrastructure()
                 .AddMachineQueries(Configuration.GetConnectionString("MachineDatabase"))
                 .AddMediatR(typeof(MachineRequestsHandler))
                 .AddDistributedMemoryCache()
                 .AddMachineSwagger(env);
+
+            services.AddGrpc(c => c.EnableDetailedErrors = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,6 +106,7 @@ namespace VendingMachine.Service.Machines
                 });
                 
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ServiceCommunications.Services.MachineItemService>();
             });
         }
     }

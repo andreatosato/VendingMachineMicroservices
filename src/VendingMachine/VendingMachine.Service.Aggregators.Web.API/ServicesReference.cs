@@ -5,14 +5,7 @@ using System.Threading.Tasks;
 
 namespace VendingMachine.Service.Aggregators.Web.API
 {
-    public interface IServicesReference
-    {
-        string ProductsService { get; set; }
-        string ProductItemsService { get; set; }
-        string MachineItemService { get; set; }
-    }
-
-    public class ServicesReference : IServicesReference
+    public class ServicesReference
     {
         public string ProductsService { get; set; }
         public string ProductItemsService { get; set; }

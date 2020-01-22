@@ -51,7 +51,13 @@ namespace VendingMachine.Service.Machines
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                        {
+                            serverOptions.Listen(System.Net.IPAddress.Any, 44393, listenOptions =>
+                            {
+                                listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
+                            });
+                        })
                         .UseStartup<Startup>()
                         .UseSerilog();
                 });

@@ -20,12 +20,14 @@
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.24.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Machines.Application\VendingMachine.Service.Machines.Application.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Machines.Data\VendingMachine.Service.Machines.Data.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Machines.Infrastructure\VendingMachine.Service.Machines.Infrastructure.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications\VendingMachine.Service.Machines.ServiceCommunications.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
   </ItemGroup>
 

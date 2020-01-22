@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,14 +39,28 @@ namespace VendingMachine.Service.Aggregators.Web.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<IServicesReference>(Configuration);
+            var serviceReference = new ServicesReference();
+            Configuration.Bind(nameof(ServicesReference), serviceReference);
+            services.AddSingleton<ServicesReference>(serviceReference);
 
             services
                 .AddCustomAuthentication(Configuration)
                 .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                 .AddProductSwagger(environment)
                 .AddGrpcServices()
-                .AddControllers();                
+                .AddControllers();
+            services.AddApiVersioning(o =>
+            {
+                o.ReportApiVersions = true;
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            })
+            .AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +132,7 @@ namespace VendingMachine.Service.Aggregators.Web.API
         {
             services.AddGrpcClient<ProductItems.ProductItemsClient>((serviceProvider, o) =>
             {
-                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
                 o.Address = new Uri(serviceReference.ProductItemsService);
             })
             //.AddInterceptor(() => new LoggingInterceptor())
@@ -129,14 +144,14 @@ namespace VendingMachine.Service.Aggregators.Web.API
 
             services.AddGrpcClient<Products.ServiceCommunications.Products.ProductsClient>((serviceProvider, o) =>
             {
-                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
                 o.Address = new Uri(serviceReference.ProductsService);
             });
 
 
             services.AddGrpcClient<Machines.ServiceCommunications.MachineItems.MachineItemsClient>((serviceProvider, o) =>
             {
-                var serviceReference = serviceProvider.GetRequiredService<IServicesReference>();
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
                 o.Address = new Uri(serviceReference.MachineItemService);
             });
 
