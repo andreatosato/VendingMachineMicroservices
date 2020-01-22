@@ -19,15 +19,19 @@ message MachineServiceModel {
     google.protobuf.Timestamp LatestMoneyCollection = 11;
     google.protobuf.DoubleValue CoinsInMachine = 12;
     google.protobuf.DoubleValue CoinsCurrentSupply = 13;
+	int32 machineId = 14;
+	MachineTypeModel MachineType = 15;
 }
 
 message ProductConsumedModel {
-	google.protobuf.Timestamp ActivationDate = 1;
-	google.protobuf.Timestamp ProvidedDate = 2;
+	int32 Id = 1;
+	google.protobuf.Timestamp ActivationDate = 2;
+	google.protobuf.Timestamp ProvidedDate = 3;
 }
 
 message ProductActiveModel {
-	google.protobuf.Timestamp ActivationDate = 1;
+	int32 Id = 1;
+	google.protobuf.Timestamp ActivationDate = 2;
 }
 
 message MapPosition {
@@ -35,7 +39,7 @@ message MapPosition {
 	double Y = 2;
 }
 
-message MachineType {
+message MachineTypeModel {
 	string Model = 1;
 	MachineVersion Version = 2;
 }

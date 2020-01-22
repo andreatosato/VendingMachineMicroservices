@@ -3,16 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Protos\machine-models.proto" />
-    <None Remove="Protos\machine.proto" />
-    <None Remove="Protos\product-items-models.proto" />
-    <None Remove="Protos\product-items.proto" />
-    <None Remove="Protos\product-models.proto" />
-    <None Remove="Protos\product.proto" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.11.2" />
     <PackageReference Include="Grpc.Net.Client" Version="2.26.0" />
@@ -24,19 +15,26 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc5" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Shared.API\VendingMachine.Service.Shared.API.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\machine-models.proto" />
     <Protobuf Include="Protos\machine.proto" />
+    <Protobuf Include="Protos\machine-models.proto" />
     <Protobuf Include="Protos\product-items.proto" />
     <Protobuf Include="Protos\product-items-models.proto" />
     <Protobuf Include="Protos\product-models.proto" />
     <Protobuf Include="Protos\product.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Mappers\" />
   </ItemGroup>
 
 

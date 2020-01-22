@@ -18,7 +18,6 @@ namespace VendingMachine.Service.Machines.ServiceCommunications.Services
         {
             if (request.MachineId > 0)
             {
-               
                 var result = await machineQuery.GetMachineItemInfoAsync(request.MachineId).ConfigureAwait(false);
                 GetMachineInfoResponse response = new GetMachineInfoResponse().ToResponse(result);
                 return response;

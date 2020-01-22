@@ -10,6 +10,7 @@ namespace VendingMachine.Service.Machines.Read.Models
     public class MachineItemReadModel : IReadEntity
     {
         public int Id { get; set; }
+        public MachineTypeReadModel MachineType { get; set; }
         public MapPointReadModel Position { get; set; }
         public decimal? Temperature { get; set; }
         // Start or Stop or Not Set
@@ -60,7 +61,12 @@ namespace VendingMachine.Service.Machines.Read.Models
         public decimal Y { get; set; }
     }
 
-
+    public class MachineTypeReadModel
+    {
+        public int Id { get; set; }
+        public string Model { get; set; }
+        public short Version { get; set; }
+    }
 
     public class MachineItemDapper
     {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine;
 using VendingMachine.Service.Machines.ServiceCommunications;
 using VendingMachine.Service.Products.ServiceCommunications;
 
@@ -27,19 +28,25 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
         [HttpGet("{machineId:int}")]
         public async Task<IActionResult> GetMachineAsync(int machineId)
         {
-            //TODO: request Machine Id 
-            //machineId
-            // Read Payload
-
-            //Then, foreach product...
-            var request = new GetProductItemsRequest();
-            request.ProductIds.Add(new int[1] { 1 });
-            while (await productItemsClient.GetProductItems(request).ResponseStream.MoveNext(CancellationToken.None))
+            var machineExist = await machineItemsClient.ExistMachineAsync(new ExistMachineRequest { MachineId = machineId });
+            if (machineExist.Exist)
             {
-                var product = productItemsClient.GetProductItems(request).ResponseStream.Current;
-            }
+                var machineInfos = await machineItemsClient.GetMachineInfosAsync(new GetMachineInfoRequest { MachineId = machineId });
+                var productIds = machineInfos.Machine.ActiveProducts.Select(x => x.Id).ToList();
 
-            throw new NotImplementedException();
+                List<ProductItemsServiceModel> products = new List<ProductItemsServiceModel>();
+                GetProductItemsRequest productItemsRequest = new GetProductItemsRequest();
+                productItemsRequest.ProductIds.AddRange(productIds);
+                var productStream = productItemsClient.GetProductItems(productItemsRequest).ResponseStream;
+                while (await productStream.MoveNext(CancellationToken.None))
+                {
+                    ProductItemsServiceModel product = productStream.Current;
+                    products.Add(product);
+                }
+
+                return Ok(MachineItemViewModels.ToViewModel(machineInfos.Machine, products));
+            }
+            return BadRequest("MachineItem not found");
         }
     }
 }

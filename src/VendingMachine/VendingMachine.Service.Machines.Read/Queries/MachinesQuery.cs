@@ -99,31 +99,32 @@ namespace VendingMachine.Service.Machines.Read
             MachineItemReadModel result = null;
             using (System.Data.IDbConnection connection = new SqlConnection(machineConnectionString))
             {
-                string sql = @"SELECT M.[Id]
-                    ,[Position]
-                    ,[Temperature]
-                    ,[Status]
-                    ,[MachineTypeId]
-                    ,[LatestLoadedProducts]
-                    ,[LatestCleaningMachine]
-                    ,[LatestMoneyCollection]
-                    ,[CoinsInMachine]
-                    ,[CoinsCurrentSupply],
-                    P.Id,
-                    P.ActivationDate
-                FROM [VendingMachine-Machines].[dbo].[Machines] AS M
-                LEFT JOIN [VendingMachine-Machines].[dbo].[ActiveProducts] AS P ON M.Id = P.MachineItemId
-                WHERE M.Id = @Id";
+                string sql = @"SELECT M.[Id],[Position],[Temperature],[Status],[MachineTypeId],
+                    [LatestLoadedProducts],[LatestCleaningMachine],[LatestMoneyCollection],[CoinsInMachine],[CoinsCurrentSupply],
+                    MT.Id,MT.Model,MT.[Version],P.Id,P.ActivationDate
+                    FROM [dbo].[Machines] AS M
+                    LEFT JOIN [dbo].[MachineTypes] AS MT ON MT.Id = M.MachineTypeId
+                    LEFT JOIN [dbo].[ActiveProducts] AS P ON M.Id = P.MachineItemId
+                    WHERE M.Id = @Id";
                 
                 result = (await connection
-                    .QueryAsync<MachineItemDapper, ActiveProductReadModel, MachineItemReadModel>(
+                    .QueryAsync<MachineItemDapper, MachineTypeReadModel, ActiveProductReadModel, MachineItemReadModel>(
                         sql: sql, 
-                        map: (m, p) => 
+                        map: (m, t, p) => 
                         {
                             if (mapping == null)
                             {
                                 mapping = new MachineItemReadModel();
                                 mapping.FromDapper(m, new MapPointReadModel(m.Position.Lat.Value, m.Position.Long.Value));
+                            }
+                            if(mapping.MachineType == null)
+                            {
+                                mapping.MachineType = new MachineTypeReadModel
+                                {
+                                    Id = t.Id,
+                                    Version = t.Version,
+                                    Model = t.Model
+                                };
                             }
                             mapping.ActiveProducts.Add(p);
                             return mapping;

@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
 
-namespace VendingMachine.Service.Products
+namespace VendingMachine.Service.Shared.API
 {
     
 
@@ -39,10 +39,10 @@ namespace VendingMachine.Service.Products
         {
             var info = new OpenApiInfo()
             {
-                Title = "Product API",
+                Title = "Vending Machines API",
                 Version = description.ApiVersion.ToString(),
-                Description = "Product API for Product manipulations",
-                Contact = new OpenApiContact() { Name = "Bill Mei", Email = "andrea.tosato@4ward.it" },
+                Description = "Vending Machine API for microservices studies",
+                Contact = new OpenApiContact() { Name = "Andrea Tosato", Email = "andrea.tosato@4ward.it" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
