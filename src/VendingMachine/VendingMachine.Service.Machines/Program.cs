@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -51,15 +53,17 @@ namespace VendingMachine.Service.Machines
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureKestrel(serverOptions =>
+                    webBuilder
+                    .ConfigureKestrel((ctx, options) =>
+                    {
+                        options.Listen(IPAddress.Any, 4010, listenOptions =>
                         {
-                            serverOptions.Listen(System.Net.IPAddress.Any, 44393, listenOptions =>
-                            {
-                                listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
-                            });
-                        })
-                        .UseStartup<Startup>()
-                        .UseSerilog();
+                            listenOptions.Protocols = HttpProtocols.Http2;
+                            listenOptions.UseHttps();
+                        });
+                    })
+                    .UseStartup<Startup>()
+                    .UseSerilog();
                 });
     }
 }

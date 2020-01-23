@@ -58,3 +58,8 @@ https://github.com/jbogard/MediatR/wiki
 
 #HealthCheck
 https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
+
+
+#API Ports
+| Machine.API | 4010 |
+| Product.API | 4020 |
