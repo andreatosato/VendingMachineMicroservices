@@ -45,7 +45,6 @@ namespace VendingMachine.Service.Aggregators.Web.API
 
             services
                 .AddCustomAuthentication(Configuration)
-                .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                 .AddProductSwagger(environment)
                 .AddGrpcServices()
                 .AddControllers();
@@ -162,6 +161,13 @@ namespace VendingMachine.Service.Aggregators.Web.API
         {
             if (environment.IsDevelopment())
             {
+                services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+                        .AddSingleton<OpenApiBasicInformation>(serviceProvider => new OpenApiBasicInformation
+                        {
+                            Description = "Service Aggregator for Web Interface",
+                            Title = "Veding Machine Aggregator - Web"
+                        });
+
                 services.AddSwaggerGen(c =>
                 {
                     c.OperationFilter<SwaggerDefaultValues>();

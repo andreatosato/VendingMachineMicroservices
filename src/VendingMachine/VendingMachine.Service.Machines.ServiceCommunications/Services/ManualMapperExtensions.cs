@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using VendingMachine.Service.Machines.Read.Models;
 
 namespace VendingMachine.Service.Machines.ServiceCommunications.Services
@@ -7,32 +8,35 @@ namespace VendingMachine.Service.Machines.ServiceCommunications.Services
     {
         public static GetMachineInfoResponse ToResponse(this GetMachineInfoResponse response, MachineItemReadModel readModel)
         {
-            response.Machine.MachineId = readModel.Id;
-            response.Machine.CoinsCurrentSupply = (double)readModel.CoinsCurrentSupply;
-            response.Machine.CoinsInMachine = (double)readModel.CoinsInMachine;
-            response.Machine.LatestCleaningMachine = readModel.LatestCleaningMachine.HasValue ?
-                Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestCleaningMachine.Value) :
-                null;
-            response.Machine.LatestLoadedProducts = readModel.LatestCleaningMachine.HasValue ?
-                Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestLoadedProducts.Value) :
-                null;
-            response.Machine.LatestMoneyCollection = readModel.LatestCleaningMachine.HasValue ?
-                Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestMoneyCollection.Value) :
-                null;
-            response.Machine.MoneyFromBirth = (double)readModel.MoneyFromBirth;
-            response.Machine.MoneyMonth = (double)readModel.MoneyMonth;
-            response.Machine.MoneyYear = (double)readModel.MoneyYear;
-            response.Machine.Status = readModel.Status;
-            response.Machine.Temperature = (double)readModel.Temperature;
-            response.Machine.Position = new MapPosition()
+            response.Machine = new MachineServiceModel
             {
-                X = (double)readModel.Position.X,
-                Y = (double)readModel.Position.Y,
-            };
-            response.Machine.MachineType = new MachineTypeModel
-            {
-                Model = readModel.MachineType.Model,
-                Version = (MachineVersion)readModel.MachineType.Version
+                MachineId = readModel.Id,
+                CoinsCurrentSupply = (double)readModel.CoinsCurrentSupply,
+                CoinsInMachine = (double)readModel.CoinsInMachine,
+                LatestCleaningMachine = readModel.LatestCleaningMachine.HasValue ?
+                    Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestCleaningMachine.Value) :
+                    null,
+                LatestLoadedProducts = readModel.LatestLoadedProducts.HasValue ?
+                    Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestLoadedProducts.Value) :
+                    null,
+                LatestMoneyCollection = readModel.LatestMoneyCollection.HasValue ?
+                    Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(readModel.LatestMoneyCollection.Value) :
+                    null,
+                MoneyFromBirth = (double)readModel.MoneyFromBirth,
+                MoneyMonth = (double)readModel.MoneyMonth,
+                MoneyYear = (double)readModel.MoneyYear,
+                Status = readModel.Status,
+                Temperature = (double)readModel.Temperature,
+                Position = new MapPosition()
+                {
+                    X = (double)readModel.Position.X,
+                    Y = (double)readModel.Position.Y,
+                },
+                MachineType = new MachineTypeModel
+                {
+                    Model = readModel.MachineType.Model,
+                    Version = Enum.Parse<MachineVersion>(readModel.MachineType.Version)
+                }
             };
             var activeProducts = readModel.ActiveProducts.Select(x => new ProductActiveModel
             {

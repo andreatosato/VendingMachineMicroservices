@@ -11,6 +11,7 @@ namespace VendingMachine.Service.Products.Read.Models
     }
     public class ProductItemReadModel
     {
+        public int Id { get; set; }
         public ProductReadModel Product { get; set; }
         public DateTimeOffset? Purchased { get; set; }
         public DateTimeOffset? Sold { get; set; }

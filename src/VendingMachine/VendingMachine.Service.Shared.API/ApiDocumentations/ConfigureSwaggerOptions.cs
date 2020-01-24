@@ -7,8 +7,6 @@ using System;
 
 namespace VendingMachine.Service.Shared.API
 {
-    
-
     /// <summary>
     /// Configures the Swagger generation options.
     /// </summary>
@@ -17,12 +15,17 @@ namespace VendingMachine.Service.Shared.API
     public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
     {
         readonly IApiVersionDescriptionProvider provider;
+        readonly OpenApiBasicInformation openApiBasicInformation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigureSwaggerOptions"/> class.
         /// </summary>
         /// <param name="provider">The <see cref="IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
-        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider) => this.provider = provider;
+        public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider, OpenApiBasicInformation openApiBasicInformation)
+        {
+            this.provider = provider;
+            this.openApiBasicInformation = openApiBasicInformation;
+        }
 
         /// <inheritdoc />
         public void Configure(SwaggerGenOptions options)
@@ -31,17 +34,17 @@ namespace VendingMachine.Service.Shared.API
             // note: you might choose to skip or document deprecated API versions differently
             foreach (var description in provider.ApiVersionDescriptions)
             {
-                options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description));
+                options.SwaggerDoc(description.GroupName, CreateInfoForApiVersion(description, openApiBasicInformation));
             }
         }
 
-        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
+        static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description, OpenApiBasicInformation openApiBasicInformation)
         {
             var info = new OpenApiInfo()
             {
-                Title = "Vending Machines API",
+                Title = openApiBasicInformation.Title,
                 Version = description.ApiVersion.ToString(),
-                Description = "Vending Machine API for microservices studies",
+                Description = openApiBasicInformation.Description,
                 Contact = new OpenApiContact() { Name = "Andrea Tosato", Email = "andrea.tosato@4ward.it" },
                 License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
@@ -53,5 +56,11 @@ namespace VendingMachine.Service.Shared.API
 
             return info;
         }
+    }
+
+    public class OpenApiBasicInformation
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
     }
 }

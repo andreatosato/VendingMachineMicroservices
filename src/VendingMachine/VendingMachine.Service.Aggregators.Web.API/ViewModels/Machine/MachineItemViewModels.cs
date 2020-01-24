@@ -28,44 +28,40 @@ namespace VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine
             {
                 ProductItemViewModel productItem = new ProductItemViewModel() 
                 {
+                    ProductItemId = t.Id,
                     ExpirationDate = t.ExpirationDate.ToDateTime(),
                     Purchased = t.Purchased.ToDateTimeOffset(),
                     Sold = t.Sold.ToDateTimeOffset(),
-                    SoldPrice = new GrossPriceViewModel {
-                        GrossPrice = (decimal)t.SoldPrice.GrossPrice,
-                        TaxPercentage = t.SoldPrice.TaxPercentage
-                    },
+                    SoldPrice = t.SoldPrice != null ?
+                        new GrossPriceViewModel
+                        {
+                            // Logic for simplify price
+                            GrossPrice = t.Product.Price?.GrossPrice > t.SoldPrice.GrossPrice ?
+                                        (decimal)t.Product.Price?.GrossPrice :
+                                        (decimal)t.SoldPrice.GrossPrice,
+                            TaxPercentage = t.SoldPrice.TaxPercentage
+                        } :
+                        null,
+                    ProductId = t.Product.Id,
+                    Name = t.Product.Name,
                 };
                 switch (t.Product.ProductType)
                 {
                     case ProductType.ColdDrink:
-                        productItem.Product = new ColdDrinkViewModel()
-                        {
-                            Id = t.Product.Id,
-                            Litre = (decimal)t.Product.Litre,
-                            Name = t.Product.Name,
-                            TemperatureMaximum = (decimal)t.Product.TemperatureMaximum,
-                            TemperatureMinimum = (decimal)t.Product.TemperatureMinimum
-                        };
+                        productItem.ProductType = "Cold Drink";
+                        productItem.Litre = (decimal)t.Product.Litre;
+                        productItem.TemperatureMaximum = (decimal)t.Product.TemperatureMaximum;
+                        productItem.TemperatureMinimum = (decimal)t.Product.TemperatureMinimum;
                         break;
                     case ProductType.HotDrink:
-                        productItem.Product = new HotDrinkViewModel()
-                        {
-                            Id = t.Product.Id,
-                            Name = t.Product.Name,
-                            TemperatureMaximum = (decimal)t.Product.TemperatureMaximum,
-                            TemperatureMinimum = (decimal)t.Product.TemperatureMinimum
-                        };
+                        productItem.ProductType = "Hot Drink";
+                        productItem.Grams = (decimal)t.Product.Grams;
+                        productItem.TemperatureMaximum = (decimal)t.Product.TemperatureMaximum;
+                        productItem.TemperatureMinimum = (decimal)t.Product.TemperatureMinimum;
                         break;
                     case ProductType.Snack:
-                        productItem.Product = new SnackViewModel()
-                        {
-                            Id = t.Product.Id,
-                            Name = t.Product.Name,
-                            Grams = (decimal)t.Product.Grams
-                        };
-                        break;
-                    default:
+                        productItem.ProductType = "Snack";
+                        productItem.Grams = (decimal)t.Product.Grams;
                         break;
                 }
                 productsVM.Add(productItem);
@@ -90,9 +86,9 @@ namespace VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine
                 MoneyFromBirth = (decimal)machine.MoneyFromBirth,
                 MoneyMonth = (decimal)machine.MoneyMonth,
                 MoneyYear = (decimal)machine.MoneyYear,
-                LatestCleaningMachine = machine.LatestCleaningMachine.ToDateTimeOffset(),
-                LatestLoadedProducts = machine.LatestLoadedProducts.ToDateTimeOffset(),
-                LatestMoneyCollection = machine.LatestMoneyCollection.ToDateTimeOffset(),
+                LatestCleaningMachine = machine.LatestCleaningMachine?.ToDateTimeOffset(),
+                LatestLoadedProducts = machine.LatestLoadedProducts?.ToDateTimeOffset(),
+                LatestMoneyCollection = machine.LatestMoneyCollection?.ToDateTimeOffset(),
                 ProductItem = productsVM
             };
         }
@@ -112,42 +108,23 @@ namespace VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine
 
     public class ProductItemViewModel
     {
-        public ProductViewModel Product { get; set; }
+        public int ProductId { get; set; }
+        public int ProductItemId { get; set; }
+        public string Name { get; set; }
+        public decimal TemperatureMinimum { get; set; }
+        public decimal TemperatureMaximum { get; set; }
+        public decimal Litre { get; set; }
+        public decimal Grams { get; set; }
+        public string ProductType { get; set; }
         public GrossPriceViewModel SoldPrice { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public DateTimeOffset? Purchased { get; set; }
         public DateTimeOffset? Sold { get; set; }
     }
 
-    public abstract class ProductViewModel
-    {
-        public string Name { get; set; }
-        public int Id { get; set; }
-        public GrossPriceViewModel Price { get; set; }
-    }
-
     public class GrossPriceViewModel
     {
         public decimal GrossPrice { get; set; }
         public int TaxPercentage { get; set; }
-    }
-
-    public class ColdDrinkViewModel : ProductViewModel
-    {
-        public decimal TemperatureMinimum { get; set; }
-        public decimal TemperatureMaximum { get; set; }
-        public decimal Litre { get; set; }
-    }
-
-    public class HotDrinkViewModel : ProductViewModel
-    {
-        public decimal TemperatureMinimum { get; set; }
-        public decimal TemperatureMaximum { get; set; }
-        public decimal Grams { get; set; }
-    }
-
-    public class SnackViewModel : ProductViewModel
-    {
-        public decimal Grams { get; set; }
     }
 }

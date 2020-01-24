@@ -65,7 +65,7 @@ namespace VendingMachine.Service.Machines.Read.Models
     {
         public int Id { get; set; }
         public string Model { get; set; }
-        public short Version { get; set; }
+        public string Version { get; set; }
     }
 
     public class MachineItemDapper

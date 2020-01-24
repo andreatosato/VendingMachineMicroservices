@@ -1,6 +1,4 @@
-﻿using Grpc.Net.Client;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,12 +11,12 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MachineController : ControllerBase
+    public class AggregationMachineController : ControllerBase
     {
         private readonly ProductItems.ProductItemsClient productItemsClient;
         private readonly MachineItems.MachineItemsClient machineItemsClient;
 
-        public MachineController(ProductItems.ProductItemsClient productItemsClient, 
+        public AggregationMachineController(ProductItems.ProductItemsClient productItemsClient, 
             MachineItems.MachineItemsClient machineItemsClient)
         {
             this.productItemsClient = productItemsClient;
@@ -37,11 +35,13 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
                 List<ProductItemsServiceModel> products = new List<ProductItemsServiceModel>();
                 GetProductItemsRequest productItemsRequest = new GetProductItemsRequest();
                 productItemsRequest.ProductIds.AddRange(productIds);
-                var productStream = productItemsClient.GetProductItems(productItemsRequest).ResponseStream;
-                while (await productStream.MoveNext(CancellationToken.None))
+                using (var productStream = productItemsClient.GetProductItems(productItemsRequest))
                 {
-                    ProductItemsServiceModel product = productStream.Current;
-                    products.Add(product);
+                    while (await productStream.ResponseStream.MoveNext(CancellationToken.None))
+                    {
+                        ProductItemsServiceModel product = productStream.ResponseStream.Current;
+                        products.Add(product);
+                    }
                 }
 
                 return Ok(MachineItemViewModels.ToViewModel(machineInfos.Machine, products));

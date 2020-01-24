@@ -76,7 +76,6 @@ namespace VendingMachine.Service.Products
                 // can also be used to control the format of the API version in route templates
                 options.SubstituteApiVersionInUrl = true;
             })
-            .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
             .AddCustomAuthentication(Configuration)
             .AddProductInfrastructure()
             .AddProductQueries(Configuration.GetConnectionString("ProductDatabase"))
@@ -147,6 +146,12 @@ namespace VendingMachine.Service.Products
         {
             if (environment.IsDevelopment())
             {
+                services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+                        .AddSingleton<OpenApiBasicInformation>((serviceProvider) => new OpenApiBasicInformation 
+                        {
+                            Title = "Product API",
+                            Description = "Product API for product and product item managment"
+                        });
                 services.AddSwaggerGen(c =>
                 {
                     c.OperationFilter<SwaggerDefaultValues>();

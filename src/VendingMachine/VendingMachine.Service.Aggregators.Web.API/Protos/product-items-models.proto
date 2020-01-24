@@ -17,11 +17,12 @@ package VendingMachine.Service.Products.ServiceCommunications;
 
 
 message ProductItemsServiceModel {
-	ProductServiceModel Product = 1;
-	google.protobuf.Timestamp Purchased = 2;
-	google.protobuf.Timestamp Sold = 3;
-	google.protobuf.Timestamp ExpirationDate = 4;
-	GrossPriceServiceModel SoldPrice = 5;
+	int32 Id = 1;
+	ProductServiceModel Product = 2;
+	google.protobuf.Timestamp Purchased = 3;
+	google.protobuf.Timestamp Sold = 4;
+	google.protobuf.Timestamp ExpirationDate = 5;
+	GrossPriceServiceModel SoldPrice = 6;
 }
 
 message GetProductItemsRequest {

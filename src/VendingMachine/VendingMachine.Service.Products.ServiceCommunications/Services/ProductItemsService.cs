@@ -19,23 +19,26 @@ namespace VendingMachine.Service.Products.ServiceCommunications.Services
         public override async Task GetProductItems(GetProductItemsRequest request, IServerStreamWriter<ProductItemsServiceModel> responseStream, ServerCallContext context)
         {
             List<int> productIds = new List<int>();
-            while (request.ProductIds.GetEnumerator().MoveNext())
+            using (IEnumerator<int> productIdEnum = request.ProductIds.GetEnumerator())
             {
-                productIds.Add(request.ProductIds.GetEnumerator().Current);
+                while (productIdEnum.MoveNext())
+                {
+                    productIds.Add(productIdEnum.Current);
+                }
             }
             Read.Models.ProductItemsReadModel productItems = await query.GetProductsInfoAsync(productIds);
             foreach (var pi in productItems.Products)
             {
                 var productItem = new ProductItemsServiceModel
                 {
-                    ExpirationDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(pi.ExpirationDate),
+                    Id = pi.Id,
+                    ExpirationDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(pi.ExpirationDate),
                     Purchased = pi.Purchased.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(pi.Purchased.GetValueOrDefault()) : null,
                     Sold = pi.Sold.HasValue ? Google.Protobuf.WellKnownTypes.Timestamp.FromDateTimeOffset(pi.Sold.GetValueOrDefault()) : null,
-                    SoldPrice = new GrossPriceServiceModel
-                    {
-                        GrossPrice = (double)pi.SoldPrice.GrossPrice,
-                        TaxPercentage = pi.SoldPrice.TaxPercentage
-                    },
+                    SoldPrice = pi.SoldPrice != null ? 
+                        new GrossPriceServiceModel { GrossPrice = (double)pi.SoldPrice.GrossPrice, TaxPercentage = pi.SoldPrice.TaxPercentage } :
+                        null
+                    ,
                     Product = new ProductServiceModel
                     {
                         Id = pi.Product.Id,
