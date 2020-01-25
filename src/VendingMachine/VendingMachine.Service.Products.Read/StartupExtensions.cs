@@ -5,7 +5,7 @@ namespace VendingMachine.Service.Products
 {
     public static partial class StartupExtensions
     {
-        public static IServiceCollection AddProductQueries(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddOrderQueries(this IServiceCollection services, string connectionString)
         {
             services.AddTransient<IProductQuery>(t => new ProductQuery(connectionString));
             services.AddTransient<IProductItemQuery>(t => new ProductItemQuery(connectionString));

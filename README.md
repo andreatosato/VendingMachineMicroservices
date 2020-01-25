@@ -63,3 +63,4 @@ https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 #API Ports
 | Machine.API | 4010 |
 | Product.API | 4020 |
+| Order.API | 4030 |

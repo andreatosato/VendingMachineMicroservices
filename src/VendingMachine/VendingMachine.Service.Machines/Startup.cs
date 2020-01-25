@@ -111,7 +111,7 @@ namespace VendingMachine.Service.Machines
         }
     }
 
-    public static class CustomExceptions
+    public static class CustomExtensions
     {
         public static IServiceCollection AddMachineSwagger(this IServiceCollection services, IHostEnvironment environment)
         {

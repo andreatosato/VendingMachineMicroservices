@@ -140,7 +140,7 @@ namespace VendingMachine.Service.Products
         }
     }
 
-    public static class CustomExceptions
+    public static class CustomExtensions
     {
         public static IServiceCollection AddProductSwagger(this IServiceCollection services, IHostEnvironment environment)
         {
