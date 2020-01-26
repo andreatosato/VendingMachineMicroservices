@@ -44,7 +44,7 @@ namespace VendingMachine.Service.Orders.Domain
             StringBuilder billingStatus = new StringBuilder($"Paid: {Coins} for: ");
             foreach (var p in OrderProductItems)
             {
-                billingStatus.AppendFormat("Product Item: {0}. Gross Price: {1}", p.ProductItemId, p.Price.Value);
+                billingStatus.AppendFormat("{0}Product Item: {1}. Gross Price: {2}", Environment.NewLine, p.ProductItemId, p.Price.Value);
             }
             return billingStatus.ToString();
         }

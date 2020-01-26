@@ -5,13 +5,13 @@ using System.Text;
 
 namespace VendingMachine.Service.Orders.Infrastructure.Commands
 {
-    public class OrderAddCommand : IRequest<OrderAddResponse>
+    public class OrderUpdateCommand : IRequest<OrderUpdateResponse>
     {
         public IEnumerable<OrderProductItemCommand> OrderProducts { get; set; }
         public MachineStatusCommand MachineStatus { get; set; }
     }
 
-    public class OrderAddResponse
+    public class OrderUpdateResponse
     {
         public int OrderId { get; set; }
         public bool CanConfirm { get; set; }

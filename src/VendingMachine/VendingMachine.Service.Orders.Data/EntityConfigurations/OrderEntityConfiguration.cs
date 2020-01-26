@@ -10,26 +10,38 @@ namespace VendingMachine.Service.Orders.Data.EntityConfigurations
         {
             builder.HasKey(x => x.Id);
             builder.Property(t => t.Id).ValueGeneratedOnAdd().IsRequired();
-            //builder.Property(t => t.MachineStatus)
-            //    .UsePropertyAccessMode(PropertyAccessMode.FieldDuringConstruction);
-            //builder.Property(t => t.OrderProductItems)
-            //    .UsePropertyAccessMode(PropertyAccessMode.FieldDuringConstruction);
             builder.Property(t => t.OrderDate);
-
+            builder.Property(t => t.Processed);
             builder.Ignore(t => t.Billing);
+
             builder.OwnsOne(t => t.MachineStatus,
                 c =>
                 {
+                    // Owns Type in same table
+                    c.ToTable("Orders");
+                    // Avoid Table_Property convention
                     c.Property(x => x.MachineId).HasColumnName("MachineId");
                     c.Property(x => x.CoinsCurrentSupply).HasColumnName("CoinsCurrentSupply");
                 }
-            ).Ignore(t => t.MachineStatus);
+            );
 
             // https://docs.microsoft.com/it-it/ef/core/modeling/owned-entities#collections-of-owned-types
             builder.OwnsMany(t => t.OrderProductItems,
-                 c => {
-                    c.WithOwner().HasForeignKey(y => y.Id);
-                    c.HasKey(t => t.ProductItemId);
+                 c =>
+                 {
+                     c.WithOwner().HasForeignKey("OrderId");
+                     c.HasKey(t => t.Id);
+                     c.Property(t => t.Id).ValueGeneratedOnAdd();
+                     c.Property(t => t.ProductItemId);
+                     c.OwnsOne(t => t.Price,
+                         p =>
+                         {
+                             // Avoid Table_Property convention
+                             p.Property(x => x.Value).HasColumnName("GrossPrice");
+                             p.Property(x => x.TaxPercentage).HasColumnName("TaxPercentage");
+                             p.Property(x => x.NetPrice).HasColumnName("NetPrice");
+                             p.Property(x => x.Rate).HasColumnName("Rate");
+                         });
                  }
             );
         }

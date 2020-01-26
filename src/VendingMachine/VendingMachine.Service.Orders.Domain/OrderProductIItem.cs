@@ -9,14 +9,21 @@ namespace VendingMachine.Service.Orders.Domain
         public int ProductItemId { get; }
         public GrossPrice Price { get; }
 
+        // EF Core
+        private OrderProductItem(int productItemId)
+        {
+            if (productItemId == 0)
+                throw new ArgumentException("ProductItem must be greater then 0");
+            ProductItemId = productItemId;
+        }
+
         public OrderProductItem(int productItemId, GrossPrice price)
         {
             if (productItemId == 0)
                 throw new ArgumentException("ProductItem must be greater then 0");
-
             
             ProductItemId = productItemId;
-            Price = price;
+            Price = price ?? throw new ArgumentNullException("Price must be set");
         }
     }
 
@@ -27,23 +34,17 @@ namespace VendingMachine.Service.Orders.Domain
         public int TaxPercentage { get; }
         public decimal Rate { get; private set; }
 
-        public GrossPrice(decimal price, int taxPercentage)
+        public GrossPrice(decimal value, int taxPercentage)
         {
-            if (price < 0)
+            if (value < 0)
                 throw new ArgumentOutOfRangeException("Price must be greater or equal then 0");
             if (taxPercentage < 0)
                 throw new ArgumentOutOfRangeException("Tax Percentage must be greater or equal then 0");
             if (taxPercentage < 0 || taxPercentage > 100)
                 throw new ArgumentOutOfRangeException("Tax Percentage must be less or equal then 100");
 
-            Value = price;
+            Value = value;
             TaxPercentage = taxPercentage;
-            CalculatePriceAndRate();
-        }
-
-        public void RedefinePrice(decimal newPrice)
-        {
-            Value = newPrice;
             CalculatePriceAndRate();
         }
 

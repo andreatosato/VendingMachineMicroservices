@@ -14,13 +14,19 @@ namespace VendingMachine.Service.Orders.Domain
         public bool CanConfirm => Billing.IsValid;
         public bool Processed { get; private set; }
 
+        /*EF Core - Query CTOR */
+        private Order(DateTimeOffset orderDate)
+        {
+            OrderDate = orderDate;
+        }
+
         public Order(
             MachineStatus machineStatus,
             ICollection<OrderProductItem> orderProductItems, 
             DateTimeOffset orderDate)
         {
-            //if (!orderProductItems.Any())
-            //    throw new ArgumentException("Order Product Item must be not empty");
+            if (!orderProductItems.Any())
+                throw new ArgumentException("Order Product Item must be not empty");
             MachineStatus = machineStatus;
             OrderProductItems = orderProductItems.ToArray();
             OrderDate = orderDate;
