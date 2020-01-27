@@ -4,9 +4,13 @@ using System.Text;
 
 namespace VendingMachine.Service.Orders.Infrastructure.Commands
 {
-    public class OrderProductItemCommand
+    public class OrderProductItemBaseCommand
     {
         public int ProductItemId { get; set; }
+    }
+
+    public class OrderProductItemCommand : OrderProductItemBaseCommand
+    {
         public GrossPriceCommand Price { get; set; }
     }
 

@@ -12,4 +12,9 @@
     <PackageReference Include="FluentValidation" Version="8.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
+  </ItemGroup>
+
 </Project>

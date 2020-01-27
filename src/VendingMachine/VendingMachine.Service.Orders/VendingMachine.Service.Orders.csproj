@@ -14,11 +14,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
@@ -30,9 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Application\VendingMachine.Service.Orders.Application.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Infrastructure\VendingMachine.Service.Orders.Infrastructure.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Read\VendingMachine.Service.Orders.Read.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.API\VendingMachine.Service.Shared.API.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
   </ItemGroup>

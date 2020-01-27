@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VendingMachine.Service.Products.ServiceCommunications;
+using VendingMachine.Service.Products.ServiceCommunications.Client;
 using VendingMachine.Service.Shared.API;
 using VendingMachine.Service.Shared.Authentication;
 
@@ -46,7 +47,7 @@ namespace VendingMachine.Service.Aggregators.Web.API
             services
                 .AddCustomAuthentication(Configuration)
                 .AddProductSwagger(environment)
-                .AddGrpcServices()
+                .AddGrpcClients()
                 .AddControllers();
             services.AddApiVersioning(o =>
             {
@@ -127,8 +128,9 @@ namespace VendingMachine.Service.Aggregators.Web.API
             return services;
         }
 
-        public static IServiceCollection AddGrpcServices(this IServiceCollection services)
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
         {
+            services.AddProductClient();
             services.AddGrpcClient<ProductItems.ProductItemsClient>((serviceProvider, o) =>
             {
                 var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
@@ -140,14 +142,13 @@ namespace VendingMachine.Service.Aggregators.Web.API
             //    o.Credentials = new CustomCredentials();
             //})
             ;
-
             services.AddGrpcClient<Products.ServiceCommunications.Products.ProductsClient>((serviceProvider, o) =>
             {
                 var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
                 o.Address = new Uri(serviceReference.ProductsService);
             });
 
-
+            services.AddMachineClient();
             services.AddGrpcClient<Machines.ServiceCommunications.MachineItems.MachineItemsClient>((serviceProvider, o) =>
             {
                 var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();

@@ -22,17 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.API\VendingMachine.Service.Shared.API.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.Authentication\VendingMachine.Service.Shared.Authentication.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Protobuf Include="Protos\machine.proto" />
-    <Protobuf Include="Protos\machine-models.proto" />
-    <Protobuf Include="Protos\product-items.proto" />
-    <Protobuf Include="Protos\product-items-models.proto" />
-    <Protobuf Include="Protos\product-models.proto" />
-    <Protobuf Include="Protos\product.proto" />
   </ItemGroup>
 
 

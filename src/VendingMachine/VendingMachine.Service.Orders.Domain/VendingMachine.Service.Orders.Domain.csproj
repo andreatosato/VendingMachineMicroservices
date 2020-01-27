@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DomainEvents\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Services.Shared.Domain\VendingMachine.Service.Shared.Domain.csproj" />
   </ItemGroup>
 

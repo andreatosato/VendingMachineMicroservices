@@ -78,10 +78,11 @@ namespace VendingMachine.Service.Orders
                 options.SubstituteApiVersionInUrl = false;
             })
             .AddCustomAuthentication(Configuration)
-            .AddOrderInfrastructure()
+            .AddOrderInfrastructure()            
             .AddOrderQueries(Configuration.GetConnectionString("OrderDatabase"))
             .AddMediatR(typeof(OrderHandler))
             .AddDistributedMemoryCache()
+            .AddGrpcClients()
             .AddProductSwagger(env);
 
             services.AddGrpc(c => c.EnableDetailedErrors = true);
@@ -231,6 +232,31 @@ namespace VendingMachine.Service.Orders
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.Default.GetBytes(jwtSettings.SecurityKey)),
                     LifetimeValidator = (DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters) => DateTime.UtcNow < expires.GetValueOrDefault(),
                 };
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
+        {
+            services.AddProductClient();
+            services.AddGrpcClient<Products.ServiceCommunications.ProductItems.ProductItemsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
+                o.Address = new Uri(serviceReference.ProductItemsService);
+            });
+
+            services.AddGrpcClient<Products.ServiceCommunications.Products.ProductsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
+                o.Address = new Uri(serviceReference.ProductsService);
+            });
+
+            services.AddMachineClient();
+            services.AddGrpcClient<Machines.ServiceCommunications.MachineItems.MachineItemsClient>((serviceProvider, o) =>
+            {
+                var serviceReference = serviceProvider.GetRequiredService<ServicesReference>();
+                o.Address = new Uri(serviceReference.MachineItemService);
             });
 
             return services;

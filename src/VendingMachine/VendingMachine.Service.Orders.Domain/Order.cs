@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VendingMachine.Service.Orders.Domain.DomainEvents;
 using VendingMachine.Service.Shared.Domain;
 
 namespace VendingMachine.Service.Orders.Domain
@@ -11,7 +12,7 @@ namespace VendingMachine.Service.Orders.Domain
         public ICollection<OrderProductItem> OrderProductItems { get; } = new List<OrderProductItem>();
         public DateTimeOffset OrderDate { get; }
         public Billing Billing { get; private set; }
-        public bool CanConfirm => Billing.IsValid;
+        public bool CanConfirm => Billing.IsValid & !Processed;
         public bool Processed { get; private set; }
 
         /*EF Core - Query CTOR */
@@ -28,23 +29,61 @@ namespace VendingMachine.Service.Orders.Domain
             if (!orderProductItems.Any())
                 throw new ArgumentException("Order Product Item must be not empty");
             MachineStatus = machineStatus;
-            OrderProductItems = orderProductItems.ToArray();
+            foreach (var pi in orderProductItems)   AddProductToBasket(pi, false);            
             OrderDate = orderDate;
             CheckMoney();
         }
-
+        
+        // Only for Ctor
         public void AddProductToBasket(OrderProductItem productItem)
         {
+            AddProductToBasket(productItem, true);
+        }
+
+        private void AddProductToBasket(OrderProductItem productItem, bool checkMoney)
+        {
             OrderProductItems.Add(productItem);
-            CheckMoney();
-            //DomainEvents.Add()
+            if(checkMoney)
+                CheckMoney();
+            DomainEvents.Add(new OrderProductToBasketEvent()
+            {
+                Operation = OrderProductToBasketEvent.OperationType.Add,
+                OrderId = Id,
+                ProductItemId = productItem.ProductItemId
+            });
+        }
+
+        public void RemoveProductToBasket(int productItemId)
+        {
+            var productToRemove = OrderProductItems.FirstOrDefault(x => x.ProductItemId == productItemId);
+            if(productToRemove != null)
+            {
+                OrderProductItems.Remove(productToRemove);
+                CheckMoney();
+                DomainEvents.Add(new OrderProductToBasketEvent()
+                {
+                    Operation = OrderProductToBasketEvent.OperationType.Remove,
+                    OrderId = Id,
+                    ProductItemId = productToRemove.ProductItemId
+                });
+            }
         }
 
         public void UpdateMachineStatus(MachineStatus currentMachineStatus)
         {
-            MachineStatus = currentMachineStatus;
-            CheckMoney();
+            if(MachineStatus.MachineId == currentMachineStatus.MachineId)
+            {
+                MachineStatus = currentMachineStatus;
+                CheckMoney();
+                //DomainEvents.Add()
+            }
+            // Errore, MachineId not correct
             //DomainEvents.Add()
+        }
+
+        public void ConfirmOrder()
+        {
+            Processed = true;
         }
 
         private void CheckMoney()
