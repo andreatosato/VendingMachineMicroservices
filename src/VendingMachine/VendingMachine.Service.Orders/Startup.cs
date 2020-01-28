@@ -48,7 +48,7 @@ namespace VendingMachine.Service.Orders
                 .AddOrderHealthChecks(Configuration, env)
                 .AddControllers(options =>
                 {
-                    // Apply Auth filter
+                    //Apply Auth filter
                     var policy = new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
                         .RequireClaim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.OrderApi)
@@ -82,8 +82,8 @@ namespace VendingMachine.Service.Orders
             .AddOrderQueries(Configuration.GetConnectionString("OrderDatabase"))
             .AddMediatR(typeof(OrderHandler))
             .AddDistributedMemoryCache()
-            .AddGrpcClients()
-            .AddProductSwagger(env);
+            .AddGrpcClients(Configuration)
+            .AddOrderSwagger(env);
 
             services.AddGrpc(c => c.EnableDetailedErrors = true);
         }
@@ -115,6 +115,7 @@ namespace VendingMachine.Service.Orders
             app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -134,23 +135,21 @@ namespace VendingMachine.Service.Orders
                     });
                 }
                 endpoints.MapControllers();
-                //endpoints.MapGrpcService<ServiceCommunications.Services.ProductsService>();
-                //endpoints.MapGrpcService<ServiceCommunications.Services.ProductItemsService>();
             });
         }
     }
 
     public static class CustomExtensions
     {
-        public static IServiceCollection AddProductSwagger(this IServiceCollection services, IHostEnvironment environment)
+        public static IServiceCollection AddOrderSwagger(this IServiceCollection services, IHostEnvironment environment)
         {
             if (environment.IsDevelopment())
             {
                 services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
                         .AddSingleton<OpenApiBasicInformation>((serviceProvider) => new OpenApiBasicInformation
                         {
-                            Title = "Product API",
-                            Description = "Product API for product and product item managment"
+                            Title = "Order API",
+                            Description = "Order API for buy products in machine"
                         });
                 services.AddSwaggerGen(c =>
                 {
@@ -186,8 +185,8 @@ namespace VendingMachine.Service.Orders
                 services
                     .AddHealthChecks()
                     .AddCheck("self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
-                    .AddSqlServer(Configuration.GetConnectionString("ProductDatabase"),
-                        tags: new[] { "product" },
+                    .AddSqlServer(Configuration.GetConnectionString("OrderDatabase"),
+                        tags: new[] { "order" },
                         name: "order-db-check");
 
                 services.AddHealthChecksUI(setupSettings: settings =>
@@ -237,8 +236,12 @@ namespace VendingMachine.Service.Orders
             return services;
         }
 
-        public static IServiceCollection AddGrpcClients(this IServiceCollection services)
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
         {
+            var serviceReference = new ServicesReference();
+            configuration.Bind(nameof(ServicesReference), serviceReference);
+            services.AddSingleton<ServicesReference>(serviceReference);
+
             services.AddProductClient();
             services.AddGrpcClient<Products.ServiceCommunications.ProductItems.ProductItemsClient>((serviceProvider, o) =>
             {

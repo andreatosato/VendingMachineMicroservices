@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VendingMachine.Service.Orders.Read.Queries;
 
 namespace VendingMachine.Service.Orders.Read
 {
@@ -9,8 +10,7 @@ namespace VendingMachine.Service.Orders.Read
     {
         public static IServiceCollection AddOrderQueries(this IServiceCollection services, string connectionString)
         {
-            //services.AddTransient<IProductQuery>(t => new ProductQuery(connectionString));
-            //services.AddTransient<IProductItemQuery>(t => new ProductItemQuery(connectionString));
+            services.AddTransient<IOrderQuery>(t => new OrderQuery(connectionString));
             return services;
         }
     }

@@ -45,7 +45,7 @@ namespace VendingMachine.Service.Orders.Domain
             OrderProductItems.Add(productItem);
             if(checkMoney)
                 CheckMoney();
-            DomainEvents.Add(new OrderProductToBasketEvent()
+            AddDomainEvent(new OrderProductToBasketEvent()
             {
                 Operation = OrderProductToBasketEvent.OperationType.Add,
                 OrderId = Id,
@@ -60,7 +60,7 @@ namespace VendingMachine.Service.Orders.Domain
             {
                 OrderProductItems.Remove(productToRemove);
                 CheckMoney();
-                DomainEvents.Add(new OrderProductToBasketEvent()
+                AddDomainEvent(new OrderProductToBasketEvent()
                 {
                     Operation = OrderProductToBasketEvent.OperationType.Remove,
                     OrderId = Id,
@@ -75,7 +75,7 @@ namespace VendingMachine.Service.Orders.Domain
             {
                 MachineStatus = currentMachineStatus;
                 CheckMoney();
-                //DomainEvents.Add()
+                //AddDomainEvent
             }
             // Errore, MachineId not correct
             //DomainEvents.Add()

@@ -23,7 +23,7 @@ namespace VendingMachine.Service.Products.Read.Queries
             bool result;
             using SqlConnection connection = new SqlConnection(productConnectionString);
             result = await connection
-                .ExecuteScalarAsync<bool>(@"SELECT COUNT(DISTINCT 1) FROM [dbo].[ProductItems] WHERE PI.Id IN @Id", 
+                .ExecuteScalarAsync<bool>(@"SELECT COUNT(DISTINCT 1) FROM [dbo].[ProductItems] WHERE Id = @Id", 
                     param: new { Id = productItemsId })
                 .ConfigureAwait(false);
             return result;

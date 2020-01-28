@@ -10,11 +10,13 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Shared.Read\VendingMachine.Service.Shared.Read.csproj" />
   </ItemGroup>
 
 </Project>

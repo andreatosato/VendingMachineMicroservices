@@ -60,7 +60,7 @@ namespace VendingMachine.Service.Orders
                     webBuilder
                      .ConfigureKestrel((ctx, options) =>
                      {
-                         options.Listen(IPAddress.Any, 4020, listenOptions =>
+                         options.Listen(IPAddress.Any, 4030, listenOptions =>
                          {
                              listenOptions.Protocols = HttpProtocols.Http2;
                              listenOptions.UseHttps();

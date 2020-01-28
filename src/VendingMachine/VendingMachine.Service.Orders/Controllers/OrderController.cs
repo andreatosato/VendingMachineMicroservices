@@ -26,6 +26,19 @@ namespace VendingMachine.Service.Orders.Controllers
             this.orderQuery = orderQuery;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(OrderReadModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetOrders([FromQuery] PagedRequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await orderQuery.GetOrders(model.ToReadModel());
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
         [HttpGet("{orderId:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OrderReadModel), StatusCodes.Status200OK)]
@@ -34,6 +47,7 @@ namespace VendingMachine.Service.Orders.Controllers
             if (ModelState.IsValid)
             {
                 //orderQuery
+
                 return Ok();
             }
             return BadRequest(ModelState);
@@ -42,7 +56,7 @@ namespace VendingMachine.Service.Orders.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
-        public async Task<IActionResult> PostOrder([FromRoute] OrderAddViewModel model)
+        public async Task<IActionResult> PostOrder([FromBody] OrderAddViewModel model)
         {
             if (ModelState.IsValid)
             {
