@@ -30,7 +30,7 @@ namespace VendingMachine.Service.Orders.Domain
             }
 
             Cost = totalCost;
-            IsValid = Cost >= Coins;
+            IsValid = Cost <= Coins;
         }
 
         protected override IEnumerable<object> GetAtomicValues()

@@ -43,6 +43,13 @@ namespace VendingMachine.Service.Products.Read.Queries
                     map: (item, p) => 
                     {
                         item.Product = p.ToReadModel();
+                        item.SoldPrice = new GrossPriceReadModel
+                        {
+                            GrossPrice = p.GrossPrice,
+                            NetPrice = p.NetPrice,
+                            Rate = p.Rate,
+                            TaxPercentage = p.TaxPercentage
+                        };
                         return item;
                     },
                     param: new { Ids = productItemsId.ToArray() })

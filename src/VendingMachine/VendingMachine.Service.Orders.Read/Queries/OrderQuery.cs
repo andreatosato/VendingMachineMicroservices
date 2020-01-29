@@ -58,5 +58,30 @@ namespace VendingMachine.Service.Orders.Read.Queries
             result.Total = total;
             return result;
         }
+
+        public async Task<OrderReadModel> GetOrder(int orderId)
+        {
+            OrderReadModel result = new OrderReadModel();
+
+            using SqlConnection connection = new SqlConnection(orderConnectionString);
+            await connection
+                .QueryAsync<OrderReadModel, OrderProductItemReadModel, OrderReadModel>(
+                    @"SELECT O.[Id],[MachineId],[CoinsCurrentSupply],[OrderDate],[Processed],
+                    OI.[Id],[ProductItemId],[GrossPrice],[NetPrice],[TaxPercentage],[Rate]
+                    FROM [dbo].[Orders] O
+                    INNER JOIN [dbo].[OrderProductItem] OI ON O.Id = OI.OrderId
+                    WHERE O.Id = @Id",
+                map: (order, orderItem) =>
+                {
+                    if (!result.OrderProductItems.Any(x => x.ProductItemId == orderItem.ProductItemId))
+                    {
+                        result.OrderProductItems.Add(orderItem);
+                    }
+                    return result;
+                },
+                param: new { Id = orderId }).ConfigureAwait(false);
+
+            return result;
+        }
     }
 }

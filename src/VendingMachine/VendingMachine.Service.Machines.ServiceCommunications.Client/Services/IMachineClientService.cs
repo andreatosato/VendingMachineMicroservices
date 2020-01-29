@@ -6,5 +6,6 @@ namespace VendingMachine.Service.Machines.ServiceCommunications.Client.Services
     {
         Task<bool> ExistMachineAsync(int machineId);
         Task<GetMachineInfoResponse> GetMachineInfoAsync(int machineId);
+        Task<MachineStatusResponse> GetMachineStatus(int machineId);
     }
 }

@@ -27,5 +27,11 @@ namespace VendingMachine.Service.Machines.ServiceCommunications.Client.Services
 
             return await client.GetMachineInfosAsync(request);
         }
+
+        public async Task<MachineStatusResponse> GetMachineStatus(int machineId)
+        {
+            MachineStatusRequest request = new MachineStatusRequest() { MachineId = machineId };
+            return await client.GetMachineStatusAsync(request);
+        }
     }
 }

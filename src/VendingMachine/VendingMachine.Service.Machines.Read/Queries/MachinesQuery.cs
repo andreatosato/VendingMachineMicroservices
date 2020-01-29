@@ -136,6 +136,22 @@ namespace VendingMachine.Service.Machines.Read
             return result;
         }
 
+        public async Task<MachineItemStatusReadModel> GetMachineItemStatusAsync(int machineId)
+        {
+            MachineItemStatusReadModel result = null;
+            using (System.Data.IDbConnection connection = new SqlConnection(machineConnectionString))
+            {
+                string sql = @"SELECT [Id] AS MachineItemId, [CoinsCurrentSupply]
+                    FROM [dbo].[Machines]
+                    WHERE Id = @Id";
+
+                result = await connection
+                    .QueryFirstOrDefaultAsync<MachineItemStatusReadModel>(sql: sql, param: new { Id = machineId })
+                    .ConfigureAwait(false);
+            }
+            return result;
+        }
+
         public async Task<bool> CheckMachineItemExistsAsync(int machineId)
         {
             using (System.Data.IDbConnection connection = new SqlConnection(machineConnectionString))

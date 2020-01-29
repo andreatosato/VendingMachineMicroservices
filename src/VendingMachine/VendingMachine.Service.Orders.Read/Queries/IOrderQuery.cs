@@ -10,5 +10,6 @@ namespace VendingMachine.Service.Orders.Read.Queries
     public interface IOrderQuery
     {
         Task<OrdersReadModel> GetOrders(PagedRequest pagedRequest);
+        Task<OrderReadModel> GetOrder(int orderId);
     }
 }

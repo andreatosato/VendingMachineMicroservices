@@ -14,6 +14,7 @@ namespace VendingMachine.Service.Machines.Read
         Task<ProductsReadModel> GetProductsInMachineAsync(int machineId);
         Task<HistoryProductsReadModel> GetHistoryProductsInMachineAsync(int machineId);
         Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId);
+        Task<MachineItemStatusReadModel> GetMachineItemStatusAsync(int machineId);
         Task<bool> CheckMachineItemExistsAsync(int machineId);
         Task<bool> CheckActiveProductExist(int productId);
         Task<bool> CheckHistoryProductExist(int productId);

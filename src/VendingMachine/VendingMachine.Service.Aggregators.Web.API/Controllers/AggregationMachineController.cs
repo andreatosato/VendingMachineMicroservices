@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine;
 using VendingMachine.Service.Machines.ServiceCommunications;
+using VendingMachine.Service.Machines.ServiceCommunications.Client.Services;
 using VendingMachine.Service.Products.ServiceCommunications;
 
 namespace VendingMachine.Service.Aggregators.Web.API.Controllers
@@ -14,22 +15,22 @@ namespace VendingMachine.Service.Aggregators.Web.API.Controllers
     public class AggregationMachineController : ControllerBase
     {
         private readonly ProductItems.ProductItemsClient productItemsClient;
-        private readonly MachineItems.MachineItemsClient machineItemsClient;
+        private readonly IMachineClientService machineClient;
 
-        public AggregationMachineController(ProductItems.ProductItemsClient productItemsClient, 
-            MachineItems.MachineItemsClient machineItemsClient)
+        public AggregationMachineController(ProductItems.ProductItemsClient productItemsClient,
+           IMachineClientService machineClient)
         {
             this.productItemsClient = productItemsClient;
-            this.machineItemsClient = machineItemsClient;
+            this.machineClient = machineClient;
         }
 
         [HttpGet("{machineId:int}")]
-        public async Task<IActionResult> GetMachineAsync(int machineId)
+        public async Task<IActionResult> GetMachineCurrentStatusAsync(int machineId)
         {
-            var machineExist = await machineItemsClient.ExistMachineAsync(new ExistMachineRequest { MachineId = machineId });
-            if (machineExist.Exist)
+            var machineExist = await machineClient.ExistMachineAsync(machineId);
+            if (machineExist)
             {
-                var machineInfos = await machineItemsClient.GetMachineInfosAsync(new GetMachineInfoRequest { MachineId = machineId });
+                var machineInfos = await machineClient.GetMachineInfoAsync(machineId);
                 var productIds = machineInfos.Machine.ActiveProducts.Select(x => x.Id).ToList();
 
                 List<ProductItemsServiceModel> products = new List<ProductItemsServiceModel>();

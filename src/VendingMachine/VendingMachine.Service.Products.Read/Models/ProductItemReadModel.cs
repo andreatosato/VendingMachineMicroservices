@@ -16,6 +16,6 @@ namespace VendingMachine.Service.Products.Read.Models
         public DateTimeOffset? Purchased { get; set; }
         public DateTimeOffset? Sold { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public GrossPriceReadModel SoldPrice { get; }
+        public GrossPriceReadModel SoldPrice { get; set; }
     }
 }

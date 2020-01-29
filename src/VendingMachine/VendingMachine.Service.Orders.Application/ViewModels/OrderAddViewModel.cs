@@ -6,9 +6,15 @@ namespace VendingMachine.Service.Orders.Application.ViewModels
 {
     public class OrderAddViewModel
     {
-        public MachineStatusViewModel ModelStatus { get; set; }
-        public ICollection<OrderProductItemViewModel> ProductItems { get; set; }
+        public int MachineId { get; set; }
+        public ICollection<int> ProductItems { get; set; }
     }
+
+    //public class OrderAddViewModel
+    //{
+    //    public MachineStatusViewModel ModelStatus { get; set; }
+    //    public ICollection<OrderProductItemViewModel> ProductItems { get; set; }
+    //}
 
     public class OrderAddedViewModel 
     {

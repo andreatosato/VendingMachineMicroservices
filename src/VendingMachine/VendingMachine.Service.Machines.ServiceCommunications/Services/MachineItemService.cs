@@ -31,5 +31,19 @@ namespace VendingMachine.Service.Machines.ServiceCommunications.Services
             var exist = await machineQuery.CheckMachineItemExistsAsync(request.MachineId).ConfigureAwait(false);
             return new ExistMachineResponse { Exist = exist };
         }
+
+        public override async Task<MachineStatusResponse> GetMachineStatus(MachineStatusRequest request, ServerCallContext context)
+        {
+            if (request.MachineId > 0)
+            {
+                var result = await machineQuery.GetMachineItemStatusAsync(request.MachineId).ConfigureAwait(false);
+                MachineStatusResponse response = new MachineStatusResponse() {
+                    CoinCurrentSupply = (double) result.CoinsCurrentSupply, 
+                    MachineId = result.MachineItemId
+                };
+                return response;
+            }
+            throw new ArgumentNullException();
+        }
     }
 }

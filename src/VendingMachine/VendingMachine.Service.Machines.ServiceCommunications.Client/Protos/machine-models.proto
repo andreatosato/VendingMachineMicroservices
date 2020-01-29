@@ -68,3 +68,12 @@ message ExistMachineRequest {
 message ExistMachineResponse {
 	bool Exist = 1;
 }
+
+message MachineStatusRequest {
+	int32 MachineId = 1;
+}
+
+message MachineStatusResponse {
+	int32 MachineId = 1;
+	double CoinCurrentSupply = 2;
+}

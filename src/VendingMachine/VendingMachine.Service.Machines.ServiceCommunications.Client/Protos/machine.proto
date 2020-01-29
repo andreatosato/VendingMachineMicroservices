@@ -9,4 +9,5 @@ package VendingMachine.Service.Machines.ServiceCommunications;
 service MachineItems {
 	rpc ExistMachine (ExistMachineRequest) returns (ExistMachineResponse);
 	rpc GetMachineInfos (GetMachineInfoRequest) returns (GetMachineInfoResponse);
+	rpc GetMachineStatus (MachineStatusRequest) returns (MachineStatusResponse);
 }
