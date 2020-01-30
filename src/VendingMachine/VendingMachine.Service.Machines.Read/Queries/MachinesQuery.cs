@@ -2,6 +2,7 @@
 using Microsoft.SqlServer.Types;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -90,7 +91,21 @@ namespace VendingMachine.Service.Machines.Read
 
         public async Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachinesAsync(SqlGeography currentPosition, decimal radius)
         {
-            throw new NotImplementedException();
+            ICollection<NearbyMachineReadModel> result = new Collection<NearbyMachineReadModel>();
+            string sql = @"SELECT M.Id, M.[Position], M.[Position].STDistance(@CurrentPosition) As Distance
+            FROM Machines M
+            WHERE M.[Position].STDistance(@CurrentPosition) < @Radius  
+            ORDER BY M.[Position].STDistance(@CurrentPosition)";
+
+            // https://docs.microsoft.com/it-it/sql/t-sql/spatial-geography/stdistance-geography-data-type?view=sql-server-ver15
+            using (SqlConnection connection = new SqlConnection(machineConnectionString))
+            {
+                var dapperResult = await connection
+                    .QueryAsync<NearbyMachineDapper>(sql, new { CurrentPosition = currentPosition, Radius = radius })
+                    .ConfigureAwait(false);
+                result = dapperResult.Select(x => NearbyMachineReadModel.FromDapper(x)).ToList();
+            }
+            return result;
         }
 
         public async Task<MachineItemReadModel> GetMachineItemInfoAsync(int machineId)

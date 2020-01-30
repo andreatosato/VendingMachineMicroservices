@@ -6,12 +6,40 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 44325
+          "Port": 4020
         }
       ],
       "UpstreamPathTemplate": "/product-api/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "Key": "Product.Api",
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 4010
+        }
+      ],
+      "UpstreamPathTemplate": "/machine-api/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Machine.Api",
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 4030
+        }
+      ],
+      "UpstreamPathTemplate": "/order-api/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Order.Api",
       "DangerousAcceptAnyServerCertificateValidator": true
     }
   ],

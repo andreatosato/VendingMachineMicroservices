@@ -21,4 +21,22 @@ namespace VendingMachine.Service.Orders.Application.Validations
             return await productItemClient.ExistProductItemAsync(productItemId).ConfigureAwait(false);
         }
     }
+
+    public class OrderUpdateProductItemValidation : AbstractValidator<OrderUpdateProductItemViewModel>
+    {
+        public OrderUpdateProductItemValidation()
+        {
+            RuleFor(t => t.OrderId).NotEmpty().GreaterThan(0);
+            RuleFor(t => t.ProductItem).NotEmpty().GreaterThan(0);
+        }
+    }
+
+    public class OrderUpdateProductItemsValidation : AbstractValidator<OrderUpdateProductItemsViewModel>
+    {
+        public OrderUpdateProductItemsValidation()
+        {
+            RuleFor(t => t.OrderId).NotEmpty().GreaterThan(0);
+            RuleForEach(t => t.ProductItems).NotEmpty().GreaterThan(0);
+        }
+    }
 }

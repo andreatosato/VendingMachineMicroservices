@@ -146,44 +146,103 @@ namespace VendingMachine.Service.Orders.Controllers
             return BadRequest(ModelState);
         }
 
-        // TODO:
         [HttpPost("{orderId:int}/Confirm")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ConfirmOrder([FromRoute] int orderId)
         {
-            if (ModelState.IsValid)
+            if (orderId > 0)
             {
-                return Ok();
+                OrderConfirmResponse response = await mediator.Send(new OrderConfirmCommand()
+                {
+                    OrderId = orderId
+                });
+
+                return Ok(response);
             }
             return BadRequest(ModelState);
         }
 
-        // TODO:
         [HttpPut("{orderId:int}/AddProductItem/{productItem:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
-        public async Task<IActionResult> AddProductItem([FromRoute] int orderId, [FromRoute] int productItem)
+        public async Task<IActionResult> AddProductItem([FromRoute] OrderUpdateProductItemViewModel model)
         {
             if (ModelState.IsValid)
             {
-                return Ok();
+                var command = new OrderAddProductItemsCommand
+                {
+                    OrderId = model.OrderId,
+                    OrderProductItemsToAdd = new[] { 
+                        new OrderProductItemBaseCommand { ProductItemId = model.ProductItem } 
+                    }
+                };
+
+                var result = await mediator.Send(command);
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }
 
-        // TODO:
         [HttpPut("{orderId:int}/RemoveProductItem/{productItem:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RemoveProductItem([FromRoute] int orderId, [FromRoute] int productItem)
+        public async Task<IActionResult> RemoveProductItem([FromRoute] OrderUpdateProductItemViewModel model)
         {
             if (ModelState.IsValid)
             {
-                return Ok();
+                var command = new OrderRemoveProductItemsCommand
+                {
+                    OrderId = model.OrderId,
+                    OrderProductItemsToRemove = new[] {
+                        new OrderProductItemBaseCommand { ProductItemId = model.ProductItem }
+                    }
+                };
+
+                var result = await mediator.Send(command);
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPut("{orderId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ClearProductItems([FromRoute] int orderId)
+        {
+            if (orderId > 0)
+            {
+                var command = new OrderClearProductItemsCommand
+                {
+                    OrderId = orderId
+                };
+
+                var result = await mediator.Send(command);
+
+                return Ok(result);
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpDelete("{orderId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteOrder([FromRoute] int orderId)
+        {
+            if (orderId > 0)
+            {
+                var command = new OrderDeleteCommand
+                {
+                    OrderId = orderId
+                };
+
+                var result = await mediator.Send(command);
+
+                return Ok(result);
             }
             return BadRequest(ModelState);
         }

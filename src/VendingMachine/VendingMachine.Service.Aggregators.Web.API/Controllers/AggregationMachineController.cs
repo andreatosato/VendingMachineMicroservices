@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine;
-using VendingMachine.Service.Machines.ServiceCommunications;
 using VendingMachine.Service.Machines.ServiceCommunications.Client.Services;
 using VendingMachine.Service.Products.ServiceCommunications;
 

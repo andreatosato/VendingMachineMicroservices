@@ -16,9 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Data\VendingMachine.Service.Orders.Data.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Domain\VendingMachine.Service.Orders.Domain.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Orders.Read\VendingMachine.Service.Orders.Read.csproj" />
+    <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Services.Shared.Domain\VendingMachine.Service.Shared.Domain.csproj" />
   </ItemGroup>
 

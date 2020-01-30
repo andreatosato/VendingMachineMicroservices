@@ -7,10 +7,16 @@ namespace VendingMachine.Service.Machines.Read.Models
     {
         public int Id { get; set; }
         public MapPointReadModel Position { get; set; }
-        public void FromDapper(NearbyMachineDapper d, MapPointReadModel position)
+        public decimal Distance { get; set; }
+
+        public static NearbyMachineReadModel FromDapper(NearbyMachineDapper d)
         {
-            Id = d.Id;
-            Position = position;
+            return new NearbyMachineReadModel
+            {
+                Id = d.Id,
+                Position = new MapPointReadModel(d.Position.Lat.Value, d.Position.Long.Value),
+                Distance = d.Distance
+            };
         }
     }
 
@@ -18,5 +24,15 @@ namespace VendingMachine.Service.Machines.Read.Models
     {
         public int Id { get; set; }
         public SqlGeography Position { get; set; }
+        public decimal Distance { get; set; }
+    }
+
+    public static class GeograpyUtility
+    {
+        private const int SRID = 4326;
+        public static SqlGeography GetPointSqlGeography(double latitude, double longitude)
+        {
+            return SqlGeography.Point(latitude, longitude, SRID);
+        }
     }
 }

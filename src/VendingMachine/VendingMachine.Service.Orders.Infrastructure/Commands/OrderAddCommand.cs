@@ -17,4 +17,9 @@ namespace VendingMachine.Service.Orders.Infrastructure.Commands
         public int OrderId { get; set; }
         public bool CanConfirm { get; set; }
     }
+
+    public class OrderDeleteCommand : IRequest
+    {
+        public int OrderId { get; set; }
+    }
 }

@@ -9,6 +9,7 @@ using VendingMachine.Service.Machines.Application.ViewModels;
 using VendingMachine.Service.Machines.Infrastructure;
 using VendingMachine.Service.Machines.Infrastructure.Commands;
 using VendingMachine.Service.Machines.Read;
+using VendingMachine.Service.Machines.Read.Models;
 using VendingMachine.Service.Shared.Exceptions;
 
 namespace VendingMachine.Service.Machines.Controllers
@@ -31,14 +32,18 @@ namespace VendingMachine.Service.Machines.Controllers
             this.logger = loggerFactory.CreateLogger(typeof(MachineItemsController));
         }
 
-
-        //TODO: Not Implemented
-        [HttpGet]
+        [HttpGet("NearbyMachineItems")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetInfosAsync([FromQuery] decimal latitude, [FromQuery] decimal longitude, [FromQuery] decimal radius)
+        public async Task<IActionResult> GetNearbyMachineItemsAsync([FromQuery] GeoSearchViewModel model)
         {
-            throw new System.NotImplementedException();
+            if (ModelState.IsValid)
+            {
+                var centerPoint = GeograpyUtility.GetPointSqlGeography(model.Latutide, model.Longitude);
+                var machines = await machineQuery.GetNearbyMachinesAsync(centerPoint, model.Radius.Value);
+                return Ok(machines);
+            }
+            return BadRequest(ModelState);
         }
 
         [HttpGet("{machineId:int}")]

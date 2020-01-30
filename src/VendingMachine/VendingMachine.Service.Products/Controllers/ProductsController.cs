@@ -20,7 +20,20 @@ namespace VendingMachine.Service.Products.Controllers
     [ApiController]
     public class Productsv1Controller : ControllerBase
     {
+        [HttpGet("{productId:int}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult IgnoredApi([FromRoute] int productId)
+        {
+            return Ok();
+        }
 
+        [HttpGet("{productId:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult NotIgnoredApi([FromRoute] int productId)
+        {
+            return Ok();
+        }
     }
 
     [ApiVersion("2.0")]    

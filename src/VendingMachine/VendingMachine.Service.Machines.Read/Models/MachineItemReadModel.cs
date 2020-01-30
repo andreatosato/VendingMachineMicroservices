@@ -54,7 +54,7 @@ namespace VendingMachine.Service.Machines.Read.Models
         public MapPointReadModel() { }
         public MapPointReadModel(double x, double y)
         {
-            X = (decimal)X;
+            X = (decimal)x;
             Y = (decimal)y;
         }
         public decimal X { get; set; }
