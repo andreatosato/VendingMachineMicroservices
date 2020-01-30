@@ -146,11 +146,40 @@ namespace VendingMachine.Service.Orders.Controllers
             return BadRequest(ModelState);
         }
 
+        // TODO:
         [HttpPost("{orderId:int}/Confirm")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> ConfirmOrder([FromRoute] int orderId)
+        {
+            if (ModelState.IsValid)
+            {
+                return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+
+        // TODO:
+        [HttpPut("{orderId:int}/AddProductItem/{productItem:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> AddProductItem([FromRoute] int orderId, [FromRoute] int productItem)
+        {
+            if (ModelState.IsValid)
+            {
+                return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+
+        // TODO:
+        [HttpPut("{orderId:int}/RemoveProductItem/{productItem:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> RemoveProductItem([FromRoute] int orderId, [FromRoute] int productItem)
         {
             if (ModelState.IsValid)
             {

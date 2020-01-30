@@ -31,6 +31,16 @@ namespace VendingMachine.Service.Machines.Controllers
             this.logger = loggerFactory.CreateLogger(typeof(MachineItemsController));
         }
 
+
+        //TODO: Not Implemented
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetInfosAsync([FromQuery] decimal latitude, [FromQuery] decimal longitude, [FromQuery] decimal radius)
+        {
+            throw new System.NotImplementedException();
+        }
+
         [HttpGet("{machineId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
