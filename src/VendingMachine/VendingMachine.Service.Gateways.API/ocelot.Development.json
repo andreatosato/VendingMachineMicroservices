@@ -41,6 +41,20 @@
       "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
       "Key": "Order.Api",
       "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 4040
+        }
+      ],
+      "UpstreamPathTemplate": "/aggregator-api/{everything}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "Key": "Aggregator.Api",
+      "DangerousAcceptAnyServerCertificateValidator": true
     }
   ],
   "Aggregates": [

@@ -26,7 +26,7 @@ namespace VendingMachine.Service.Products.ServiceCommunications.Services
                     productIds.Add(productIdEnum.Current);
                 }
             }
-            Read.Models.ProductItemsReadModel productItems = await query.GetProductsInfoAsync(productIds);
+            Read.Models.ProductItemsReadModel productItems = await query.GetProductItemsInfoAsync(productIds);
             foreach (var pi in productItems.Products)
             {
                 var productItem = new ProductItemsServiceModel

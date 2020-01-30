@@ -64,3 +64,4 @@ https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 | Machine.API | 4010 |
 | Product.API | 4020 |
 | Order.API | 4030 |
+| Aggregator.API | 4040 | 
