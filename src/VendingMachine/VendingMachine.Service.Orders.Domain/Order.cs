@@ -13,7 +13,9 @@ namespace VendingMachine.Service.Orders.Domain
         public DateTimeOffset OrderDate { get; }
         public Billing Billing { get; private set; }
         public bool CanConfirm => Billing.IsValid & !Processed;
-        public bool Processed { get; private set; }
+        public bool Processed => Confirmed || Cancelled;
+        public bool Confirmed { get; private set; }
+        public bool Cancelled { get; private set; }
 
         /*EF Core - Query CTOR */
         private Order(DateTimeOffset orderDate)
@@ -83,7 +85,12 @@ namespace VendingMachine.Service.Orders.Domain
 
         public void ConfirmOrder()
         {
-            Processed = true;
+            Confirmed = true;
+        }
+
+        public void CancelOrder()
+        {
+            Cancelled = true;
         }
 
         private void CheckMoney()

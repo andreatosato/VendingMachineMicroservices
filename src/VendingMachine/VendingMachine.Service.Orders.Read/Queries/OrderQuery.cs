@@ -47,11 +47,11 @@ namespace VendingMachine.Service.Orders.Read.Queries
                 },
                 param: new { pagedRequest.Skip, pagedRequest.Take }).ConfigureAwait(false);
             
-            result.CurrentItem = pagedRequest.Skip / pagedRequest.Take;
+            result.CurrentPage = pagedRequest.Skip / pagedRequest.Take;
 
             int total = await connection
                .ExecuteScalarAsync<int>(
-                   @"SELECT COUNT(DISTINCT 1)
+                   @"SELECT COUNT(O.Id)
                     FROM [dbo].[Orders] O
                     INNER JOIN [dbo].[OrderProductItem] OI ON O.Id = OI.OrderId");
             
@@ -80,6 +80,21 @@ namespace VendingMachine.Service.Orders.Read.Queries
                     return result;
                 },
                 param: new { Id = orderId }).ConfigureAwait(false);
+
+            return result;
+        }
+
+        public async Task<bool> ExistPendingOrder(int machineId)
+        {
+            using SqlConnection connection = new SqlConnection(orderConnectionString);
+            bool result = await connection
+                .ExecuteScalarAsync<bool>(
+                    @"SELECT COUNT(DISTINCT 1)
+                    FROM [dbo].[Orders]
+                    WHERE MachineId = @Id 
+                    AND (Confirmed = 0 AND Cancelled = 0)  /*Not Processed*/",
+                param: new { Id = machineId })
+                .ConfigureAwait(false);
 
             return result;
         }

@@ -8,7 +8,7 @@ namespace VendingMachine.Service.Orders.Read.Models
     public class OrdersReadModel : IReadPagedEntity<OrderReadModel>
     {
         public ICollection<OrderReadModel> Entities { get; set; } = new List<OrderReadModel>();
-        public int CurrentItem { get; set; }
+        public int CurrentPage { get; set; }
         public int Total { get; set; }
     }
 

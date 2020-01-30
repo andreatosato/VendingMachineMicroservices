@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System.Threading;
 using System.Threading.Tasks;
 using VendingMachine.Service.Machines.Data.EntityConfigurations;
@@ -28,14 +29,15 @@ namespace VendingMachine.Service.Machines.Data
         }
 
         // Only for test
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true",
-                x => x.UseNetTopologySuite());
-            optionsBuilder.EnableSensitiveDataLogging();
-            base.OnConfiguring(optionsBuilder);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(
+        //        "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true",
+        //        x => x.UseNetTopologySuite());
+        //    optionsBuilder.EnableSensitiveDataLogging();
+        //    base.OnConfiguring(optionsBuilder);
+        //}
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new MachineEntityConfiguration());
@@ -52,6 +54,20 @@ namespace VendingMachine.Service.Machines.Data
             int result = await base.SaveChangesAsync(cancellationToken);
             await _mediator?.DispatchDomainEventsAsync(this);
             return result;
+        }
+    }
+
+
+    public class MachineContextFactory : IDesignTimeDbContextFactory<MachineContext>
+    {
+        public MachineContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<MachineContext>();
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Machines;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.EnableSensitiveDataLogging();
+
+            return new MachineContext(optionsBuilder.Options, null);
         }
     }
 }

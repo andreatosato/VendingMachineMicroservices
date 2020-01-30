@@ -10,7 +10,7 @@ namespace VendingMachine.Service.Shared.Read
         where T : IReadEntity
     {
         public ICollection<T> Entities { get; set; }
-        public int CurrentItem { get; set; }
+        public int CurrentPage { get; set; }
         public int Total { get; set; }
     }
 }

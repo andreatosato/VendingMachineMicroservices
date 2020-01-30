@@ -63,6 +63,7 @@ namespace VendingMachine.Service.Orders.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> PostOrder([FromBody] OrderAddViewModel model)
         {
@@ -106,8 +107,15 @@ namespace VendingMachine.Service.Orders.Controllers
                 }
                 #endregion
 
-
-                var pitems = productItems.Select(x =>
+                DateTimeOffset orderDate = DateTimeOffset.UtcNow;
+                var orderAddCommand = new OrderAddCommand
+                {
+                    MachineStatus = new MachineStatusCommand
+                    {
+                        MachineId = machineStatus.MachineId,
+                        CoinsCurrentSupply = (decimal)machineStatus.CoinCurrentSupply
+                    },
+                    OrderProducts = productItems.Select(x =>
                        new OrderProductItemCommand
                        {
                            ProductItemId = x.Id,
@@ -117,26 +125,36 @@ namespace VendingMachine.Service.Orders.Controllers
                                TaxPercentage = x.SoldPrice.TaxPercentage
                            }
                        })
-                    .ToList();
-
-                DateTimeOffset orderDate = DateTimeOffset.UtcNow;
-                var orderAddCommand = new OrderAddCommand
-                {
-                    MachineStatus = new MachineStatusCommand
-                    {
-                        MachineId = machineStatus.MachineId,
-                        CoinsCurrentSupply = (decimal)machineStatus.CoinCurrentSupply
-                    },
-                    OrderProducts = pitems,
+                    .ToList(),
                     OrderDate = orderDate
                 };
-
-                var orderAddResponse = await mediator.Send(orderAddCommand);
-                return Ok(new OrderAddedViewModel
+                try
                 {
-                    CanConfirm = orderAddResponse.CanConfirm,
-                    OrderId = orderAddResponse.OrderId
-                });
+                    var orderAddResponse = await mediator.Send(orderAddCommand);
+                    return Ok(new OrderAddedViewModel
+                    {
+                        CanConfirm = orderAddResponse.CanConfirm,
+                        OrderId = orderAddResponse.OrderId
+                    });
+                }
+                catch (InvalidOperationException ioe)
+                {
+                    ModelState.AddModelError("PendingOrder", ioe.Message);
+                    return Conflict(ModelState);
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("{orderId:int}/Confirm")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(OrderAddedViewModel), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ConfirmOrder([FromRoute] int orderId)
+        {
+            if (ModelState.IsValid)
+            {
+                return Ok();
             }
             return BadRequest(ModelState);
         }

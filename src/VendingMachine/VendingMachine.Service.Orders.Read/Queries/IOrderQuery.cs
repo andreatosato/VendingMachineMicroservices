@@ -11,5 +11,6 @@ namespace VendingMachine.Service.Orders.Read.Queries
     {
         Task<OrdersReadModel> GetOrders(PagedRequest pagedRequest);
         Task<OrderReadModel> GetOrder(int orderId);
+        Task<bool> ExistPendingOrder(int machineId);
     }
 }

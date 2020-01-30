@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using VendingMachine.Service.Orders.Domain;
 using VendingMachine.Service.Orders.Infrastructure.Commands;
+using VendingMachine.Service.Orders.Read.Queries;
 
 namespace VendingMachine.Service.Orders.Infrastructure.Handlers
 {
@@ -13,15 +14,21 @@ namespace VendingMachine.Service.Orders.Infrastructure.Handlers
         IRequestHandler<OrderUpdateCommand, OrderUpdateResponse>
     {
         private readonly IOrdersUoW ordersUoW;
+        private readonly IOrderQuery orderQuery;
 
-        public OrderHandler(IOrdersUoW ordersUoW)
+        public OrderHandler(IOrdersUoW ordersUoW, IOrderQuery orderQuery)
         {
             this.ordersUoW = ordersUoW;
+            this.orderQuery = orderQuery;
         }
 
         public async Task<OrderAddResponse> Handle(OrderAddCommand request, CancellationToken cancellationToken)
         {
-            // MachineStatus don't check because must call from aggregator pattern
+            // Check pending order for this machine
+            bool orderInPending = await orderQuery.ExistPendingOrder(request.MachineStatus.MachineId);
+            if (orderInPending)
+                throw new System.InvalidOperationException("Another order in pending for this machine");
+
             MachineStatus machineStatus = new MachineStatus(request.MachineStatus.MachineId, request.MachineStatus.CoinsCurrentSupply);
             List<OrderProductItem> productItems = new List<OrderProductItem>();
             foreach (var p in request.OrderProducts)

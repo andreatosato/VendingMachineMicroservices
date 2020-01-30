@@ -11,7 +11,8 @@ namespace VendingMachine.Service.Orders.Data.EntityConfigurations
             builder.HasKey(x => x.Id);
             builder.Property(t => t.Id).ValueGeneratedOnAdd().IsRequired();
             builder.Property(t => t.OrderDate);
-            builder.Property(t => t.Processed);
+            builder.Property(t => t.Confirmed);
+            builder.Property(t => t.Cancelled);            
             builder.Ignore(t => t.Billing);
 
             builder.OwnsOne(t => t.MachineStatus,

@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System.Diagnostics.CodeAnalysis;
 using VendingMachine.Service.Products.Data.Entities;
 using VendingMachine.Service.Products.Data.EntityConfigurations;
@@ -7,6 +9,8 @@ namespace VendingMachine.Service.Products.Data
 {
     public class ProductContext : DbContext
     {
+        private readonly IMediator mediator;
+
         public DbSet<ProductEntity> Products { get; set; }
         public DbSet<ProductItemEntity> ProductItems { get; set; }
 
@@ -14,18 +18,18 @@ namespace VendingMachine.Service.Products.Data
         {
         }
 
-        public ProductContext([NotNull] DbContextOptions options) : base(options)
+        public ProductContext(DbContextOptions options, IMediator _mediator) : base(options)
         {
-
+            mediator = _mediator;
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Products;Trusted_Connection=True;MultipleActiveResultSets=true");
-            optionsBuilder.EnableSensitiveDataLogging();
-            base.OnConfiguring(optionsBuilder);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer(
+        //        "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Products;Trusted_Connection=True;MultipleActiveResultSets=true");
+        //    optionsBuilder.EnableSensitiveDataLogging();
+        //    base.OnConfiguring(optionsBuilder);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +110,19 @@ namespace VendingMachine.Service.Products.Data
             });
 
             base.OnModelCreating(modelBuilder);
+        }
+    }
+
+    public class ProductContextFactory : IDesignTimeDbContextFactory<ProductContext>
+    {
+        public ProductContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ProductContext>();
+            optionsBuilder.UseSqlServer(
+                "Server=(localdb)\\mssqllocaldb;Database=VendingMachine-Products;Trusted_Connection=True;MultipleActiveResultSets=true");
+            optionsBuilder.EnableSensitiveDataLogging();
+
+            return new ProductContext(optionsBuilder.Options, null);
         }
     }
 }

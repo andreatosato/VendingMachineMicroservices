@@ -10,7 +10,7 @@ using VendingMachine.Service.Orders.Data;
 namespace VendingMachine.Service.Orders.Data.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20200126085002_FirstMigrationOrders")]
+    [Migration("20200130080107_FirstMigrationOrders")]
     partial class FirstMigrationOrders
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,11 +28,14 @@ namespace VendingMachine.Service.Orders.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Cancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTimeOffset>("OrderDate")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("Processed")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

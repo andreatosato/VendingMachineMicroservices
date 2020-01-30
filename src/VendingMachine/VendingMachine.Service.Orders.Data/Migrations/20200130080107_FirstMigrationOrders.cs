@@ -16,7 +16,8 @@ namespace VendingMachine.Service.Orders.Data.Migrations
                     MachineId = table.Column<int>(nullable: true),
                     CoinsCurrentSupply = table.Column<decimal>(nullable: true),
                     OrderDate = table.Column<DateTimeOffset>(nullable: false),
-                    Processed = table.Column<bool>(nullable: false)
+                    Confirmed = table.Column<bool>(nullable: false),
+                    Cancelled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
