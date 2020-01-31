@@ -16,7 +16,7 @@ using VendingMachine.Service.Shared.Exceptions;
 namespace VendingMachine.Service.Products.Controllers
 {
     [ApiVersion("1.0", Deprecated = true)]
-    [Route("api/Products")]
+    [Route("Products")]
     [ApiController]
     public class Productsv1Controller : ControllerBase
     {

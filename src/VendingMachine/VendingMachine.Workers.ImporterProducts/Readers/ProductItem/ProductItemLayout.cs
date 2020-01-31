@@ -15,8 +15,7 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
                 .WithMember(x => x.ProductId)
                 .WithMember(x => x.Purchased)
                 .WithMember(x => x.ExpirationDate)
-                .WithMember(x => x.GrossPrice, c => c.AllowNull(""))
-                .WithMember(x => x.TaxPercentage, c => c.AllowNull(""));
+                .WithMember(x => x.RedefinedPrice, c => c.AllowNull("").WithName("Price"));
         }
     }
 
@@ -26,7 +25,6 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
         public int MachineId { get; set; }
         public DateTimeOffset Purchased { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public decimal GrossPrice { get; set; }
-        public int TaxPercentage { get; set; }
+        public decimal RedefinedPrice { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VendingMachine.Service.Gateway.RefitModels;
 using VendingMachine.Workers.ImporterProducts.Readers;
 
 namespace VendingMachine.Workers.ImporterProducts
@@ -33,6 +34,7 @@ namespace VendingMachine.Workers.ImporterProducts
                     services.AddSingleton<WatcherConfiguration>(watcherConfiguration);
 
                     services.AddTransient<IProductItemsImporter, ProductItemsImporter>();
+                    services.AddRefitClients();
                 })
                 .ConfigureServices((hostContext, services) =>
                 {

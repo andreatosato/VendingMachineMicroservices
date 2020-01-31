@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace VendingMachine.Workers.ImporterProducts.Readers.Product
+namespace VendingMachine.Workers.ImporterProducts.Readers
 {
     public interface IProductImporter
     {

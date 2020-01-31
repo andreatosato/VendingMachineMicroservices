@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using VendingMachine.Service.Gateway.RefitModels;
 
 namespace VendingMachine.Workers.ImporterProducts.Readers
 {
@@ -16,13 +17,25 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
 
         public async Task DoWorkAsync(string Name, string FullName)
         {
+            IGatewayApi api = (IGatewayApi)serviceProvider.GetService(typeof(IGatewayApi));
             var layout = new ProductItemLayout();
             var factory = new FlatFile.Delimited.Implementation.DelimitedFileEngineFactory();
             using (var stream = new MemoryStream(await File.ReadAllBytesAsync(FullName)))
             {
                 var flatFile = factory.GetEngine(layout);
                 var records = flatFile.Read<ProductItem>(stream).ToArray();
-                // TODO: create product Item
+
+                foreach (var product in records)
+                {
+                    var productItem = new Service.Products.Application.ViewModels.ProductItems.ProductItemViewModel
+                    {
+                        ExpirationDate = product.ExpirationDate,
+                        ProductId = product.ProductId,
+                        Purchased = product.Purchased,
+                        SoldPrice = product.RedefinedPrice
+                    };
+                    await api.PostCreateProductItemAsync(productItem);
+                }
             }
         }
     }

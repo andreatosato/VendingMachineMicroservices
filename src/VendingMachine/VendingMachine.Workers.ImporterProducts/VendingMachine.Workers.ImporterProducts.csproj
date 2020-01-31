@@ -9,4 +9,12 @@
     <PackageReference Include="FlatFile" Version="0.2.51" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Gateway.RefitModels\VendingMachine.Service.Gateway.RefitModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FileImports\" />
+  </ItemGroup>
 </Project>
