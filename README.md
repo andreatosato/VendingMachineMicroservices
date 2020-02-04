@@ -65,3 +65,15 @@ https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks
 | Product.API | 4020 |
 | Order.API | 4030 |
 | Aggregator.API | 4040 | 
+
+
+#Step 1 - Align data environment
+Create database and update data
+1. dotnet ef database update --project "VendingMachine.Service.Authentications.API"
+2. dotnet ef database update --project "VendingMachine.Service.Machines.Data"
+3. dotnet ef database update --project "VendingMachine.Service.Products.Data"
+4. dotnet ef database update --project "VendingMachine.Service.Orders.Data"
+5. Run All app projects
+6. Copy VendingMachine.Workers.ImporterProducts\FileImport to %TEMP%\Workshop\VendingMachine
+... Products.csv
+... ProductItems.csv

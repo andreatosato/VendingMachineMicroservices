@@ -16,7 +16,10 @@ namespace VendingMachine.Workers.ImporterProducts
     {
         private readonly ILogger<Worker> _logger;
         public IServiceProvider Services { get; }
-        public WatcherConfiguration configuration;
+        private WatcherConfiguration configuration;
+        private FileSystemWatcher watcherProduct;
+        private FileSystemWatcher watcherProductItem;
+        private bool productIsWorking = false;
 
         public Worker(ILogger<Worker> logger, IServiceProvider services, WatcherConfiguration configuration)
         {
@@ -25,21 +28,40 @@ namespace VendingMachine.Workers.ImporterProducts
             this.configuration = configuration;
         }
 
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            watcherProduct = new FileSystemWatcher
+            {
+                Path = Path.GetTempPath() + configuration.ProductPath,
+                EnableRaisingEvents = true,
+                IncludeSubdirectories = false
+            };
+            watcherProduct.Created += WatcherProduct_Created;
+            //watcherProduct.Changed += WatcherProduct_Created;
+
+            watcherProductItem = new FileSystemWatcher
+            {
+                Path = Path.GetTempPath() + configuration.ProductItemPath,
+                EnableRaisingEvents = true,
+                IncludeSubdirectories = false
+            };
+            watcherProductItem.Created += WatcherProductItem_Created;
+            //watcherProductItem.Changed += WatcherProductItem_Created;
+
+            return base.StartAsync(cancellationToken);
+        }
+
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                using (FileSystemWatcher watcher = new FileSystemWatcher())
-                {
-                    watcher.Path = configuration.Path;
-                    watcher.Created += Watcher_Created;
-                }
-                //await Task.Delay(1000, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
 
-        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        private void WatcherProductItem_Created(object sender, FileSystemEventArgs e)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -51,9 +73,31 @@ namespace VendingMachine.Workers.ImporterProducts
             }).Wait();           
         }
 
-        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        private void WatcherProduct_Created(object sender, FileSystemEventArgs e)
         {
-            
+            try
+            {
+                productIsWorking = true;
+                Task.Factory.StartNew(async () =>
+                {
+                    using (var scope = Services.CreateScope())
+                    {
+                        var productImporter = scope.ServiceProvider.GetRequiredService<IProductImporter>();
+                        await productImporter.DoWorkAsync(e.Name, e.FullPath);
+                    }
+                }).Wait();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                productIsWorking = false;
+            }
+           
         }
+
     }
 }

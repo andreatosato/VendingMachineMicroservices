@@ -38,6 +38,9 @@ namespace VendingMachine.Service.Products.Infrastructure.Handlers
         public async Task<ProductItemAddResponse> Handle(ProductItemAddCommand request, CancellationToken cancellationToken)
         {
             var productDomain = await productUoW.ProductRepository.FindAsync(request.ProductId);
+            if (productDomain == null)
+                throw new InvalidOperationException($"Product Id [{request.ProductId}] not exist");
+
             var domain = new ProductItem(productDomain);
             
             var productCreated = await productUoW.ProductItemRepository.AddAsync(domain);

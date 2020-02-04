@@ -52,7 +52,11 @@ namespace VendingMachine.Service.Authentications.API.Controllers
             };
 
             var result = await userManager.CreateAsync(user, model.Password);
-            await userManager.AddClaimsAsync(user, new Claim[] { new Claim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi) });
+            await userManager.AddClaimsAsync(user, new Claim[] { new Claim(VendingMachineClaimTypes.ApiClaim, 
+                VendingMachineClaimValues.MachineApi, 
+                VendingMachineClaimValues.OrderApi, 
+                VendingMachineClaimValues.ProductApi) 
+            });
             if (result.Succeeded)
             {
                 return Ok(result);
@@ -126,6 +130,45 @@ namespace VendingMachine.Service.Authentications.API.Controllers
                 return Ok(result);
             }
 
+            return Unauthorized();
+        }
+
+        [HttpPost("clienttoken")]
+        [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<AuthResponse>> CreateClientToken([FromBody] LoginClient loginClient)
+        {
+            if(loginClient.ClientName == "Worker" && loginClient.ClientSecret == "%&&(78045r")
+            {
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sid, loginClient.ClientName),
+                    new Claim(JwtRegisteredClaimNames.Sub, loginClient.ClientName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.MachineApi),
+                    new Claim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.OrderApi),
+                    new Claim(VendingMachineClaimTypes.ApiClaim, VendingMachineClaimValues.ProductApi),
+                    new Claim(ClaimTypes.Role, VendingMachineRoles.Admin),
+                    new Claim(ClaimTypes.Role, VendingMachineRoles.User)
+                };
+
+                var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecurityKey));
+                var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+                var jwtSecurityToken = new JwtSecurityToken(
+                    issuer: jwtSettings.Issuer,
+                    audience: jwtSettings.Audience,
+                    claims: claims,
+                    notBefore: DateTime.UtcNow,
+                    expires: DateTime.UtcNow.AddMinutes(jwtSettings.ExpirationMinutes),
+                    signingCredentials: signingCredentials
+                    );
+
+                var result = new AuthResponse(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken), jwtSecurityToken.ValidTo);
+                return Ok(result);
+            }
             return Unauthorized();
         }
     }

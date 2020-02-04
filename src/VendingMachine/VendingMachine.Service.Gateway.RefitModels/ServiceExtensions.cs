@@ -10,14 +10,39 @@ namespace VendingMachine.Service.Gateway.RefitModels
         public static IServiceCollection AddRefitClients(this IServiceCollection services)
         {
             services.AddTransient<IAuthClient, AutenticatedHttpClient>();
-            services.AddTransient(serviceProvider => GetAutenticationRestService<IAuthenticationApi>(serviceProvider));
-            services.AddTransient(serviceProvider => GetGatewayRestService<IGatewayApi>(serviceProvider));
+            services.AddTransient(sp => RestService.For<IAuthenticationApi>(sp.GetRequiredService<ServicesReference>().AuthService));
+            services.AddTransient(sp => {
+                try
+                {
+                    string url = sp.GetRequiredService<ServicesReference>().GatewayBackendService;
+                    var httpClient = sp.GetRequiredService<IAuthClient>().GetClient(url);
+                    var r = RestService.For<IGatewayApi>(httpClient);
+                    return r;
+                }
+                catch (Exception ex)
+                {
+
+                    throw;
+                }
+            });
+            //services.AddTransient(serviceProvider => GetAutenticationRestService<IAuthenticationApi>(serviceProvider));
+            //services.AddTransient(serviceProvider => GetGatewayRestService<IGatewayApi>(serviceProvider));
             return services;
         }
 
         private static T GetRestService<T>(IServiceProvider serviceProvider, string Url)
         {
-            return RestService.For<T>(serviceProvider.GetRequiredService<IAuthClient>().GetClient(Url));
+            try
+            {
+                var httpClient = serviceProvider.GetRequiredService<IAuthClient>().GetClient(Url);
+                T result = RestService.For<T>(httpClient);
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         private static T GetAutenticationRestService<T>(IServiceProvider serviceProvider)

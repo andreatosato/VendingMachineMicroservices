@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using VendingMachine.Service.Gateway.RefitModels.Auth;
 
 namespace VendingMachine.Service.Gateway.RefitModels
 {
@@ -17,8 +18,8 @@ namespace VendingMachine.Service.Gateway.RefitModels
             // The AcquireTokenAsync call will prompt with a UI if necessary
             // Or otherwise silently use a refresh token to return
             // a valid access token	
-            var token = await authenticationApi.LoginAsync();
-            return token;
+            var response = await authenticationApi.LoginClientTokenAsync(new LoginClient() { ClientName = "Worker", ClientSecret = "%&&(78045r" });
+            return response.token;
         }
 
         public HttpClient GetClient(string baseUrl)
@@ -29,5 +30,12 @@ namespace VendingMachine.Service.Gateway.RefitModels
             };
             return client;
         }
+
+        private class AuthResponse
+        {
+            public string token { get; set; }
+        }
     }
+
+
 }

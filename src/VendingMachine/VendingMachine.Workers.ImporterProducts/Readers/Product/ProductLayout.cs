@@ -11,6 +11,7 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
         {
             WithDelimiter(";")
                 .WithQuote("\"")
+                .WithHeader()
                 .WithMember(x => x.Name)
                 .WithMember(x => x.ProductType)
                 .WithMember(x => x.GrossPrice)

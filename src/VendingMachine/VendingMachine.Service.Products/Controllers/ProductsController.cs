@@ -37,7 +37,7 @@ namespace VendingMachine.Service.Products.Controllers
     }
 
     [ApiVersion("2.0")]    
-    [Route("api/Products")]
+    [Route("Products")]
     [ApiController]
     public class ProductsV2Controller : ControllerBase
     {
