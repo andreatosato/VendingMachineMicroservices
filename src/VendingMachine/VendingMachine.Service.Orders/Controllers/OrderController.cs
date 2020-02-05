@@ -15,7 +15,7 @@ using VendingMachine.Service.Products.ServiceCommunications.Client.Services;
 
 namespace VendingMachine.Service.Orders.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
     public class OrderController : ControllerBase

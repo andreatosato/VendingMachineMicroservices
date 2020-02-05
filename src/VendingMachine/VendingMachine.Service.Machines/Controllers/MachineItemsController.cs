@@ -14,7 +14,7 @@ using VendingMachine.Service.Shared.Exceptions;
 
 namespace VendingMachine.Service.Machines.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [RequireHttps]
     public class MachineItemsController : ControllerBase

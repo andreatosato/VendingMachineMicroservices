@@ -11,7 +11,7 @@ using VendingMachine.Service.Machines.Infrastructure.Commands;
 namespace VendingMachine.Service.Machines.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]    
+    [Route("[controller]")]    
     public class CoinsController : ControllerBase
     {
         private readonly IMediator mediator;
