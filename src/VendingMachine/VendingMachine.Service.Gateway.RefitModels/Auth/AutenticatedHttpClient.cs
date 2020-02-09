@@ -28,7 +28,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
             var client = new HttpClient(new AuthenticatedHttpClientHandler(GetToken))
             {
                 BaseAddress = new Uri(baseUrl),
-                DefaultRequestVersion = new Version(2, 0)
+                DefaultRequestVersion = new Version(2, 0),
             };
             return client;
         }

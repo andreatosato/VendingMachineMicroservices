@@ -15,6 +15,11 @@ namespace VendingMachine.Service.Gateway.RefitModels
         public AuthenticatedHttpClientHandler(Func<Task<string>> getToken)
         {
             this.getToken = getToken ?? throw new ArgumentNullException(nameof(getToken));
+            this.SslProtocols = System.Security.Authentication.SslProtocols.Tls
+                | System.Security.Authentication.SslProtocols.Tls11
+                | System.Security.Authentication.SslProtocols.Tls12
+                | System.Security.Authentication.SslProtocols.Tls13;
+            this.ServerCertificateCustomValidationCallback = (a, b, c, d) => true;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -27,7 +32,17 @@ namespace VendingMachine.Service.Gateway.RefitModels
                 request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, token);
             }
 
-            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                request.Version = new Version("2.0");
+                var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }
