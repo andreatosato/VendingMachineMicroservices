@@ -38,7 +38,7 @@ namespace VendingMachine.Service.Machines
         {
             services.AddHttpContextAccessor()
                 .AddMachineEntityFramework(Configuration, env)
-                .AddMachineHealthChecks(Configuration)
+                //.AddMachineHealthChecks(Configuration)
                 .AddControllers(options =>
                 {
                     // Add ModelBinderProvider
@@ -93,17 +93,17 @@ namespace VendingMachine.Service.Machines
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health-data-api", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
+                //endpoints.MapHealthChecks("/health-data-api", new HealthCheckOptions()
+                //{
+                //    Predicate = _ => true,
+                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                //});
 
-                endpoints.MapHealthChecksUI(setupOptions: setup =>
-                {
-                    setup.UIPath = "/show-health-ui"; // this is ui path in your browser
-                    setup.ApiPath = "/health-ui-api"; // the UI ( spa app )  use this path to get information from the store ( this is NOT the health-data-api path, is internal ui api )
-                });
+                //endpoints.MapHealthChecksUI(setupOptions: setup =>
+                //{
+                //    setup.UIPath = "/show-health-ui"; // this is ui path in your browser
+                //    setup.ApiPath = "/health-ui-api"; // the UI ( spa app )  use this path to get information from the store ( this is NOT the health-data-api path, is internal ui api )
+                //});
                 
                 endpoints.MapControllers();
                 endpoints.MapGrpcService<ServiceCommunications.Services.MachineItemService>();

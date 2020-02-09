@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -22,8 +24,8 @@ namespace VendingMachine.Service.Gateways.API
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(Configuration)
                .MinimumLevel.Debug()
-               .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-               .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
+               .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
+               .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Verbose)
                .Enrich.FromLogContext()
                .WriteTo.Console()
                .CreateLogger();
@@ -59,7 +61,16 @@ namespace VendingMachine.Service.Gateways.API
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .ConfigureKestrel((ctx, options) =>
+                    {
+                        options.Listen(IPAddress.Any, 4020, listenOptions =>
+                        {
+                            listenOptions.Protocols = HttpProtocols.Http2;
+                            listenOptions.UseHttps();
+                        });
+                    })
+                    .UseStartup<Startup>();
                 });
     }
 }
