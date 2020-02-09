@@ -100,9 +100,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Orde
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Orders.ServiceCommunications", "VendingMachine.Service.Orders.ServiceCommunications\VendingMachine.Service.Orders.ServiceCommunications.csproj", "{B999A50D-B5B5-4751-810D-743E2D61428B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachine.Service.Machines.ServiceCommunications.Client", "VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj", "{4938D271-FCB9-42B6-8DFC-D17C5BA06395}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Machines.ServiceCommunications.Client", "VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj", "{4938D271-FCB9-42B6-8DFC-D17C5BA06395}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachine.Service.Products.ServiceCommunications.Client", "VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj", "{23E69FE1-B8C7-49D9-B7B1-635132DC432C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Products.ServiceCommunications.Client", "VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj", "{23E69FE1-B8C7-49D9-B7B1-635132DC432C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ocelot", "Ocelot\Ocelot.csproj", "{F92F0052-1181-4088-806F-43931656119C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -254,6 +256,10 @@ Global
 		{23E69FE1-B8C7-49D9-B7B1-635132DC432C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23E69FE1-B8C7-49D9-B7B1-635132DC432C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23E69FE1-B8C7-49D9-B7B1-635132DC432C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F92F0052-1181-4088-806F-43931656119C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F92F0052-1181-4088-806F-43931656119C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F92F0052-1181-4088-806F-43931656119C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F92F0052-1181-4088-806F-43931656119C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

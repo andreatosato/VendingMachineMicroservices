@@ -19,7 +19,6 @@ namespace VendingMachine.Workers.ImporterProducts
         private WatcherConfiguration configuration;
         private FileSystemWatcher watcherProduct;
         private FileSystemWatcher watcherProductItem;
-        private bool productIsWorking = false;
 
         public Worker(ILogger<Worker> logger, IServiceProvider services, WatcherConfiguration configuration)
         {
@@ -56,7 +55,7 @@ namespace VendingMachine.Workers.ImporterProducts
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
             }
         }
@@ -77,7 +76,6 @@ namespace VendingMachine.Workers.ImporterProducts
         {
             try
             {
-                productIsWorking = true;
                 Task.Factory.StartNew(async () =>
                 {
                     using (var scope = Services.CreateScope())
@@ -89,12 +87,10 @@ namespace VendingMachine.Workers.ImporterProducts
             }
             catch (Exception)
             {
-
                 throw;
             }
             finally
             {
-                productIsWorking = false;
             }
            
         }

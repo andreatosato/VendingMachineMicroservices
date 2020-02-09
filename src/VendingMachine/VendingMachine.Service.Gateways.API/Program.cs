@@ -32,7 +32,7 @@ namespace VendingMachine.Service.Gateways.API
 
             try
             {
-                Log.Information("Starting ovelot web host");
+                Log.Information("Starting ocelot web host");
                 CreateHostBuilder(args).Build().Run();
                 return 0;
             }
@@ -64,7 +64,7 @@ namespace VendingMachine.Service.Gateways.API
                     webBuilder
                     .ConfigureKestrel((ctx, options) =>
                     {
-                        options.Listen(IPAddress.Any, 4020, listenOptions =>
+                        options.Listen(IPAddress.Any, 4444, listenOptions =>
                         {
                             listenOptions.Protocols = HttpProtocols.Http2;
                             listenOptions.UseHttps();

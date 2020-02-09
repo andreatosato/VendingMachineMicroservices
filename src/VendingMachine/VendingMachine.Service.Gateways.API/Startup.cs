@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Provider.Polly;
+//using Ocelot.Provider.Polly;
 using VendingMachine.Service.Shared.Authentication;
 
 namespace VendingMachine.Service.Gateways.API
@@ -25,9 +25,9 @@ namespace VendingMachine.Service.Gateways.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddOcelot()
+                .AddOcelot();
                 //.AddTransientDefinedAggregator<TryDefinedAggregator>()
-                .AddPolly();
+                //.AddPolly();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
