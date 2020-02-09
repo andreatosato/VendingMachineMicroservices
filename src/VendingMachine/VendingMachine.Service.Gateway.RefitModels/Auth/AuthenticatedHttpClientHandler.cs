@@ -22,6 +22,8 @@ namespace VendingMachine.Service.Gateway.RefitModels
             this.ServerCertificateCustomValidationCallback = (a, b, c, d) => true;
         }
 
+        public Version Version { get; set; }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // See if the request has an authorize header
@@ -31,18 +33,10 @@ namespace VendingMachine.Service.Gateway.RefitModels
                 var token = await getToken().ConfigureAwait(false);
                 request.Headers.Authorization = new AuthenticationHeaderValue(auth.Scheme, token);
             }
-
-            try
-            {
-                request.Version = new Version("2.0");
-                var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-                return response;
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
+            
+            request.Version = Version;
+            var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            return response;            
         }
     }
 }
