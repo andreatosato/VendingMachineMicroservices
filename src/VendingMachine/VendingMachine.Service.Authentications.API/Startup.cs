@@ -29,6 +29,8 @@ namespace VendingMachine.Service.Authentications.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddControllers();
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -94,8 +96,8 @@ namespace VendingMachine.Service.Authentications.API
                 });
             }
 
+            app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             app.UseAuthorization();

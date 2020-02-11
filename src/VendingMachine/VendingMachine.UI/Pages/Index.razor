@@ -1,6 +1,28 @@
 ﻿@page "/"
 
+@inject Authentication.IAccessTokenReader accesTokenReader
+
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
+@if (!IsAuthenticate)
+{
+<span>Autenticate please.</span>
+}
+else
+{
+<span>Go to Machine</span>
+}
+
+
+@code{ 
+    private bool IsAuthenticate { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        string token = await accesTokenReader.GetTokenAsync();
+        IsAuthenticate = !string.IsNullOrEmpty(token);
+    }
+}

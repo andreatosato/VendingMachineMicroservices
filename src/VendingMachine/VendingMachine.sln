@@ -104,9 +104,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Prod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ocelot", "Ocelot\Ocelot.csproj", "{F92F0052-1181-4088-806F-43931656119C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachine.UI", "VendingMachine.UI\VendingMachine.UI.csproj", "{F95A4A5D-3E3E-4CEF-8CE3-A7B60D8C6773}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.UI", "VendingMachine.UI\VendingMachine.UI.csproj", "{F95A4A5D-3E3E-4CEF-8CE3-A7B60D8C6773}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingMachine.Service.Aggregators.Web.API.ViewModels", "VendingMachine.Service.Aggregators.Web.API.ViewModels\VendingMachine.Service.Aggregators.Web.API.ViewModels.csproj", "{FCE4BF2E-4907-4008-8B92-EDF59E4B8939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingMachine.Service.Aggregators.Web.API.ViewModels", "VendingMachine.Service.Aggregators.Web.API.ViewModels\VendingMachine.Service.Aggregators.Web.API.ViewModels.csproj", "{FCE4BF2E-4907-4008-8B92-EDF59E4B8939}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,10 +21,12 @@ namespace VendingMachine.Service.Gateway.RefitModels.Auth
             // The AcquireTokenAsync call will prompt with a UI if necessary
             // Or otherwise silently use a refresh token to return
             // a valid access token	
+            var scopes = new[] { "Machine.Api", "Product.Api", "Order.Api" }.ToList();
+
             var response = await authenticationApi.LoginClientAsync(new LoginRequest() 
             { 
                 Grant_Type = "password",
-                Scopes = new [] {"Machine.Api", "Product.Api", "Order.Api"}.ToList(),
+                Scopes = "Machine.Api,Product.Api,Order.Api",
                 Username = username,
                 Password = password
             });

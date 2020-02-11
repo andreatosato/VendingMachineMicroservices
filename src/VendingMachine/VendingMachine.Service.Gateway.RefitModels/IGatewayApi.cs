@@ -8,7 +8,8 @@ namespace VendingMachine.Service.Gateway.RefitModels
     /// </summary>
     public interface IGatewayApi : 
         IProductApiV2, IProductItemApi,
-        IAggregationMachine
+        IAggregationMachine,
+        IMachineApi
     {
         // For Refit
         [Get("/get?result=Foo")]

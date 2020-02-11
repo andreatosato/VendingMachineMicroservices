@@ -11,7 +11,7 @@ namespace VendingMachine.Service.Authentications.API.ViewModels
         [Required]
         public string Grant_Type { get; set; }
 
-        public List<string> Scopes { get; set; }
+        public string Scopes { get; set; }
 
         [Required]
         [EmailAddress]

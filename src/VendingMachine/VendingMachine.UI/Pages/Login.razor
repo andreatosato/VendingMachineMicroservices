@@ -2,30 +2,46 @@
 @using VendingMachine.UI.ViewModels
 @inject VendingMachine.Service.Gateway.RefitModels.IAuthUserClient authUser
 @inject Authentication.IAccessTokenReader accesTokenReader
-
+@inject NavigationManager navigation
 
 <h3>Login</h3>
 
-<EditForm Model="@LoginData" OnSubmit="FormSubmitted">
-    <DataAnnotationsValidator/> <!--Validate input-->
-    <ValidationSummary/> <!--Error Messages-->
-    <div class="form-group">
-        <label for="username">Username</label>
-        <InputText @bind-Value="LoginData.Username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Username" />
-        <small id="usernameHelp" class="form-text text-muted">Please insert your username</small>
-        <ValidationMessage For="() => LoginData.Username" /> <!--Error Messages-->
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <InputText @bind-Value="LoginData.Password" type="password" class="form-control" id="password" placeholder="Password" />
-        <ValidationMessage For="() => LoginData.Password" /> <!--Error Messages-->
-    </div>
+@if (!IsAuthenticate)
+{
+    <EditForm Model="@LoginData" OnSubmit="FormSubmitted">
+        <DataAnnotationsValidator /> <!--Validate input-->
+        <ValidationSummary /> <!--Error Messages-->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <InputText @bind-Value="LoginData.Username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Username" />
+            <small id="usernameHelp" class="form-text text-muted">Please insert your username</small>
+            <ValidationMessage For="() => LoginData.Username" /> <!--Error Messages-->
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <InputText @bind-Value="LoginData.Password" type="password" class="form-control" id="password" placeholder="Password" />
+            <ValidationMessage For="() => LoginData.Password" /> <!--Error Messages-->
+        </div>
 
-    <input type="submit" value="Login" class="btn btn-primary" />
-</EditForm>
+        <input type="submit" value="Login" class="btn btn-primary" />
+    </EditForm>
+}
+else
+{
+    <div class="text-center">
+        <button class="btn btn-info" @onclick="LogOut">Logout</button>
+    </div>
+}
 
 @code {
     LoginViewModel LoginData = new LoginViewModel();
+    public bool IsAuthenticate { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string token = await accesTokenReader.GetTokenAsync();
+        IsAuthenticate = !string.IsNullOrEmpty(token);
+    }
 
     async Task FormSubmitted(EditContext ctx)
     {
@@ -33,9 +49,15 @@
         {
             string token = await authUser.GetToken(LoginData.Username, LoginData.Password);
             await accesTokenReader.SetTokenAsync(token);
+            navigation.NavigateTo("/");
         }
         else
         {
         }
+    }
+
+    async Task LogOut()
+    {
+        await accesTokenReader.SetTokenAsync(string.Empty);
     }
 }

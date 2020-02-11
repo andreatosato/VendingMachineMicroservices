@@ -1,0 +1,39 @@
+﻿@page "/machines"
+@using VendingMachine.Service.Machines.Read.Models
+@inject LocationService  LocationService
+@inject IJSRuntime js
+@inject IGatewayApi api
+
+
+<h3>Machines</h3>
+
+<div id="vendingMap"></div>
+
+@code {
+
+    private Location CurrentPosition { get; set; }
+    private IEnumerable<NearbyMachineReadModel> MachineItems { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        CurrentPosition = await LocationService.GetLocationAsync();
+        Console.WriteLine($"{CurrentPosition.Latitude} {CurrentPosition.Longitude}");
+        await api.GetNearbyMachineItemsAsync(new Service.Machines.Application.ViewModels.GeoSearchViewModel
+        {
+            Latutide = (double)CurrentPosition.Latitude,
+            Longitude = (double)CurrentPosition.Longitude,
+            Radius = 10_000
+        });
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Latitude, CurrentPosition.Longitude);
+        foreach (var m in MachineItems)
+        {
+            await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
+        }
+    }
+}

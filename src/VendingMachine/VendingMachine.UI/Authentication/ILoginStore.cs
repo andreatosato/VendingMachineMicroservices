@@ -18,11 +18,11 @@ namespace VendingMachine.UI.Authentication
         public string Password { get; set; }
     }
 
-    public class AccessTokenStore : IAccessTokenReader
+    public class AccessTokenReader : IAccessTokenReader
     {
         private const string AccessTokenKey = nameof(AccessTokenKey);
         private ISessionStorage sessionStorage;
-        public AccessTokenStore(ISessionStorage sessionStorage)
+        public AccessTokenReader(ISessionStorage sessionStorage)
         {
             this.sessionStorage = sessionStorage;
         }

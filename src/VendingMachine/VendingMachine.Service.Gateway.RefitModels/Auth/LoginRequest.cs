@@ -10,7 +10,7 @@ namespace VendingMachine.Service.Gateway.RefitModels.Auth
         [Required]
         public string Grant_Type { get; set; }
 
-        public List<string> Scopes { get; set; }
+        public string Scopes { get; set; }
 
         [Required]
         [EmailAddress]
