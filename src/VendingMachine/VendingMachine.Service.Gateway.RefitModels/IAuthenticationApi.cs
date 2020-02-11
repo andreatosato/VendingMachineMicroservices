@@ -10,7 +10,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
     public interface IAuthenticationApi
     {
         [Post("/connect/token")]
-        Task<string> LoginClientAsync([Body(BodySerializationMethod.UrlEncoded)]LoginRequest loginRequest);
+        Task<AuthResponse> LoginClientAsync([Body(BodySerializationMethod.UrlEncoded)]LoginRequest loginRequest);
 
         [Post("/connect/clienttoken")]
         Task<AuthResponse> LoginClientTokenAsync([Body] LoginClient loginRequest);

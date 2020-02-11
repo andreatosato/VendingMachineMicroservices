@@ -6,4 +6,9 @@ namespace VendingMachine.Service.Gateway.RefitModels
     {
         HttpClient GetClient(string baseUrl);
     }
+
+    public interface IAuthUserClient
+    {
+        HttpClient GetClient(string baseUrl, string username, string password);
+    }
 }

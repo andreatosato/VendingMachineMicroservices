@@ -9,6 +9,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
     public interface IGatewayApi : 
         IProductApiV2, IProductItemApi
     {
+        // For Refit
         [Get("/get?result=Foo")]
         Task<string> Foo();
     }
