@@ -36,18 +36,18 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<ColdDrinkEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
-            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum");
-            builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum");
+            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum").HasColumnType("decimal(5,3)");
+            builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum").HasColumnType("decimal(5,3)");
             
             //owned types with table splitting
             builder.OwnsOne(
                o => o.Price,
                sa =>
                {
-                   sa.Property(p => p.GrossPrice).HasColumnName("GrossPrice");
+                   sa.Property(p => p.GrossPrice).HasColumnName("GrossPrice").HasColumnType("decimal(8,3)");
                    sa.Property(p => p.TaxPercentage).HasColumnName("TaxPercentage");
-                   sa.Property(p => p.NetPrice).HasColumnName("NetPrice");
-                   sa.Property(p => p.Rate).HasColumnName("Rate");
+                   sa.Property(p => p.NetPrice).HasColumnName("NetPrice").HasColumnType("decimal(8,3)");
+                   sa.Property(p => p.Rate).HasColumnName("Rate").HasColumnType("decimal(8,3)");
                });
         }
     }
@@ -57,9 +57,9 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<HotDrinkEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
-            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum");
-            builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum");
-            builder.Property(x => x.Grams).HasColumnName("Grams");
+            builder.Property(x => x.TemperatureMaximum).HasColumnName("TemperatureMaximum").HasColumnType("decimal(5,3)");
+            builder.Property(x => x.TemperatureMinimum).HasColumnName("TemperatureMinimum").HasColumnType("decimal(5,3)");
+            builder.Property(x => x.Grams).HasColumnName("Grams").HasColumnType("decimal(8,3)");
 
             //owned types with table splitting
             builder.OwnsOne(
@@ -79,17 +79,17 @@ namespace VendingMachine.Service.Products.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<SnackEntity> builder)
         {
             builder.HasBaseType<ProductEntity>();
-            builder.Property(x => x.Grams).HasColumnName("Grams");
+            builder.Property(x => x.Grams).HasColumnName("Grams").HasColumnType("decimal(8,3)");
 
             //owned types with table splitting
             builder.OwnsOne(
                o => o.Price,
                sa =>
                {
-                   sa.Property(p => p.GrossPrice).HasColumnName("GrossPrice");
+                   sa.Property(p => p.GrossPrice).HasColumnName("GrossPrice").HasColumnType("decimal(8,3)");
                    sa.Property(p => p.TaxPercentage).HasColumnName("TaxPercentage");
-                   sa.Property(p => p.NetPrice).HasColumnName("NetPrice");
-                   sa.Property(p => p.Rate).HasColumnName("Rate");
+                   sa.Property(p => p.NetPrice).HasColumnName("NetPrice").HasColumnType("decimal(8,3)");
+                   sa.Property(p => p.Rate).HasColumnName("Rate").HasColumnType("decimal(8,3)");
                });
         }
     }

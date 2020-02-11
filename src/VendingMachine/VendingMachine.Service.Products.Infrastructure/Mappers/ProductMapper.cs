@@ -24,7 +24,6 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                 cfg.CreateMap<Product, ProductEntity>()
                    .ForMember(entity => entity.Price, mapper => mapper.MapFrom(entity => entity.Price))
                    .ReverseMap()
-                   .ForMember(d => d.Id, c => c.Ignore())
                    .ForMember(domain => domain.Price, mapper => mapper.Ignore());
 
                 cfg.CreateMap<ColdDrink, ColdDrinkEntity>()
@@ -72,6 +71,7 @@ namespace VendingMachine.Service.Products.Infrastructure.Mappers
                    .ForMember(domain => domain.SoldPrice, mapper => mapper.Ignore())
                    .ForMember(domain => domain.Sold, mapper => mapper.Ignore())
                    .ForMember(domain => domain.Purchased, mapper => mapper.Ignore())
+                   .ForMember(domain => domain.Product, mapper => mapper.Ignore())
                    .AfterMap((entity, domain, ctx) =>
                    {
                        if (entity.SoldPrice != null)

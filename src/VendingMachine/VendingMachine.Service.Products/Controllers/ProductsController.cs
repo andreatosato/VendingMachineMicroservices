@@ -128,7 +128,7 @@ namespace VendingMachine.Service.Products.Controllers
                     Grams = model.Grams
                 }).ConfigureAwait(false);
                 model.Id = productId.Id;
-                return CreatedAtAction(nameof(GetInfosAsync), new { productId = model.Id }, model);
+                return Created($"{model.Id}", model);
             }
             return BadRequest(ModelState);
         }

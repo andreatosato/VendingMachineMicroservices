@@ -40,7 +40,8 @@ namespace VendingMachine.Service.Products.Domain
         /// <param name="price">price to set</param>
         public void SetGrossPriceValue(decimal newPrice)
         {
-            SoldPrice.RedefinePrice(newPrice);
+            if(newPrice > 0)
+                SoldPrice.RedefinePrice(newPrice);
         }
     }
 }

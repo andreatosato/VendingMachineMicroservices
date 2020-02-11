@@ -17,26 +17,36 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
 
         public async Task DoWorkAsync(string Name, string FullName)
         {
-            IGatewayApi api = (IGatewayApi)serviceProvider.GetService(typeof(IGatewayApi));
-            var layout = new ProductItemLayout();
-            var factory = new FlatFile.Delimited.Implementation.DelimitedFileEngineFactory();
-            using (var stream = new MemoryStream(await File.ReadAllBytesAsync(FullName)))
+            try 
             {
-                var flatFile = factory.GetEngine(layout);
-                var records = flatFile.Read<ProductItem>(stream).ToArray();
-
-                foreach (var product in records)
+                IGatewayApi api = (IGatewayApi)serviceProvider.GetService(typeof(IGatewayApi));
+                var layout = new ProductItemLayout();
+                var factory = new FlatFile.Delimited.Implementation.DelimitedFileEngineFactory();
+                using (var stream = new MemoryStream(await File.ReadAllBytesAsync(FullName)))
                 {
-                    var productItem = new Service.Products.Application.ViewModels.ProductItems.ProductItemViewModel
+                    var flatFile = factory.GetEngine(layout);
+                    var records = flatFile.Read<ProductItem>(stream).ToArray();
+
+                    foreach (var product in records)
                     {
-                        ExpirationDate = product.ExpirationDate,
-                        ProductId = product.ProductId,
-                        Purchased = product.Purchased,
-                        SoldPrice = product.RedefinedPrice
-                    };
-                    await api.PostCreateProductItemAsync(productItem);
+                        var productItem = new Service.Products.Application.ViewModels.ProductItems.ProductItemViewModel
+                        {
+                            ExpirationDate = product.ExpirationDate,
+                            ProductId = product.ProductId,
+                            Purchased = product.Purchased,
+                            SoldPrice = product.RedefinedPrice
+                        };
+                        await api.PostCreateProductItemAsync(productItem);
+                    }
                 }
+
             }
-        }
+            catch (Exception ex)
+            {
+                // TODO: Log
+
+                throw;
+            }
+}
     }
 }

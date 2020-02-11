@@ -52,9 +52,12 @@ namespace VendingMachine.Service.Products.Controllers
                 var response = await mediator.Send(new ProductItemAddCommand()
                 {
                     ProductId = model.ProductId,
-                    ExpirationDate = model.ExpirationDate.GetValueOrDefault()
+                    ExpirationDate = model.ExpirationDate.GetValueOrDefault(),
+                    SoldPrice = model.SoldPrice.GetValueOrDefault(),
+                    Purchased = model.Purchased.GetValueOrDefault()
                 });
-                return CreatedAtAction(nameof(GetInfosAsync), new { productItemId = response.ProductItemId }, response);
+                return Created($"{response.ProductItemId}", response);
+                //return CreatedAtAction(nameof(GetInfosAsync), new { productItemId = response.ProductItemId }, response);
             }
             return BadRequest(ModelState);
         }

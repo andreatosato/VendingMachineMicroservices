@@ -18,7 +18,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
         [Get("/product-api/Products/{productId}")]
         Task<SnackViewModel> GetSnakAsync(int productId);
 
-        [Post("/product-api/Products/Snak")]
+        [Post("/product-api/Products/Snack")]
         Task<string> PostCreateSnackAsync([Body] SnackViewModel model);
 
         [Post("/product-api/Products/ColdDrink")]
@@ -31,6 +31,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
         Task DeleteProductAsync(int productId);
     }
 
+    [Headers("Authorization: Bearer")]
     public interface IProductItemApi
     {
         [Get("/{productItemId}")]

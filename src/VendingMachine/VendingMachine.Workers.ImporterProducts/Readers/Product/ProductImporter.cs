@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Service.Gateway.RefitModels;
 
@@ -22,7 +23,7 @@ namespace VendingMachine.Workers.ImporterProducts.Readers
                 IGatewayApi api = (IGatewayApi)serviceProvider.GetService(typeof(IGatewayApi));
                 var layout = new ProductLayout();
                 var factory = new FlatFile.Delimited.Implementation.DelimitedFileEngineFactory();
-                using (var stream = new MemoryStream(await File.ReadAllBytesAsync(FullName)))
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(await File.ReadAllTextAsync(FullName, Encoding.UTF8))))
                 {
                     var flatFile = factory.GetEngine(layout);
                     var records = flatFile.Read<Product>(stream).ToArray();

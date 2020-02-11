@@ -42,10 +42,24 @@ namespace VendingMachine.Service.Products.Infrastructure.Handlers
                 throw new InvalidOperationException($"Product Id [{request.ProductId}] not exist");
 
             var domain = new ProductItem(productDomain);
-            
-            var productCreated = await productUoW.ProductItemRepository.AddAsync(domain);
-            await productUoW.SaveAsync();
-            return new ProductItemAddResponse { ProductItemId = productCreated.Id };
+            domain.SetExpirationDate(request.ExpirationDate);
+            domain.SetPurchasedDate(request.Purchased);
+            domain.SetGrossPriceValue(request.SoldPrice.GetValueOrDefault());
+
+            try
+            {
+                var productCreated = await productUoW.ProductItemRepository.AddAsync(domain);
+                await productUoW.SaveAsync();
+                return new ProductItemAddResponse { ProductItemId = productCreated.Id };
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            //var productCreated = await productUoW.ProductItemRepository.AddAsync(domain);
+            //await productUoW.SaveAsync();
+            //return new ProductItemAddResponse { ProductItemId = productCreated.Id };
         }
 
         public async Task<Unit> Handle(ProductItemDeleteCommand request, CancellationToken cancellationToken)

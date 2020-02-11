@@ -1,4 +1,4 @@
 Name;ProductType;GrossPrice;TaxPercentage;Litre;TemperatureMaximum;TemperatureMinimum;Grams
 Coca Cola 0.5 litri;ColdDrink;1;4;0.5;20;-5;
-Caffè;HotDrink;0.45;4;;150;12;30
-Kinder Delice;Snack;0.7;4;;;45
+Caffe;HotDrink;0.45;4;;150;12;30
+Kinder Delice;Snack;0.7;4;;;;45

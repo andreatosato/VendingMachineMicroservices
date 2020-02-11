@@ -24,7 +24,11 @@ namespace VendingMachine.Service.Products.Infrastructure.Repositories
 
         public async Task<ProductItem> AddAsync(ProductItem element)
         {
-            var entity = await db.ProductItems.AddAsync(mapper.Map<ProductItemEntity>(element)).ConfigureAwait(false);
+            var mappedEntity = mapper.Map<ProductItemEntity>(element);
+            if (mappedEntity.Product != null)
+                mappedEntity.Product = db.Products.Find(mappedEntity.Product.Id);
+
+            var entity = await db.ProductItems.AddAsync(mappedEntity).ConfigureAwait(false);
             addedObjects.Add(element, entity.Entity);
             return mapper.Map<ProductItem>(entity.Entity);           
         }

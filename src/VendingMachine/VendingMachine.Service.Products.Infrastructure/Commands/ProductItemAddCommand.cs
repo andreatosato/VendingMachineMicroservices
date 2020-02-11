@@ -7,6 +7,8 @@ namespace VendingMachine.Service.Products.Infrastructure.Commands
     {
         public int ProductId { get; set; }
         public DateTime ExpirationDate { get; set; }
+        public decimal? SoldPrice { get; set; }
+        public DateTimeOffset Purchased { get; set; }
     }
 
     public class ProductItemAddResponse
