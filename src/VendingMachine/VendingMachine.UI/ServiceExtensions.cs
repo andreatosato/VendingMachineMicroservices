@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using System;
-using System.Net.Http;
 using VendingMachine.Service.Gateway.RefitModels;
 using VendingMachine.Service.Gateway.RefitModels.Auth;
 
-namespace VendingMachine.Web
+namespace VendingMachine.UI
 {
     public static class ServiceExtensions
     {

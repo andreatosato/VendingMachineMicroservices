@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace VendingMachine.Web.ViewModels
+namespace VendingMachine.UI.ViewModels
 {
     public class LoginViewModel
     {
