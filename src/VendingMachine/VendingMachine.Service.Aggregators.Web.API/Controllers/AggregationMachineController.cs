@@ -10,7 +10,7 @@ using VendingMachine.Service.Products.ServiceCommunications;
 namespace VendingMachine.Service.Aggregators.Web.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class AggregationMachineController : ControllerBase
     {
         private readonly ProductItems.ProductItemsClient productItemsClient;

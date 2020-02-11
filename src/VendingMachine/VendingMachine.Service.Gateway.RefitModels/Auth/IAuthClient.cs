@@ -1,4 +1,5 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace VendingMachine.Service.Gateway.RefitModels
 {
@@ -9,6 +10,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
 
     public interface IAuthUserClient
     {
-        HttpClient GetClient(string baseUrl, string username, string password);
+        Task<string> GetToken(string username, string password);
+        HttpClient GetClient(string baseUrl, string token);
     }
 }

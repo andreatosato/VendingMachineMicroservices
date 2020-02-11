@@ -19,13 +19,13 @@ namespace VendingMachine.Service.Gateway.RefitModels
         Task<SnackViewModel> GetSnakAsync(int productId);
 
         [Post("/product-api/Products/Snack")]
-        Task<string> PostCreateSnackAsync([Body] SnackViewModel model);
+        Task<string> PostCreateSnackAsync([Body] Products.Application.ViewModels.Products.SnackViewModel model);
 
         [Post("/product-api/Products/ColdDrink")]
-        Task<string> PostCreateColdDrinkAsync([Body] ColdDrinkViewModel model);
+        Task<string> PostCreateColdDrinkAsync([Body] Products.Application.ViewModels.Products.ColdDrinkViewModel model);
 
         [Post("/product-api/Products/HotDrink")]
-        Task<string> PostCreateHotDrinkAsync([Body] HotDrinkViewModel model);
+        Task<string> PostCreateHotDrinkAsync([Body] Products.Application.ViewModels.Products.HotDrinkViewModel model);
 
         [Post("/product-api/Products/{productId}")]
         Task DeleteProductAsync(int productId);
@@ -38,6 +38,6 @@ namespace VendingMachine.Service.Gateway.RefitModels
         Task<ProductItemReadModel> GetInfosAsync(int productItemId);
 
         [Post("/product-api/ProductItems/")]
-        Task<string> PostCreateProductItemAsync([Body] ProductItemViewModel model);
+        Task<string> PostCreateProductItemAsync([Body] Products.Application.ViewModels.ProductItems.ProductItemViewModel model);
     }
 }

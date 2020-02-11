@@ -16,7 +16,7 @@ namespace VendingMachine.Service.Gateway.RefitModels.Auth
             this.authenticationApi = authenticationApi;
         }
 
-        private async Task<string> GetToken(string username, string password)
+        public async Task<string> GetToken(string username, string password)
         {
             // The AcquireTokenAsync call will prompt with a UI if necessary
             // Or otherwise silently use a refresh token to return
@@ -31,10 +31,10 @@ namespace VendingMachine.Service.Gateway.RefitModels.Auth
             return response.token;
         }
 
-        public HttpClient GetClient(string baseUrl, string username, string password)
+        public HttpClient GetClient(string baseUrl, string token)
         {
             
-            var authHandler = new AuthenticatedHttpClientHandler(() => GetToken(username, password))
+            var authHandler = new AuthenticatedHttpClientHandler(() => Task.FromResult(token))
             {
                 Version = new Version("2.0")
             };

@@ -7,7 +7,8 @@ namespace VendingMachine.Service.Gateway.RefitModels
     /// https://github.com/reactiveui/refit
     /// </summary>
     public interface IGatewayApi : 
-        IProductApiV2, IProductItemApi
+        IProductApiV2, IProductItemApi,
+        IAggregationMachine
     {
         // For Refit
         [Get("/get?result=Foo")]

@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Aggregators.Web.API.ViewModels\VendingMachine.Service.Aggregators.Web.API.ViewModels.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Machines.ServiceCommunications.Client\VendingMachine.Service.Machines.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.ServiceCommunications.Client\VendingMachine.Service.Products.ServiceCommunications.Client.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Shared.API\VendingMachine.Service.Shared.API.csproj" />

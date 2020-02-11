@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VendingMachine.Service.Aggregators.Web.API.ViewModels\VendingMachine.Service.Aggregators.Web.API.ViewModels.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Application\VendingMachine.Service.Products.Application.csproj" />
     <ProjectReference Include="..\VendingMachine.Service.Products.Read\VendingMachine.Service.Products.Read.csproj" />
   </ItemGroup>

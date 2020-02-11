@@ -1,5 +1,7 @@
 ﻿@page  "/login"
 @using VendingMachine.UI.ViewModels
+@inject VendingMachine.Service.Gateway.RefitModels.IAuthUserClient authUser
+@inject Authentication.IAccessTokenReader accesTokenReader
 
 
 <h3>Login</h3>
@@ -25,10 +27,12 @@
 @code {
     LoginViewModel LoginData = new LoginViewModel();
 
-    void FormSubmitted(EditContext ctx)
+    async Task FormSubmitted(EditContext ctx)
     {
         if (ctx.Validate())
         {
+            string token = await authUser.GetToken(LoginData.Username, LoginData.Password);
+            await accesTokenReader.SetTokenAsync(token);
         }
         else
         {
