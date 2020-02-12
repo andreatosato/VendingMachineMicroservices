@@ -17,6 +17,17 @@ MapsControl.draw = function (centerx, centery, markers) {
     MapsControl.map.events.add('ready', function () {
         console.log("Map Ready");
         console.log(JSON.stringify(markers));
+        console.log("Marker center" + centerx + " " + centery);
+        // Position
+        var markerCurrentPosition = new atlas.HtmlMarker({
+            color: 'Red',
+            text: 'Your Position',
+            position: [centerx, centery],
+        });
+        console.log(MapsControl.map.markers);
+        MapsControl.map.markers.add(markerCurrentPosition);
+
+        // Vending Machines
         for (var i = 0; i < markers.length; i++) {
             var marker = new atlas.HtmlMarker({
                 color: 'DodgerBlue',
