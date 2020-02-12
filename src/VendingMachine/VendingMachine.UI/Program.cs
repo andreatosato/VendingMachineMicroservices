@@ -43,7 +43,7 @@ namespace VendingMachine.UI
             services.AddSingleton<IAccessTokenReader, AccessTokenReader>();
 
             //https://github.com/AspNetMonsters/Blazor.Geolocation
-            services.AddSingleton<LocationService>();
+            services.AddScoped<LocationService>();
 
             //https://github.com/BlazorExtensions/Storage
             services.AddStorage();

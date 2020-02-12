@@ -22,6 +22,8 @@ namespace VendingMachine.UI.Authentication
     {
         private const string AccessTokenKey = nameof(AccessTokenKey);
         private ISessionStorage sessionStorage;
+        private string token; // TODO
+
         public AccessTokenReader(ISessionStorage sessionStorage)
         {
             this.sessionStorage = sessionStorage;
@@ -29,12 +31,18 @@ namespace VendingMachine.UI.Authentication
 
         public async Task<string> GetTokenAsync()
         {
-            return await sessionStorage.GetItem<string>(AccessTokenKey);
+            return await sessionStorage.GetItem<string>(AccessTokenKey).ConfigureAwait(false);
+        }
+
+        public string GetToken()
+        {
+            return token;
         }
 
         public async Task SetTokenAsync(string accessToken)
         {
-            await sessionStorage.SetItem<string>(AccessTokenKey, accessToken);
+            await sessionStorage.SetItem<string>(AccessTokenKey, accessToken).ConfigureAwait(false);
+            token = accessToken;
         }
     }
 
@@ -42,5 +50,6 @@ namespace VendingMachine.UI.Authentication
     {
         Task SetTokenAsync(string accessToken);
         Task<string> GetTokenAsync();
+        string GetToken();
     }
 }

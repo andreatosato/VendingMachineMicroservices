@@ -1,39 +1,67 @@
 ﻿@page "/machines"
 @using VendingMachine.Service.Machines.Read.Models
-@inject LocationService  LocationService
+@inject LocationService  locationService
 @inject IJSRuntime js
 @inject IGatewayApi api
 
 
 <h3>Machines</h3>
 
-<div id="vendingMap"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            Latitude
+        </div>
+        <div class="col-4">
+            Longitude
+        </div>
+        <div class="col-4">
+            Accuracy
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            @CurrentPosition.Latitude
+        </div>
+        <div class="col-4">
+            @CurrentPosition.Longitude
+        </div>
+        <div class="col-4">
+            @CurrentPosition.Accuracy metri
+        </div>
+    </div>
+    <div class="row">
+        <div id="vendingMap"></div>
+    </div>
+</div>
+
+    
 
 @code {
 
-    private Location CurrentPosition { get; set; }
+    private Location CurrentPosition = new Location();
     private IEnumerable<NearbyMachineReadModel> MachineItems { get; set; }
-
-    protected async override Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        CurrentPosition = await LocationService.GetLocationAsync();
-        Console.WriteLine($"{CurrentPosition.Latitude} {CurrentPosition.Longitude}");
-        await api.GetNearbyMachineItemsAsync(new Service.Machines.Application.ViewModels.GeoSearchViewModel
-        {
-            Latutide = (double)CurrentPosition.Latitude,
-            Longitude = (double)CurrentPosition.Longitude,
-            Radius = 10_000
-        });
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-        await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Latitude, CurrentPosition.Longitude);
-        foreach (var m in MachineItems)
-        {
-            await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
-        }
+        CurrentPosition = await locationService.GetLocationAsync();
+        Console.WriteLine($"{CurrentPosition.Latitude} {CurrentPosition.Longitude}");
+        
+
+        //await api.GetNearbyMachineItemsAsync(new Service.Machines.Application.ViewModels.GeoSearchViewModel
+        //{
+        //    Latutide = (double)CurrentPosition.Latitude,
+        //    Longitude = (double)CurrentPosition.Longitude,
+        //    Radius = 10_000
+        //});
+
+        //await base.OnAfterRenderAsync(firstRender);
+        //await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Latitude, CurrentPosition.Longitude);
+        //foreach (var m in MachineItems)
+        //{
+        //    await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
+        //}
+
+        base.StateHasChanged();
     }
 }
