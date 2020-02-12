@@ -96,7 +96,7 @@ namespace VendingMachine.Service.Authentications.API
                 });
             }
 
-            app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseCors(opt => opt.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             app.UseHttpsRedirection();
             app.UseRouting();
 

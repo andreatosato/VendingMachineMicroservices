@@ -10,7 +10,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
     [Headers("Authorization: Bearer")]
     public interface IAggregationMachine
     {
-        [Get("/aggregator-api/AggregatorMachine/{machineId:int}")]
+        [Get("/aggregator-api/AggregatorMachine/{machineId}")]
         Task<MachineItemViewModels> GetMachineCurrentStatusAsync(int machineId);
     }
 }

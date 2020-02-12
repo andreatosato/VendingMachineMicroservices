@@ -12,11 +12,11 @@ namespace VendingMachine.UI
     {
         public static IServiceCollection AddRefitClients(this IServiceCollection services)
         {
-            services.AddTransient<IAuthUserClient, AutenticatedUserHttpClient>();
+            services.AddTransient<IAuthUserClient, AutenticatedBlazorUserHttpClient>();
             services.AddTransient(sp => RestService.For<IAuthenticationApi>(sp.GetRequiredService<ServicesReference>().AuthService));
-            services.AddTransient<IGatewayApi>((sp) =>
+            services.AddTransient<IGatewayApiBlazor>((sp) =>
             {
-                IGatewayApi r = null;
+                IGatewayApiBlazor r = null;
                 Console.WriteLine("IGateway transient");
                 string url = sp.GetRequiredService<ServicesReference>().GatewayBackendService;
                 Console.WriteLine("url " + url);
@@ -28,7 +28,7 @@ namespace VendingMachine.UI
                     if (!string.IsNullOrEmpty(token))
                     {
                         var httpClient = sp.GetRequiredService<IAuthUserClient>().GetClient(url, token);
-                        r = RestService.For<IGatewayApi>(httpClient);
+                        r = RestService.For<IGatewayApiBlazor>(httpClient);
                         Console.WriteLine("return internal api");
                         return r;
                     }

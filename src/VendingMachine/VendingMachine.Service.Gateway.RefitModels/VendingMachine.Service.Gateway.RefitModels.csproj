@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="refit" Version="5.0.23" />
     <PackageReference Include="Refit.HttpClientFactory" Version="5.0.23" />
+    <PackageReference Include="WebAssembly.Net.Http" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>
