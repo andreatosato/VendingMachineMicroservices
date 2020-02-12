@@ -29,9 +29,9 @@ namespace VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine
                 ProductItemViewModel productItem = new ProductItemViewModel() 
                 {
                     ProductItemId = t.Id,
-                    ExpirationDate = t.ExpirationDate.ToDateTime(),
-                    Purchased = t.Purchased.ToDateTimeOffset(),
-                    Sold = t.Sold.ToDateTimeOffset(),
+                    ExpirationDate = t.ExpirationDate?.ToDateTime(),
+                    Purchased = t.Purchased?.ToDateTimeOffset(),
+                    Sold = t.Sold?.ToDateTimeOffset(),
                     SoldPrice = t.SoldPrice != null ?
                         new GrossPriceViewModel
                         {

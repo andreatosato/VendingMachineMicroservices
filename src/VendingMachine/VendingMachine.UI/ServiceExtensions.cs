@@ -14,17 +14,14 @@ namespace VendingMachine.UI
         {
             services.AddTransient<IAuthUserClient, AutenticatedBlazorUserHttpClient>();
             services.AddTransient(sp => RestService.For<IAuthenticationApi>(sp.GetRequiredService<ServicesReference>().AuthService));
-            services.AddTransient<IGatewayApiBlazor>((sp) =>
+            services.AddScoped<IGatewayApiBlazor>((sp) =>
             {
                 IGatewayApiBlazor r = null;
-                Console.WriteLine("IGateway transient");
                 string url = sp.GetRequiredService<ServicesReference>().GatewayBackendService;
-                Console.WriteLine("url " + url);
                 var accessTokenStore = sp.GetRequiredService<IAccessTokenReader>();
                 try
                 {
-                    string token = accessTokenStore.GetToken();
-                    Console.WriteLine("token task " + token);
+                    string token = accessTokenStore.GetToken();                   
                     if (!string.IsNullOrEmpty(token))
                     {
                         var httpClient = sp.GetRequiredService<IAuthUserClient>().GetClient(url, token);

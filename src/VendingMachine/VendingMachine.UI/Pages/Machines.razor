@@ -1,5 +1,6 @@
 ﻿@page "/machines"
 @using VendingMachine.Service.Machines.Read.Models
+@using VendingMachine.UI.ViewModels.Machines
 @inject LocationService  locationService
 @inject IJSRuntime js
 @inject IGatewayApiBlazor api
@@ -19,7 +20,7 @@
             Accuracy
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top: 30px">
         <div class="col-4">
             @CurrentPosition.Latitude
         </div>
@@ -31,18 +32,28 @@
         </div>
     </div>
     <div class="row">
+        <ul>
+            @foreach (var item in MachineItems)
+            {
+            <li>
+                <a href="/products/@item.Id">
+                    Machine id: @item.Id
+                </a>
+            </li>
+            }
+        </ul>
+    </div>
+    <div class="row">
         <div class="col-12">
             <div id="vendingMap"></div>
         </div>
     </div>
 </div>
 
-    
-
 @code {
 
     private Location CurrentPosition = new Location();
-    private IEnumerable<NearbyMachineReadModel> MachineItems { get; set; }
+    private IEnumerable<NearbyMachineReadModel> MachineItems { get; set; } = new List<NearbyMachineReadModel>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -50,25 +61,26 @@
         if (firstRender)
         {
             CurrentPosition = await locationService.GetLocationAsync();
-            base.StateHasChanged();
-        }
-        else
-        {
             MachineItems = await api.GetNearbyMachineItemsAsync(new GeoSearchViewModel
             {
                 Latutide = (double)CurrentPosition.Latitude,
                 Longitude = (double)CurrentPosition.Longitude,
                 Radius = 10_000
             });
-
-            await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Longitude, CurrentPosition.Latitude);
+            base.StateHasChanged();
+        }
+        else
+        {
+            List<MachineMarkerViewModel> machineMarkers = new List<MachineMarkerViewModel>();
             foreach (var m in MachineItems)
             {
-                Console.WriteLine($"Vending Machine {m.Id} Position: {m.Position.Y} , {m.Position.X} ");
-                await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.Y, m.Position.X, m.Id.ToString());
-
-                 await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
+                Console.WriteLine($"Machine Razor Page: {m.Position.X} {m.Position.Y} {m.Id.ToString()}");
+                machineMarkers.Add(new MachineMarkerViewModel { X = m.Position.Y, Y = m.Position.X, Id = m.Id.ToString() });
             }
+            //var position = new PositionViewModel { X = CurrentPosition.Longitude, Y = CurrentPosition.Latitude };
+            await js.InvokeVoidAsync("MapsControl.draw", CurrentPosition.Longitude, CurrentPosition.Latitude,
+                //position,
+                machineMarkers);
         }
 
     }

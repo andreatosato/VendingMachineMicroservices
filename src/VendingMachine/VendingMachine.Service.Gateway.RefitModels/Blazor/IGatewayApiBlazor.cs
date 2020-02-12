@@ -43,7 +43,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
 
 
 
-        [Get("/aggregator-api/AggregatorMachine/{machineId}")]
+        [Get("/aggregator-api/AggregationMachine/{machineId}")]
         Task<MachineItemViewModels> GetMachineCurrentStatusAsync(int machineId);
 
 

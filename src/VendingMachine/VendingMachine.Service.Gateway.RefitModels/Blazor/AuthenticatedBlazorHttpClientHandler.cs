@@ -31,6 +31,11 @@ namespace VendingMachine.Service.Gateway.RefitModels
             {
                 request.Headers.Add("x-api-version", "2.0");
             }
+
+            if (request.RequestUri.AbsoluteUri.Contains("/AggregationMachine"))
+            {
+                request.Headers.Add("x-api-version", "1.0");
+            }
             
             request.Version = Version;
             var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);

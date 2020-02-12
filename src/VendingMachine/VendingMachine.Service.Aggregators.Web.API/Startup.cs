@@ -43,7 +43,7 @@ namespace VendingMachine.Service.Aggregators.Web.API
             var serviceReference = new ServicesReference();
             Configuration.Bind(nameof(ServicesReference), serviceReference);
             services.AddSingleton<ServicesReference>(serviceReference);
-
+            services.AddCors();
             services
                 .AddCustomAuthentication(Configuration)
                 .AddProductSwagger(environment)
@@ -70,6 +70,8 @@ namespace VendingMachine.Service.Aggregators.Web.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             if (env.IsDevelopment())
             {
                 // Enable middleware to serve generated Swagger as a JSON endpoint.

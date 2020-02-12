@@ -1,24 +1,63 @@
-﻿@page "/{machineId}/products"
+﻿@page "/products/{MachineId:int}"
 @using VendingMachine.Service.Aggregators.Web.API.ViewModels.Machine
 @inject IGatewayApiBlazor api
 
 
-<h3>Products</h3>
+<h3>Products in Machine: @MachineId</h3>
 
-@foreach (var item in MachineStatus.ProductItem)
+@if (MachineStatus != null)
 {
-    @item.Name
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">CoinsCurrentSupply</th>
+                <th scope="col">CoinsInMachines</th>
+                <th scope="col">MoneyFromBirth - MoneyYear - MoneyMonth</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">@MachineStatus.MachineType.ModelName - @MachineStatus.MachineType.Version</th>
+                <td>@MachineStatus.CoinsCurrentSupply</td>
+                <td>@MachineStatus.CoinsInMachines</td>
+                <td>@MachineStatus.MoneyFromBirth - @MachineStatus.MoneyYear - @MachineStatus.MoneyMonth</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ProductItemId</th>
+                <th scope="col">Temperature</th>
+                <th scope="col">Sold</th>
+                <th scope="col">ProductType</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in MachineStatus?.ProductItem)
+            {
+                <tr>
+                    <th scope="row">@item.ProductItemId</th>
+                    <td>@item.TemperatureMinimum - @item.TemperatureMaximum</td>
+                    <td>@item.SoldPrice.GrossPrice - @item.SoldPrice.TaxPercentage</td>
+                    <td>@item.ProductType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
+
 
 @code {
     [Parameter]
     public int MachineId { get; set; }
 
-    public MachineItemViewModels MachineStatus { get; set; }
+    public MachineItemViewModels MachineStatus = null;
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
         MachineStatus = await api.GetMachineCurrentStatusAsync(MachineId);
     }
 }
