@@ -31,7 +31,9 @@
         </div>
     </div>
     <div class="row">
-        <div id="vendingMap"></div>
+        <div class="col-12">
+            <div id="vendingMap"></div>
+        </div>
     </div>
 </div>
 
@@ -48,7 +50,6 @@
         if (firstRender)
         {
             CurrentPosition = await locationService.GetLocationAsync();
-            Console.WriteLine($"{CurrentPosition.Latitude} {CurrentPosition.Longitude}");
             base.StateHasChanged();
         }
         else
@@ -60,11 +61,13 @@
                 Radius = 10_000
             });
 
-            await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Latitude, CurrentPosition.Longitude);
+            await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Longitude, CurrentPosition.Latitude);
             foreach (var m in MachineItems)
             {
-                Console.WriteLine($"Vending Machine {m.Id} Position: {m.Position.X} , {m.Position.Y} ");
-                await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
+                Console.WriteLine($"Vending Machine {m.Id} Position: {m.Position.Y} , {m.Position.X} ");
+                await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.Y, m.Position.X, m.Id.ToString());
+
+                 await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
             }
         }
 

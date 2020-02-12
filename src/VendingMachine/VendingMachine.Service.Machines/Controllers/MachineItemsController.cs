@@ -16,7 +16,6 @@ namespace VendingMachine.Service.Machines.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [RequireHttps]
     public class MachineItemsController : ControllerBase
     {
         private readonly IMachineQuery machineQuery;
