@@ -53,7 +53,7 @@
         }
         else
         {
-            await api.GetNearbyMachineItemsAsync(new GeoSearchViewModel
+            MachineItems = await api.GetNearbyMachineItemsAsync(new GeoSearchViewModel
             {
                 Latutide = (double)CurrentPosition.Latitude,
                 Longitude = (double)CurrentPosition.Longitude,
@@ -63,6 +63,7 @@
             await js.InvokeVoidAsync("MapsControl.init", CurrentPosition.Latitude, CurrentPosition.Longitude);
             foreach (var m in MachineItems)
             {
+                Console.WriteLine($"Vending Machine {m.Id} Position: {m.Position.X} , {m.Position.Y} ");
                 await js.InvokeVoidAsync("MapsControl.AddVendingMachine", m.Position.X, m.Position.Y, m.Id.ToString());
             }
         }

@@ -24,6 +24,12 @@ namespace VendingMachine.Service.Gateways.API
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services
                 .AddOcelot();
                 //.AddTransientDefinedAggregator<TryDefinedAggregator>()
@@ -37,6 +43,7 @@ namespace VendingMachine.Service.Gateways.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseCors("MyPolicy");
             app.UseOcelot().Wait();
             
             app.UseRouting();

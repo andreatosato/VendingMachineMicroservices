@@ -11,7 +11,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
     [Headers("Authorization: Bearer")]
     public interface IMachineApi
     {
-        [Get("/machine-api/NearbyMachineItems")]
+        [Get("/machine-api/MachineItems/NearbyMachineItems")]
         Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachineItemsAsync([Body] GeoSearchViewModel model);
     }
 }

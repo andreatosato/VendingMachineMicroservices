@@ -48,7 +48,7 @@ namespace VendingMachine.Service.Gateway.RefitModels
 
 
 
-        [Get("/machine-api/NearbyMachineItems")]
+        [Get("/machine-api/MachineItems/NearbyMachineItems")]
         Task<IEnumerable<NearbyMachineReadModel>> GetNearbyMachineItemsAsync(GeoSearchViewModel model);
 
     }

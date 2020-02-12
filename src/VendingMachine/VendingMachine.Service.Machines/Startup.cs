@@ -36,7 +36,12 @@ namespace VendingMachine.Service.Machines
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddHttpContextAccessor()
                 .AddMachineEntityFramework(Configuration, env)
                 //.AddMachineHealthChecks(Configuration)
@@ -74,7 +79,7 @@ namespace VendingMachine.Service.Machines
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors("MyPolicy");
 
             if (env.IsDevelopment())
             {
