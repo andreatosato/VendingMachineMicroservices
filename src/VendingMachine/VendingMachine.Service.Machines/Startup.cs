@@ -9,8 +9,6 @@ using Microsoft.OpenApi.Models;
 using VendingMachine.Service.Machines.Infrastructure.Handlers;
 using FluentValidation.AspNetCore;
 using VendingMachine.Service.Machines.Application.Validations.Coins;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
 using System;
 using VendingMachine.Service.Machines.Binders;
 using Microsoft.AspNetCore.Authorization;
