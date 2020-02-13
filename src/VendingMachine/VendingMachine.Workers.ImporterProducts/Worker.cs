@@ -36,8 +36,6 @@ namespace VendingMachine.Workers.ImporterProducts
                 IncludeSubdirectories = false
             };
             watcherProduct.Created += WatcherProduct_Created;
-            //watcherProduct.Changed += WatcherProduct_Created;
-
             watcherProductItem = new FileSystemWatcher
             {
                 Path = Path.GetTempPath() + configuration.ProductItemPath,
@@ -45,7 +43,6 @@ namespace VendingMachine.Workers.ImporterProducts
                 IncludeSubdirectories = false
             };
             watcherProductItem.Created += WatcherProductItem_Created;
-            //watcherProductItem.Changed += WatcherProductItem_Created;
 
             return base.StartAsync(cancellationToken);
         }
