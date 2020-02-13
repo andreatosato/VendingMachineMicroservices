@@ -29,13 +29,13 @@ namespace VendingMachine.Service.Machines.Infrastructure.Handlers
         // Add coins in machine
         public async Task<Unit> Handle(AddCoinsMachineCommand request, CancellationToken cancellationToken)
         {
-            var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
-            machine.AddCoins(request.CoinsAdded);
-            await machinesUoW.SaveAsync().ConfigureAwait(false);
+            //var machine = await machinesUoW.MachineRepository.FindAsync(request.MachineId).ConfigureAwait(false);
+            //machine.AddCoins(request.CoinsAdded);
+            //await machinesUoW.SaveAsync().ConfigureAwait(false);
 
-            await mediator
-                .Publish(new CoinNotificationEvent(request.MachineId, request.CoinsAdded, CoinOperation.Add))
-                .ConfigureAwait(false);
+            //await mediator
+            //    .Publish(new CoinNotificationEvent(request.MachineId, request.CoinsAdded, CoinOperation.Add))
+            //    .ConfigureAwait(false);
             return new Unit();
         }
 

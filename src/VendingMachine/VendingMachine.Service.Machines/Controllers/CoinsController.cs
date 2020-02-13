@@ -28,24 +28,24 @@ namespace VendingMachine.Service.Machines.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Add([FromBody] AddCoinsViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await mediator.Send(new AddCoinsMachineCommand()
-                    {
-                        CoinsAdded = model.Coins,
-                        MachineId = model.MachineId
-                    });
-                    logger.LogInformation("Coins Added: {@Coins} in machine: {@MachineId}", model.Coins, model.MachineId);
-                    return Ok();
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError("AddCoins", ex);
-                    throw;
-                }
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        await mediator.Send(new AddCoinsMachineCommand()
+            //        {
+            //            CoinsAdded = model.Coins,
+            //            MachineId = model.MachineId
+            //        });
+            //        logger.LogInformation("Coins Added: {@Coins} in machine: {@MachineId}", model.Coins, model.MachineId);
+            //        return Ok();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        logger.LogError("AddCoins", ex);
+            //        throw;
+            //    }
+            //}
             return BadRequest(ModelState);
         }
 

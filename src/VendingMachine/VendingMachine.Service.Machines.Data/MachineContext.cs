@@ -33,7 +33,7 @@ namespace VendingMachine.Service.Machines.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new MachineEntityConfiguration());
+            //modelBuilder.ApplyConfiguration(new MachineEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MachineVersionEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ActiveProductEntityConfiguration());
             modelBuilder.ApplyConfiguration(new HistoryProductEntityConfiguration());

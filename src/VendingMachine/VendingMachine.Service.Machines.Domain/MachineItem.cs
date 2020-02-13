@@ -16,10 +16,6 @@ namespace VendingMachine.Service.Machines.Domain
         public bool? Status { get; set; }
 
         public MachineType MachineType { get; private set; }
-
-        //public decimal MoneyFromBirth { get; }
-        //public decimal MoneyMonth { get; }
-        //public decimal MoneyYear { get; }
         public List<ProductConsumed> HistoryProducts { get; } = new List<ProductConsumed>();
         public List<Product> ActiveProducts { get; } = new List<Product>();
         public DateTimeOffset? LatestLoadedProducts { get; private set; }
@@ -90,12 +86,12 @@ namespace VendingMachine.Service.Machines.Domain
             }
         }
 
-        public void AddCoins(decimal coinAdded)
-        {
-            CoinsInMachine += coinAdded;
-            CoinsCurrentSupply += coinAdded;
-            AddDomainEvent(new MachineItemUpdatedEvent(Id));
-        }
+        //public void AddCoins(decimal coinAdded)
+        //{
+        //    CoinsInMachine += coinAdded;
+        //    CoinsCurrentSupply += coinAdded;
+        //    AddDomainEvent(new MachineItemUpdatedEvent(Id));
+        //}
 
         public decimal RestCoins()
         {

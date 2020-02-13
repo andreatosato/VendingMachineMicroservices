@@ -5,11 +5,11 @@ namespace VendingMachine.Service.Machines.Application.Validations.Coins
 {
     public class AddCoinsValidation : AbstractValidator<AddCoinsViewModel>
     {
-        public AddCoinsValidation()
-        {
-            RuleFor(t => t.Coins).NotEmpty().GreaterThan(0);
-            RuleFor(t => t.MachineId).NotEmpty().GreaterThan(0);
-        }
+        //public AddCoinsValidation()
+        //{
+        //    RuleFor(t => t.Coins).NotEmpty().GreaterThan(0);
+        //    RuleFor(t => t.MachineId).NotEmpty().GreaterThan(0);
+        //}
     }
 
     public class CollectCoinsValidation : AbstractValidator<CollectCoinsViewModel>
