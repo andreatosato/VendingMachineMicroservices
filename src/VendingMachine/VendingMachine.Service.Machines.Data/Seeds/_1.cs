@@ -22,6 +22,18 @@ namespace VendingMachine.Service.Machines.Data.Seeds
                 new[] {"Model", "Version" },
                 new object[] {"MiniSnakky", "FrigoAndCoffee" });
 
+            builder.InsertData("ActiveProduct",
+               new[] { "Id", "ActivationDate" },
+               new object[] { 1, new DateTimeOffset(2020, 2, 10, 0, 0, 0, TimeSpan.Zero) });
+
+            builder.InsertData("ActiveProduct",
+               new[] { "Id", "ActivationDate" },
+               new object[] { 2, new DateTimeOffset(2020, 2, 10, 0, 0, 0, TimeSpan.Zero) });
+
+            builder.InsertData("ActiveProduct",
+               new[] { "Id", "ActivationDate" },
+               new object[] { 3, new DateTimeOffset(2020, 2, 10, 0, 0, 0, TimeSpan.Zero) });
+
             builder.InsertData("Machines",
                 new[] {"DataCreated", "DataUpdated", "Position", "Temperature", "Status", "MachineTypeId", "CoinsInMachine", "CoinsCurrentSupply" },
                 new object[] { DateTime.UtcNow, null, SeedBase.SetPosition(45.4351m, 10.9988m), "2", true, 2, 0, 0 });

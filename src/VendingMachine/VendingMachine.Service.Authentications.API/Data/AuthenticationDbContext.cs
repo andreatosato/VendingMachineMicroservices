@@ -17,8 +17,11 @@ namespace VendingMachine.Service.Authentications.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            SeedData(modelBuilder);
+        }
 
-            // Seeds Data
+        private void SeedData(ModelBuilder modelBuilder)
+        {
             string user1Mail = "andrea.tosato@4ward.it";
             var user1Object = new ApplicationUser()
             {
@@ -54,6 +57,40 @@ namespace VendingMachine.Service.Authentications.API.Data
             modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 3, UserId = user1Object.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.OrderApi });
 
             modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>() { UserId = user1Object.Id, RoleId = adminRole.Id });
+
+
+
+
+
+
+
+            string userWorkshopMail = "test@cloudgen.it";
+            var userWorksObject = new ApplicationUser()
+            {
+                Email = userWorkshopMail,
+                NormalizedEmail = userWorkshopMail,
+                EmailConfirmed = true,
+                FirstName = "Associazione",
+                LastName = "Cloudgen",
+                LockoutEnabled = false,
+                UserName = userWorkshopMail,
+                NormalizedUserName = userWorkshopMail
+            };
+            userWorksObject.Id = Guid.NewGuid();
+            userWorksObject.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(userWorksObject, "Pass123$");
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasData(userWorksObject);
+
+
+           
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 4, UserId = userWorksObject.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.MachineApi });
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 5, UserId = userWorksObject.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.ProductApi });
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().HasData(new IdentityUserClaim<Guid>() { Id = 6, UserId = userWorksObject.Id, ClaimType = VendingMachineClaimTypes.ApiClaim, ClaimValue = VendingMachineClaimValues.OrderApi });
+
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>() { UserId = userWorksObject.Id, RoleId = adminRole.Id });
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>() { UserId = userWorksObject.Id, RoleId = userRole.Id });
+
         }
     }
 }

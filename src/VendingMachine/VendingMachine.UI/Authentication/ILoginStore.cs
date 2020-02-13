@@ -24,6 +24,10 @@ namespace VendingMachine.UI.Authentication
         public AccessTokenReader(ILocalStorage localStorage)
         {
             this.localStorage = localStorage;
+            Task.Run(async () =>
+            {
+                this.token = await this.GetTokenAsync();
+            }).ConfigureAwait(false);
         }
 
         public async Task<string> GetTokenAsync()

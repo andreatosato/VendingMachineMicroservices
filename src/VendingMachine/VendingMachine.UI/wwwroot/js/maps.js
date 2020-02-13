@@ -48,25 +48,3 @@ MapsControl.draw = function (centerx, centery, markers) {
         }
     }.bind(this));   
 }
-
-//MapsControl.AddVendingMachine = function (x, y, vendingMachineId) {
-//    MapsControl.map.events.add('ready', function () {
-//        console.log("Marker: " + x + ' ' + y + ' ' + vendingMachineId);
-//        console.log('<div style="padding:10px"><a href="/' + vendingMachineId + '/products">Machine ID: ' + vendingMachineId + '</a></div>');
-
-//        var marker = new atlas.HtmlMarker({
-//            color: 'DodgerBlue',
-//            text: vendingMachineId,
-//            position: [x, y],
-//            popup: new atlas.Popup({
-//                content: '<div style="padding:10px">jj</div>',
-//                pixelOffset: [0, -30]
-//            })
-//        });
-//        MapsControl.map.markers.add(marker);
-
-//        MapsControl.map.events.add('click', marker, () => {
-//            marker.togglePopup();
-//        });
-//    });
-//}

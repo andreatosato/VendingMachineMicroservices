@@ -18,6 +18,11 @@ A seguire:
 - dotnet ef migrations add SecondMigrationMachines --project "VendingMachine.Service.Machines.Data"
 
 
+
+dotnet ef migrations add SecondMigrationAuth --project "VendingMachine.Service.Authentications.API"
+ dotnet ef database update --project "VendingMachine.Service.Authentications.API"
+
+
 #EF Migration Seed Limitation
 - https://docs.microsoft.com/en-us/ef/core/modeling/data-seeding#limitations-of-model-seed-data
 This type of seed data is managed by migrations and the script to update the data that's already in the database needs to be generated without connecting to the database. This imposes some restrictions:
@@ -77,3 +82,11 @@ Create database and update data
 6. Copy VendingMachine.Workers.ImporterProducts\FileImport to %TEMP%\Workshop\VendingMachine
 ... Products.csv
 ... ProductItems.csv
+
+
+
+#Utenti
+| Username | Password |
+|----------|----------|
+| test@cloudgen.it | Pass123$ |
+| andrea.tosato@4ward.it | Pass123$ |

@@ -17,9 +17,9 @@ namespace VendingMachine.Service.Machines.Domain
 
         public MachineType MachineType { get; private set; }
 
-        public decimal MoneyFromBirth { get; }
-        public decimal MoneyMonth { get; }
-        public decimal MoneyYear { get; }
+        //public decimal MoneyFromBirth { get; }
+        //public decimal MoneyMonth { get; }
+        //public decimal MoneyYear { get; }
         public List<ProductConsumed> HistoryProducts { get; } = new List<ProductConsumed>();
         public List<Product> ActiveProducts { get; } = new List<Product>();
         public DateTimeOffset? LatestLoadedProducts { get; private set; }

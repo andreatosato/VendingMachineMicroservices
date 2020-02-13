@@ -19,8 +19,4 @@
     <ProjectReference Include="..\VendingMachine.Service.Shared.Data\VendingMachine.Service.Shared.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
