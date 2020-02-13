@@ -21,7 +21,7 @@ MapsControl.draw = function (centerx, centery, markers) {
         // Position
         var markerCurrentPosition = new atlas.HtmlMarker({
             color: 'Red',
-            text: 'Your Position',
+            text: 'Me',
             position: [centerx, centery],
         });
         console.log(MapsControl.map.markers);
@@ -34,7 +34,7 @@ MapsControl.draw = function (centerx, centery, markers) {
                 text: markers[i].id,
                 position: [markers[i].x, markers[i].y],
                 popup: new atlas.Popup({
-                    content: '<div style="padding:10px"><a href="/' + markers[i].id + '/products">Machine ID: ' + markers[i].id + '</a></div>',
+                    content: '<div style="padding:10px"><a href="/products/' + markers[i].id + '">Machine ID: ' + markers[i].id + '</a></div>',
                     pixelOffset: [0, -30]
                 })
             });

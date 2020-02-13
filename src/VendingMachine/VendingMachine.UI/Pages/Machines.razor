@@ -31,7 +31,7 @@
             @CurrentPosition.Accuracy metri
         </div>
     </div>
-    <div class="row">
+    @*<div class="row">
         <ul>
             @foreach (var item in MachineItems)
             {
@@ -42,10 +42,10 @@
             </li>
             }
         </ul>
-    </div>
+    </div>*@
     <div class="row">
         <div class="col-12">
-            <div id="vendingMap"></div>
+            <div id="vendingMap" style="width:100%;height:65vh;"></div>
         </div>
     </div>
 </div>
@@ -77,10 +77,7 @@
                 Console.WriteLine($"Machine Razor Page: {m.Position.X} {m.Position.Y} {m.Id.ToString()}");
                 machineMarkers.Add(new MachineMarkerViewModel { X = m.Position.Y, Y = m.Position.X, Id = m.Id.ToString() });
             }
-            //var position = new PositionViewModel { X = CurrentPosition.Longitude, Y = CurrentPosition.Latitude };
-            await js.InvokeVoidAsync("MapsControl.draw", CurrentPosition.Longitude, CurrentPosition.Latitude,
-                //position,
-                machineMarkers);
+            await js.InvokeVoidAsync("MapsControl.draw", CurrentPosition.Longitude, CurrentPosition.Latitude, machineMarkers);
         }
 
     }

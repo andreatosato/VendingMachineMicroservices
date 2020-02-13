@@ -17,6 +17,7 @@ namespace VendingMachine.UI
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+            //IConfiguration configuration = builder.Configuration.Build();
             builder.Services.AddServices();
             builder.RootComponents.Add<App>("app");
 
@@ -34,7 +35,8 @@ namespace VendingMachine.UI
             //configuration.Bind(nameof(ServicesReference), serviceReference);
             //services.AddSingleton<ServicesReference>(serviceReference);
 
-            services.AddSingleton<ServicesReference>((sp ) => new ServicesReference { 
+            services.AddSingleton<ServicesReference>((sp) => new ServicesReference
+            {
                 AuthService = "https://localhost:44330/",
                 GatewayBackendService = "https://localhost:4444/"
             });

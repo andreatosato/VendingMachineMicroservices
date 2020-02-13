@@ -1,7 +1,4 @@
 ﻿using Blazor.Extensions.Storage.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace VendingMachine.UI.Authentication
@@ -21,17 +18,17 @@ namespace VendingMachine.UI.Authentication
     public class AccessTokenReader : IAccessTokenReader
     {
         private const string AccessTokenKey = nameof(AccessTokenKey);
-        private ISessionStorage sessionStorage;
+        private ILocalStorage localStorage;
         private string token; // TODO
 
-        public AccessTokenReader(ISessionStorage sessionStorage)
+        public AccessTokenReader(ILocalStorage localStorage)
         {
-            this.sessionStorage = sessionStorage;
+            this.localStorage = localStorage;
         }
 
         public async Task<string> GetTokenAsync()
         {
-            return await sessionStorage.GetItem<string>(AccessTokenKey).ConfigureAwait(false);
+            return await localStorage.GetItem<string>(AccessTokenKey).ConfigureAwait(false);
         }
 
         public string GetToken()
@@ -41,7 +38,7 @@ namespace VendingMachine.UI.Authentication
 
         public async Task SetTokenAsync(string accessToken)
         {
-            await sessionStorage.SetItem<string>(AccessTokenKey, accessToken).ConfigureAwait(false);
+            await localStorage.SetItem<string>(AccessTokenKey, accessToken).ConfigureAwait(false);
             token = accessToken;
         }
     }
